@@ -1,710 +1,742 @@
 {
-    // ~ FILE-PATH: .vscode/settings.json
-    // ==========================================================================
-    //      ⚙️ GENERAL SETTINGS
-    // ==========================================================================
-    "explorer.confirmDelete": false,
-    "explorer.confirmDragAndDrop": false,
-    "files.trimTrailingWhitespaceInRegexAndStrings": false,
-    "files.associations": {
-        "*.json": "jsonc",
-        "*.editorconfig": "editorconfig",
-        "*.psm1": "powershell",
-        "*.psd1": "powershell",
-        "*.ps1": "powershell"
+  // ~ FILE-PATH: .vscode/settings.json
+  // ==========================================================================
+  //      ⚙️ GENERAL SETTINGS
+  // ==========================================================================
+  "explorer.confirmDelete": false,
+  "explorer.confirmDragAndDrop": false,
+  "files.trimTrailingWhitespaceInRegexAndStrings": false,
+  "files.associations": {
+    "*.json": "jsonc",
+    "*.editorconfig": "editorconfig",
+    "*.psm1": "powershell",
+    "*.psd1": "powershell",
+    "*.ps1": "powershell"
+  },
+  // ==========================================================================
+  //      🎨 WORKBENCH & APPEARANCE
+  // ==========================================================================
+  "workbench.colorTheme": "Theme Darker",
+  "workbench.iconTheme": "flow-deep",
+  "workbench.productIconTheme": "material-product-icons",
+  "workbench.panel.defaultLocation": "right",
+  // ==========================================================================
+  //      📝 EDITOR CORE SETTINGS
+  // ==========================================================================
+  "editor.fontFamily": "'JetBrainsMono NFM Regular'",
+  "editor.fontSize": 14,
+  "editor.lineHeight": 1.4,
+  "editor.fontLigatures": true,
+  "editor.smoothScrolling": true,
+  "editor.minimap.enabled": false,
+  "editor.inlineSuggest.enabled": true,
+  "editor.suggest.preview": true,
+  "editor.tabCompletion": "on",
+  "editor.showDeprecated": true,
+  "editor.autoIndent": "full",
+  "editor.wordWrapColumn": 100,
+  "editor.rulers": [
+    100
+  ],
+  "editor.semanticHighlighting.enabled": true,
+  "editor.semanticTokenColorCustomizations": {
+    "enabled": true
+  },
+  "editor.stickyScroll.enabled": true,
+  "editor.stickyScroll.defaultModel": "indentationModel",
+  "editor.cursorBlinking": "expand",
+  "editor.cursorSmoothCaretAnimation": "on",
+  "editor.guides.highlightActiveBracketPair": true,
+  "editor.bracketPairColorization.enabled": true,
+  "editor.bracketPairColorization.independentColorPoolPerBracketType": true,
+  "editor.guides.bracketPairs": "active",
+  "editor.guides.indentation": true,
+  "editor.codeActionsOnSave": {
+    "source.fixAll": "explicit",
+    "source.fixAll.eslint": "explicit",
+    "source.organizeImports": "always",
+    "source.addMissingImports": "always"
+  },
+  "editor.wordWrap": "on",
+  "editor.defaultFoldingRangeProvider": "EditorConfig.EditorConfig",
+  "editor.foldingStrategy": "auto",
+  "editor.folding": true,
+  "editor.detectIndentation": false,
+  "editor.defaultFormatter": "dbaeumer.vscode-eslint",
+  "editor.formatOnType": false,
+  "editor.formatOnPaste": true,
+  "editor.formatOnSave": true,
+  "editor.formatOnSaveMode": "file",
+  "editor.glyphMargin": true,
+  "files.autoSave": "onFocusChange",
+  // ==========================================================================
+  //      🖥️ TERMINAL SETTINGS
+  // ==========================================================================
+  "terminal.integrated.fontFamily": "'JetBrainsMono NFM Regular'",
+  "terminal.integrated.fontSize": 14,
+  "terminal.integrated.lineHeight": 1,
+  "terminal.integrated.enablePersistentSessions": false,
+  "terminal.integrated.shellIntegration.enabled": false,
+  "terminal.integrated.suggest.enabled": true,
+  "terminal.integrated.profiles.linux": {
+    "fish-host": {
+      "path": "host-spawn",
+      "args": [
+        "fish"
+      ],
+      "icon": "terminal-linux"
+    }
+  },
+  "terminal.integrated.defaultProfile.linux": "fish",
+  "terminal.integrated.minimumContrastRatio": 1,
+  //***************************************************************************
+  //*
+  //*      💻 LANGUAGE SPECIFIC SETTINGS
+  //*
+  //***************************************************************************
+  // ==========================================================================
+  //      ⚙️ HTML/CSS SETTINGS
+  // ==========================================================================
+  "css.styleSheets": [
+    "node_modules/bulma/css/bulma.min.css",
+    "src/**/*.css"
+  ],
+  "css.lint.unknownAtRules": "ignore",
+  "scss.lint.unknownAtRules": "ignore",
+  "less.lint.unknownAtRules": "ignore",
+  // ==========================================================================
+  //      ⚙️ JAVASCRIPT/TYPESCRIPT SETTINGS
+  // ==========================================================================
+  "[javascript]": {
+    "editor.defaultFormatter": "dbaeumer.vscode-eslint"
+  },
+  "[javascriptreact]": {
+    "editor.defaultFormatter": "dbaeumer.vscode-eslint"
+  },
+  "betterTypeScriptErrors.prettify": true,
+  "js/ts.inlayHints.parameterNames.enabled": "all",
+  "js/ts.inlayHints.variableTypes.enabled": true,
+  "js/ts.inlayHints.parameterTypes.enabled": true,
+  "js/ts.inlayHints.functionLikeReturnTypes.enabled": true,
+  "js/ts.format.semicolons": "insert",
+  "js/ts.preferences.quoteStyle": "single",
+  "js/ts.referencesCodeLens.enabled": true,
+  "js/ts.suggest.autoImports": false,
+  "js/ts.updateImportsOnPaste.enabled": true,
+  "js/ts.updateImportsOnFileMove.enabled": "always",
+  "js/ts.suggest.paths": false,
+  "js/ts.suggestionActions.enabled": true,
+  "js/ts.tsserver.log": "off",
+  "js/ts.tsserver.useSyntaxServer": "always",
+  "js/ts.tsserver.experimental.enableProjectDiagnostics": true,
+  "js/ts.tsdk.path": "node_modules/typescript/lib",
+  "extensions.experimental.affinity": {
+    "better-ts-errors.better-ts-errors": 1
+  },
+  "editor.experimental.preferTreeSitter.typescript": true,
+  "[typescript]": {
+    "editor.defaultFormatter": "vscode.typescript-language-features"
+  },
+  "[typescriptreact]": {
+    "editor.defaultFormatter": "dbaeumer.vscode-eslint"
+  },
+  // ==========================================================================
+  //      ⚙️ MARKDOWN SETTINGS
+  // ==========================================================================
+  "markdown.validate.enabled": true,
+  "[markdown]": {
+    "editor.defaultFormatter": "yzhang.markdown-all-in-one"
+  },
+  "markdownlint.config": {
+    "default": true,
+    "MD033": {
+      "allowed_elements": [
+        "span"
+      ]
     },
-    // ==========================================================================
-    //      🎨 WORKBENCH & APPEARANCE
-    // ==========================================================================
-    "workbench.colorTheme": "Theme Darker",
-    "workbench.iconTheme": "flow-deep",
-    "workbench.productIconTheme": "material-product-icons",
-    "workbench.panel.defaultLocation": "right",
-    // ==========================================================================
-    //      📝 EDITOR CORE SETTINGS
-    // ==========================================================================
-    "editor.fontFamily": "'JetBrainsMono NFM Regular'",
-    "editor.fontSize": 14,
-    "editor.lineHeight": 1.4,
-    "editor.fontLigatures": true,
-    "editor.smoothScrolling": true,
-    "editor.minimap.enabled": false,
-    "editor.inlineSuggest.enabled": true,
-    "editor.suggest.preview": true,
-    "editor.tabCompletion": "on",
-    "editor.showDeprecated": true,
-    "editor.autoIndent": "full",
-    "editor.wordWrapColumn": 100,
-    "editor.rulers": [
-        100
-    ],
-    "editor.semanticHighlighting.enabled": true,
-    "editor.semanticTokenColorCustomizations": {
-        "enabled": true
-    },
-    "editor.stickyScroll.enabled": true,
-    "editor.stickyScroll.defaultModel": "indentationModel",
-    "editor.cursorBlinking": "expand",
-    "editor.cursorSmoothCaretAnimation": "on",
-    "editor.guides.highlightActiveBracketPair": true,
-    "editor.bracketPairColorization.enabled": true,
-    "editor.bracketPairColorization.independentColorPoolPerBracketType": true,
-    "editor.guides.bracketPairs": "active",
-    "editor.guides.indentation": true,
-    "editor.codeActionsOnSave": {
-        "source.fixAll": "explicit",
-        "source.fixAll.eslint": "explicit",
-        "source.organizeImports": "always",
-        "source.addMissingImports": "always"
-    },
-    "editor.wordWrap": "on",
-    "editor.defaultFoldingRangeProvider": "EditorConfig.EditorConfig",
-    "editor.foldingStrategy": "auto",
-    "editor.folding": true,
-    "editor.detectIndentation": false,
-    "editor.defaultFormatter": "dbaeumer.vscode-eslint",
-    "editor.formatOnType": false,
-    "editor.formatOnPaste": true,
-    "editor.formatOnSave": true,
-    "editor.formatOnSaveMode": "file",
-    "editor.glyphMargin": true,
-    "files.autoSave": "onFocusChange",
-    // ==========================================================================
-    //      🖥️ TERMINAL SETTINGS
-    // ==========================================================================
-    "terminal.integrated.fontFamily": "'JetBrainsMono NFM Regular'",
-    "terminal.integrated.fontSize": 14,
-    "terminal.integrated.lineHeight": 1,
-    "terminal.integrated.enablePersistentSessions": false,
-    "terminal.integrated.shellIntegration.enabled": false,
-    "terminal.integrated.suggest.enabled": true,
-    "terminal.integrated.profiles.linux": {
-        "fish-host": {
-            "path": "host-spawn",
-            "args": [
-                "fish"
-            ],
-            "icon": "terminal-linux"
-        }
-    },
-    "terminal.integrated.defaultProfile.linux": "fish",
-    "terminal.integrated.minimumContrastRatio": 1,
-    //***************************************************************************
-    //*
-    //*      💻 LANGUAGE SPECIFIC SETTINGS
-    //*
-    //***************************************************************************
-    // ==========================================================================
-    //      ⚙️ HTML/CSS SETTINGS
-    // ==========================================================================
-    "css.styleSheets": [
-        "node_modules/bulma/css/bulma.min.css",
-        "src/**/*.css"
-    ],
-    "css.lint.unknownAtRules": "ignore",
-    "scss.lint.unknownAtRules": "ignore",
-    "less.lint.unknownAtRules": "ignore",
-    // ==========================================================================
-    //      ⚙️ JAVASCRIPT/TYPESCRIPT SETTINGS
-    // ==========================================================================
-    "[javascript]": {
-        "editor.defaultFormatter": "dbaeumer.vscode-eslint"
-    },
-    "[javascriptreact]": {
-        "editor.defaultFormatter": "dbaeumer.vscode-eslint"
-    },
-    "betterTypeScriptErrors.prettify": true,
-    "js/ts.inlayHints.parameterNames.enabled": "all",
-    "js/ts.inlayHints.variableTypes.enabled": true,
-    "js/ts.inlayHints.parameterTypes.enabled": true,
-    "js/ts.inlayHints.functionLikeReturnTypes.enabled": true,
-    "js/ts.format.semicolons": "insert",
-    "js/ts.preferences.quoteStyle": "single",
-    "js/ts.referencesCodeLens.enabled": true,
-    "js/ts.suggest.autoImports": false,
-    "js/ts.updateImportsOnPaste.enabled": true,
-    "js/ts.updateImportsOnFileMove.enabled": "always",
-    "js/ts.suggest.paths": false,
-    "js/ts.suggestionActions.enabled": true,
-    "js/ts.tsserver.log": "off",
-    "js/ts.tsserver.useSyntaxServer": "always",
-    "js/ts.tsserver.experimental.enableProjectDiagnostics": true,
-    "js/ts.tsdk.path": "node_modules/typescript/lib",
-    "extensions.experimental.affinity": {
-        "better-ts-errors.better-ts-errors": 1
-    },
-    "editor.experimental.preferTreeSitter.typescript": true,
-    "[typescript]": {
-        "editor.defaultFormatter": "vscode.typescript-language-features"
-    },
-    "[typescriptreact]": {
-        "editor.defaultFormatter": "dbaeumer.vscode-eslint"
-    },
-    // ==========================================================================
-    //      ⚙️ MARKDOWN SETTINGS
-    // ==========================================================================
-    "markdown.validate.enabled": true,
-    "[markdown]": {
-        "editor.defaultFormatter": "yzhang.markdown-all-in-one"
-    },
-    "markdownlint.config": {
-        "default": true,
-        "MD033": {
-            "allowed_elements": [
-                "span"
-            ]
-        },
-        "MD041": false,
-        "MD026": false
-    },
-    // ==========================================================================
-    //      ⚙️ JSON/JSONC SETTINGS
-    // ==========================================================================
-    "json.schemaDownload.enable": false,
+    "MD041": false,
+    "MD026": false
+  },
+  // ==========================================================================
+  //      ⚙️ JSON/JSONC SETTINGS
+  // ==========================================================================
+  "json.schemaDownload.enable": false,
+  "[json]": {
+    "editor.defaultFormatter": "dbaeumer.vscode-eslint"
+  },
+  "[jsonc]": {
+    "editor.defaultFormatter": "vscode.json-language-features"
+  },
+  // ==========================================================================
+  //      ⚙️ BUN SETTINGS
+  // ==========================================================================
+  "bun.runtime": "%USERPROFILE%/.bun/bin/bun",
+  "bun.debugTerminal.enabled": true,
+  "bun.debugTerminal.stopOnEntry": false,
+  "bun.test.filePattern": "**/*{.test.,.spec.,_test_,_spec_}{js,ts,tsx,jsx,mts,cts,cjs,mjs}",
+  "bun.test.customScript": "bun test",
+  // ==========================================================================
+  //      ⚙️ GIT SETTINGS
+  // ==========================================================================
+  "git.enableSmartCommit": true,
+  "git.autofetch": true,
+  "git.confirmSync": false,
+  "git.openRepositoryInParentFolders": "always",
+  // ==========================================================================
+  //      ⚙️ POWERSHELL SETTINGS
+  // ==========================================================================
+  // Integrated Console Settings
+  "powershell.integratedConsole.focusConsoleOnExecute": false,
+  "powershell.integratedConsole.suppressStartupBanner": false,
+  // Code Formatting Settings (some example defaults)
+  "powershell.codeFormatting.preset": "Stroustrup",
+  "powershell.codeFormatting.openBraceOnSameLine": true,
+  "powershell.codeFormatting.newLineAfterOpenBrace": true,
+  // Pester Settings
+  "powershell.pester.useLegacyCodeLens": false,
+  // Script Analysis & Linting Settings
+  "powershell.scriptAnalysis.enable": true,
+  "powershell.scriptAnalysis.settingsPath": "",
+  "[powershell]": {
+    "editor.defaultFormatter": "dbaeumer.vscode-eslint"
+  },
+  //***************************************************************************
+  //*
+  //*         ➕ EXTENSION-SPECIFIC SETTINGS
+  //*
+  //***************************************************************************
+  // ==========================================================================
+  //      ⚙️ TOML AND EDITORCONFIG SETTINGS
+  // ==========================================================================
+  "[toml]": {
+    "editor.defaultFormatter": "tamasfe.even-better-toml",
+    "editor.formatOnSave": true
+  },
+  "[editorconfig]": {
+    "editor.defaultFormatter": "dbaeumer.vscode-eslint"
+  },
+  // ==========================================================================
+  //      ⚙️ PRETTIER/ESLINT SETTINGS
+  // ==========================================================================
+  "prettier.useEditorConfig": true,
+  "eslint.useFlatConfig": true,
+  "eslint.format.enable": true,
+  "eslint.enable": true,
+  "eslint.validate": [
+    "javascript",
+    "javascriptreact",
+    "typescript",
+    "typescriptreact",
+    "types"
+  ],
+  "eslint.codeAction.showDocumentation": {
+    "enable": true
+  },
+  "eslint.codeAction.disableRuleComment": {
+    "enable": true,
+    "location": "sameLine"
+  },
+  "eslint.options": {
+    "overrideConfigFile": "eslint.config.ts"
+  },
+  // ==========================================================================
+  //      ⚙️ REGION FOLDING SETTINGS
+  // ==========================================================================
+  "maptz.regionfolder": {
     "[json]": {
-        "editor.defaultFormatter": "dbaeumer.vscode-eslint"
+      "foldEnd": "/* #endregion */",
+      "foldEndRegex": "/\\*[\\s]*#endregion",
+      "foldStart": "/* #region [NAME] */",
+      "foldStartRegex": "^[\\s]*/\\*[\\s]*#region[\\s]*(.*)[\\s]*\\*/[\\s]*$",
+      "defaultFoldStartRegex": "^[\\s]*/\\*[\\s]*#region[\\s]*default\\s(.*)[\\s]*\\*/[\\s]*$",
+      "foldDefinitions": [
+        {
+          "foldEndRegex": "\\*+/[\\s]*$",
+          "foldStartRegex": "^[\\s]*/\\*\\*+",
+          "isFoldedByDefault": true
+        }
+      ]
     },
     "[jsonc]": {
-        "editor.defaultFormatter": "vscode.json-language-features"
-    },
-    // ==========================================================================
-    //      ⚙️ BUN SETTINGS
-    // ==========================================================================
-    "bun.runtime": "%USERPROFILE%/.bun/bin/bun",
-    "bun.debugTerminal.enabled": true,
-    "bun.debugTerminal.stopOnEntry": false,
-    "bun.test.filePattern": "**/*{.test.,.spec.,_test_,_spec_}{js,ts,tsx,jsx,mts,cts,cjs,mjs}",
-    "bun.test.customScript": "bun test",
-    // ==========================================================================
-    //      ⚙️ GIT SETTINGS
-    // ==========================================================================
-    "git.enableSmartCommit": true,
-    "git.autofetch": true,
-    "git.confirmSync": false,
-    "git.openRepositoryInParentFolders": "always",
-    // ==========================================================================
-    //      ⚙️ POWERSHELL SETTINGS
-    // ==========================================================================
-    // Integrated Console Settings
-    "powershell.integratedConsole.focusConsoleOnExecute": false,
-    "powershell.integratedConsole.suppressStartupBanner": false,
-    // Code Formatting Settings (some example defaults)
-    "powershell.codeFormatting.preset": "Stroustrup",
-    "powershell.codeFormatting.openBraceOnSameLine": true,
-    "powershell.codeFormatting.newLineAfterOpenBrace": true,
-    // Pester Settings
-    "powershell.pester.useLegacyCodeLens": false,
-    // Script Analysis & Linting Settings
-    "powershell.scriptAnalysis.enable": true,
-    "powershell.scriptAnalysis.settingsPath": "",
-    "[powershell]": {
-        "editor.defaultFormatter": "dbaeumer.vscode-eslint"
-    },
-    //***************************************************************************
-    //*
-    //*         ➕ EXTENSION-SPECIFIC SETTINGS
-    //*
-    //***************************************************************************
-    // ==========================================================================
-    //      ⚙️ TOML AND EDITORCONFIG SETTINGS
-    // ==========================================================================
-    "[toml]": {
-        "editor.defaultFormatter": "tamasfe.even-better-toml",
-        "editor.formatOnSave": true
-    },
-    "[editorconfig]": {
-        "editor.defaultFormatter": "dbaeumer.vscode-eslint"
-    },
-    // ==========================================================================
-    //      ⚙️ PRETTIER/ESLINT SETTINGS
-    // ==========================================================================
-    "prettier.useEditorConfig": true,
-    "eslint.useFlatConfig": true,
-    "eslint.format.enable": true,
-    "eslint.enable": true,
-    "eslint.validate": [
-        "javascript",
-        "javascriptreact",
-        "typescript",
-        "typescriptreact",
-        "types"
-    ],
-    "eslint.codeAction.showDocumentation": {
-        "enable": true
-    },
-    "eslint.codeAction.disableRuleComment": {
-        "enable": true,
-        "location": "sameLine"
-    },
-    "eslint.options": {
-        "overrideConfigFile": "eslint.config.ts"
-    },
-    // ==========================================================================
-    //      ⚙️ REGION FOLDING SETTINGS
-    // ==========================================================================
-    "maptz.regionfolder": {
-        "[json]": {
-            "foldEnd": "/* #endregion */",
-            "foldEndRegex": "/\\*[\\s]*#endregion",
-            "foldStart": "/* #region [NAME] */",
-            "foldStartRegex": "^[\\s]*/\\*[\\s]*#region[\\s]*(.*)[\\s]*\\*/[\\s]*$",
-            "defaultFoldStartRegex": "^[\\s]*/\\*[\\s]*#region[\\s]*default\\s(.*)[\\s]*\\*/[\\s]*$",
-            "foldDefinitions": [
-                {
-                    "foldEndRegex": "\\*+/[\\s]*$",
-                    "foldStartRegex": "^[\\s]*/\\*\\*+",
-                    "isFoldedByDefault": true
-                }
-            ]
-        },
-        "[jsonc]": {
-            "foldEnd": "/* #endregion */",
-            "foldEndRegex": "/\\*[\\s]*#endregion",
-            "foldStart": "/* #region [NAME] */",
-            "foldStartRegex": "^[\\s]*/\\*[\\s]*#region[\\s]*(.*)[\\s]*\\*/[\\s]*$",
-            "defaultFoldStartRegex": "^[\\s]*/\\*[\\s]*#region[\\s]*default\\s(.*)[\\s]*\\*/[\\s]*$",
-            "foldDefinitions": [
-                {
-                    "foldEndRegex": "\\*+/[\\s]*$",
-                    "foldStartRegex": "^[\\s]*/\\*\\*+",
-                    "isFoldedByDefault": true
-                }
-            ]
-        },
-        "[javascript]": {
-            "foldEnd": "/* #endregion */",
-            "foldEndRegex": "/\\*[\\s]*#endregion",
-            "foldStart": "/* #region [NAME] */",
-            "foldStartRegex": "^[\\s]*/\\*[\\s]*#region[\\s]*(.*)[\\s]*\\*/[\\s]*$",
-            "defaultFoldStartRegex": "^[\\s]*/\\*[\\s]*#region[\\s]*default\\s(.*)[\\s]*\\*/[\\s]*$",
-            "foldDefinitions": [
-                {
-                    "foldEndRegex": "\\*+/[\\s]*$",
-                    "foldStartRegex": "^[\\s]*/\\*\\*+",
-                    "isFoldedByDefault": true
-                }
-            ]
-        },
-        "[javascriptreact]": {
-            "foldEnd": "/* #endregion */",
-            "foldEndRegex": "/\\*[\\s]*#endregion",
-            "foldStart": "/* #region [NAME] */",
-            "foldStartRegex": "^[\\s]*/\\*[\\s]*#region[\\s]*(.*)[\\s]*\\*/[\\s]*$",
-            "defaultFoldStartRegex": "^[\\s]*/\\*[\\s]*#region[\\s]*default\\s(.*)[\\s]*\\*/[\\s]*$",
-            "foldDefinitions": [
-                {
-                    "foldEndRegex": "\\*+/[\\s]*$",
-                    "foldStartRegex": "^[\\s]*/\\*\\*+",
-                    "isFoldedByDefault": true
-                }
-            ]
-        },
-        "[typescript]": {
-            "foldEnd": "/* #endregion */",
-            "foldEndRegex": "/\\*[\\s]*#endregion",
-            "foldStart": "/* #region [NAME] */",
-            "foldStartRegex": "^[\\s]*/\\*[\\s]*#region[\\s]*(.*)[\\s]*\\*/[\\s]*$",
-            "defaultFoldStartRegex": "^[\\s]*/\\*[\\s]*#region[\\s]*default\\s(.*)[\\s]*\\*/[\\s]*$",
-            "foldDefinitions": [
-                {
-                    "foldEndRegex": "\\*+/[\\s]*$",
-                    "foldStartRegex": "^[\\s]*/\\*\\*+",
-                    "isFoldedByDefault": true
-                }
-            ]
-        },
-        "[typescriptreact]": {
-            "foldEnd": "/* #endregion */",
-            "foldEndRegex": "/\\*[\\s]*#endregion",
-            "foldStart": "/* #region [NAME] */",
-            "foldStartRegex": "^[\\s]*/\\*[\\s]*#region[\\s]*(.*)[\\s]*\\*/[\\s]*$",
-            "defaultFoldStartRegex": "^[\\s]*/\\*[\\s]*#region[\\s]*default\\s(.*)[\\s]*\\*/[\\s]*$",
-            "foldDefinitions": [
-                {
-                    "foldEndRegex": "\\*+/[\\s]*$",
-                    "foldStartRegex": "^[\\s]*/\\*\\*+",
-                    "isFoldedByDefault": true
-                }
-            ]
+      "foldEnd": "/* #endregion */",
+      "foldEndRegex": "/\\*[\\s]*#endregion",
+      "foldStart": "/* #region [NAME] */",
+      "foldStartRegex": "^[\\s]*/\\*[\\s]*#region[\\s]*(.*)[\\s]*\\*/[\\s]*$",
+      "defaultFoldStartRegex": "^[\\s]*/\\*[\\s]*#region[\\s]*default\\s(.*)[\\s]*\\*/[\\s]*$",
+      "foldDefinitions": [
+        {
+          "foldEndRegex": "\\*+/[\\s]*$",
+          "foldStartRegex": "^[\\s]*/\\*\\*+",
+          "isFoldedByDefault": true
         }
+      ]
     },
-    // ==========================================================================
-    //      ⚙️ BETTER COMMENTS SETTINGS
-    // ==========================================================================
-    "better-comments.multilineComments": true,
-    "better-comments.highlightPlainText": false,
-    "better-comments.tags": [
+    "[javascript]": {
+      "foldEnd": "/* #endregion */",
+      "foldEndRegex": "/\\*[\\s]*#endregion",
+      "foldStart": "/* #region [NAME] */",
+      "foldStartRegex": "^[\\s]*/\\*[\\s]*#region[\\s]*(.*)[\\s]*\\*/[\\s]*$",
+      "defaultFoldStartRegex": "^[\\s]*/\\*[\\s]*#region[\\s]*default\\s(.*)[\\s]*\\*/[\\s]*$",
+      "foldDefinitions": [
         {
-            "tag": "!",
-            "color": "#FF6E6E",
-            "strikethrough": false,
-            "underline": false,
-            "backgroundColor": "transparent",
-            "bold": true,
-            "italic": false
-        },
-        {
-            "tag": "?",
-            "color": "#8be9fd",
-            "strikethrough": false,
-            "underline": false,
-            "backgroundColor": "transparent",
-            "bold": false,
-            "italic": false
-        },
-        {
-            "tag": "//",
-            "color": "#50fa7b",
-            "strikethrough": false,
-            "underline": false,
-            "backgroundColor": "transparent",
-            "bold": false,
-            "italic": false
-        },
-        {
-            "tag": "///",
-            "color": "#50fa7b",
-            "strikethrough": true,
-            "underline": false,
-            "backgroundColor": "transparent",
-            "bold": false,
-            "italic": false
-        },
-        {
-            "tag": "$",
-            "color": "#50fa7b",
-            "strikethrough": false,
-            "underline": false,
-            "backgroundColor": "transparent",
-            "bold": false,
-            "italic": false
-        },
-        {
-            "tag": "@",
-            "color": "#ffb86c",
-            "strikethrough": false,
-            "underline": false,
-            "backgroundColor": "transparent",
-            "bold": false,
-            "italic": false
-        },
-        {
-            "tag": "fixme",
-            "color": "#6272a4",
-            "strikethrough": false,
-            "underline": false,
-            "backgroundColor": "transparent",
-            "bold": false,
-            "italic": false
-        },
-        {
-            "tag": "fixit",
-            "color": "#6272a4",
-            "strikethrough": false,
-            "underline": false,
-            "backgroundColor": "transparent",
-            "bold": false,
-            "italic": false
-        },
-        {
-            "tag": "fix",
-            "color": "#6272a4",
-            "strikethrough": false,
-            "underline": false,
-            "backgroundColor": "transparent",
-            "bold": false,
-            "italic": false
-        },
-        {
-            "tag": "#",
-            "color": "#ff5555",
-            "strikethrough": false,
-            "underline": false,
-            "backgroundColor": "transparent",
-            "bold": false,
-            "italic": false
-        },
-        {
-            "tag": "*",
-            "color": "#ff79c6",
-            "strikethrough": false,
-            "underline": false,
-            "backgroundColor": "transparent",
-            "bold": true,
-            "italic": false
-        },
-        {
-            "tag": "&",
-            "color": "#D6ACFF",
-            "strikethrough": false,
-            "underline": false,
-            "backgroundColor": "transparent",
-            "bold": true,
-            "italic": true
-        },
-        {
-            "tag": "region",
-            "color": "#BD93F9",
-            "strikethrough": false,
-            "underline": false,
-            "backgroundColor": "transparent",
-            "bold": false,
-            "italic": false
-        },
-        {
-            "tag": "endregion",
-            "color": "#BD93F9",
-            "strikethrough": false,
-            "underline": false,
-            "backgroundColor": "transparent",
-            "bold": false,
-            "italic": false
+          "foldEndRegex": "\\*+/[\\s]*$",
+          "foldStartRegex": "^[\\s]*/\\*\\*+",
+          "isFoldedByDefault": true
         }
-    ],
-    // ==========================================================================
-    //      ⚙️ INDENT RAINBOW SETTINGS
-    // ==========================================================================
-    "indentRainbow.indicatorStyle": "classic",
-    "indentRainbow.lightIndicatorStyleLineWidth": 1,
-    "indentRainbow.colorOnWhiteSpaceOnly": true,
-    "indentRainbow.updateDelay": 100,
-    "indentRainbow.errorColor": "rgba(128,32,32,0.6)",
-    "indentRainbow.tabmixColor": "rgba(128,32,96,0.6)",
-    "indentRainbow.colors": [
-        "rgba(255,255,64,0.07)",
-        "rgba(127,255,127,0.07)",
-        "rgba(255,127,255,0.07)",
-        "rgba(79,236,236,0.07)"
-    ],
-    // ==========================================================================
-    //      🎨 COLORIZE SETTINGS
-    // ==========================================================================
-    "colorize.decoration_type": "background",
-    "colorize.enable_search_variables": true,
-    "colorize.hide_current_line_decorations": true,
-    "colorize.colorized_colors": [
-        "HEXA",
-        "ARGB",
-        "RGB",
-        "HSL",
-        "OKLAB",
-        "OKLCH"
-    ],
-    "colorize.languages": [
-        "css",
-        "scss",
-        "sass",
-        "less",
-        "html",
-        "javascript",
-        "javascriptreact",
-        "typescript",
-        "typescriptreact",
-        "json",
-        "jsonc",
-        "toml",
-        "python",
-        "java",
-        "powershell",
-        "ps1",
-        "psd1",
-        "markdown",
-        "md",
-        "mdx"
-    ],
-    "colorize.include": [
-        "**/src/**",
-        "*.html"
-    ],
-    "colorize.exclude": [
-        "**/node_modules/**",
-        "**/ALL/**"
-    ],
-    "colorize.colorized_variables": [
-        "LESS"
-    ],
-    // ==========================================================================
-    //      🎨 HIGHLIGHT SETTINGS
-    // ==========================================================================
-    //
-    // Dracula Classic:
-    // Token	        Hex	        Usage
-    // --------------------------------------------------------------------------
-    // Background	    #282A36	    Main background
-    // Current Line	  #6272A4	    Semantic current line highlight token
-    // Selection	    #44475A	    Text selection
-    // Foreground	    #F8F8F2	    Default text
-    // Comment	      #6272A4	    Comments, disabled code
-    // Red	          #FF5555	    Errors, warnings, deletion
-    // Orange	        #FFB86C	    Numbers, constants, booleans
-    // Yellow	        #F1FA8C	    Strings, text content
-    // Green	        #50FA7B	    Functions, methods, inherited classes
-    // Cyan	          #8BE9FD	    Classes, types, support, regex
-    // Purple	        #BD93F9	    Instance reserved words, constants
-    // Pink	          #FF79C6	    Keywords, storage types
-    //
-    //
-    "highlight.decorations": {},
-    "highlight.regexFlags": "g",
-    "highlight.regexes": {
-        //$ Highlight file paths in comments with a specific format, e.g.:
-        //~ FILE-PATH: src/styles.css
-        // ~ FILE-PATH: src/styles.css
-        //~ file-path: src/styles.css
-        // ~ file-path: src/styles.css
-        // FILE-PATH: src/styles.css
-        //FILE-PATH: src/styles.css
-        // file-path: src/styles.css
-        //file-path: src/styles.css
-        //
-        //       2         3            4            5        6
-        "/(^|[ \\t]?(\/\/|#)\\s?(~?)\\s?(file-path)\\s{0}(:)\\s{1}(.*)[ \\t]?)$/gim": {
-            "filterLanguageRegex": "(javascript|typescript|js|ts|jsx|tsx|json|jsonc|toml|yaml|yml])",
-            "decorations": [
-                { // Group 1
-                    "overviewRulerColor": "#FFB86C",
-                    "backgroundColor": "#44475A",
-                    "borderRadius": "4px",
-                    "border": "1px dotted #FFB86C",
-                    "rangeBehavior": 1
-                },
-                { // Group 2
-                    "color": "#FFB86C"
-                },
-                { // Group 3
-                    "color": "#FFB86C"
-                },
-                { // Group 4
-                    "color": "#FF79C6"
-                },
-                { // Group 5
-                    "color": "#FFB86C"
-                },
-                { // Group 6
-                    "color": "#BD93F9",
-                    "textDecoration": "none; padding: 0 8px 0 0;",
-                    "after": {
-                        "contentText": ""
-                    }
-                }
-            ]
-        },
-        //$ Highlight web URLs in comments with a specific format, e.g.:
-        // https://www.example.com
-        // http://localhost
-        // https://localhost:8080/dashboard#metrics
-        // http://127.0.0.1:3000
-        // https://cspell.org
-        // ftp://files.local/shared/data.csv
-        //
-        "/(\\s?([a-zA-Z0-9+.-]+:\\/\\/[a-zA-Z0-9@:%._\\+~#=\\-]{1,256}(?::\\d+)?(?:[-a-zA-Z0-9()@:%_\\+.~#?&\\/=]*))\\h?)/gim": {
-            "filterLanguageRegex": "(javascript|typescript|js|ts|jsx|tsx|json|jsonc|toml|yaml|yml])",
-            "decorations": [
-                {
-                    "backgroundColor": "#44475A",
-                    "borderRadius": "4px",
-                    "border": "0.5px dashed #FFB86C",
-                    "padding": "0 0 0 8px",
-                    "before": {
-                        "contentText": ""
-                    }
-                },
-                {
-                    "color": "#FFB86C",
-                    "backgroundColor": "transparent",
-                    "fontWeight": "normal",
-                    "textDecoration": "none; padding: 0 8px 0 0;",
-                    "after": {
-                        "contentText": ""
-                    }
-                }
-            ]
+      ]
+    },
+    "[javascriptreact]": {
+      "foldEnd": "/* #endregion */",
+      "foldEndRegex": "/\\*[\\s]*#endregion",
+      "foldStart": "/* #region [NAME] */",
+      "foldStartRegex": "^[\\s]*/\\*[\\s]*#region[\\s]*(.*)[\\s]*\\*/[\\s]*$",
+      "defaultFoldStartRegex": "^[\\s]*/\\*[\\s]*#region[\\s]*default\\s(.*)[\\s]*\\*/[\\s]*$",
+      "foldDefinitions": [
+        {
+          "foldEndRegex": "\\*+/[\\s]*$",
+          "foldStartRegex": "^[\\s]*/\\*\\*+",
+          "isFoldedByDefault": true
         }
+      ]
     },
-    "[svg]": {
-        "editor.formatOnSave": false,
-        "editor.defaultFormatter": "jock.svg"
+    "[typescript]": {
+      "foldEnd": "/* #endregion */",
+      "foldEndRegex": "/\\*[\\s]*#endregion",
+      "foldStart": "/* #region [NAME] */",
+      "foldStartRegex": "^[\\s]*/\\*[\\s]*#region[\\s]*(.*)[\\s]*\\*/[\\s]*$",
+      "defaultFoldStartRegex": "^[\\s]*/\\*[\\s]*#region[\\s]*default\\s(.*)[\\s]*\\*/[\\s]*$",
+      "foldDefinitions": [
+        {
+          "foldEndRegex": "\\*+/[\\s]*$",
+          "foldStartRegex": "^[\\s]*/\\*\\*+",
+          "isFoldedByDefault": true
+        }
+      ]
     },
-    "svg.preview.autoShow": true,
-    "[html]": {
-        "editor.formatOnSave": false
+    "[typescriptreact]": {
+      "foldEnd": "/* #endregion */",
+      "foldEndRegex": "/\\*[\\s]*#endregion",
+      "foldStart": "/* #region [NAME] */",
+      "foldStartRegex": "^[\\s]*/\\*[\\s]*#region[\\s]*(.*)[\\s]*\\*/[\\s]*$",
+      "defaultFoldStartRegex": "^[\\s]*/\\*[\\s]*#region[\\s]*default\\s(.*)[\\s]*\\*/[\\s]*$",
+      "foldDefinitions": [
+        {
+          "foldEndRegex": "\\*+/[\\s]*$",
+          "foldStartRegex": "^[\\s]*/\\*\\*+",
+          "isFoldedByDefault": true
+        }
+      ]
+    }
+  },
+  // ==========================================================================
+  //      ⚙️ BETTER COMMENTS SETTINGS
+  // ==========================================================================
+  "better-comments.multilineComments": true,
+  "better-comments.highlightPlainText": false,
+  "better-comments.tags": [
+    {
+      "tag": "!",
+      "color": "#FF6E6E",
+      "strikethrough": false,
+      "underline": false,
+      "backgroundColor": "transparent",
+      "bold": true,
+      "italic": false
     },
-    "html.format.wrapAttributes": "force-expand-multiline",
-    "splitHTMLAttributes.tabSize": 2,
-    "splitHTMLAttributes.useSpacesForTabs": true,
-    "splitHTMLAttributes.closingBracketOnNewLine": true,
-    "splitHTMLAttributes.sortOrder": [
-        "^xmlns",
-        "^role",
-        "^viewBox",
-        "^key",
-        "^:",
-        "^id$",
-        "^class$",
-        "^x1?$",
-        "^y1?$",
-        "^x2$",
-        "^y2$",
-        "^cx$",
-        "^cy$",
-        "^r$",
-        "^width$",
-        "^height$",
-        "^fill",
-        "^stroke",
-        "^style",
-        "^d$",
-        "^points$",
-        "^.*=\""
-    ],
-    "svg.preview.background": "dark-transparent",
-    "tailwindcss-highlight.languages": [
-        "html",
-        "javascript",
-        "javascriptreact",
-        "typescript",
-        "typescriptreact",
-        "vue",
-        "php",
-        "svelte"
-    ],
-    "tailwindcss-highlight.enabledUtilities": [
-        "padding",
-        "margin",
-        "space",
-        "width",
-        "height",
-        "flex",
-        "grid",
-        "position"
-    ],
-    "typescript.tsdk": "node_modules\\typescript\\lib",
-    "markdown.validate.ignoredLinks": [
-        "./src/config/config.toml"
-    ],
-    // "tailwindcss-highlight.customUtilitiesConfig": {
-    //   "padding": {
-    //     "style": {
-    //       "backgroundColor": "",
-    //       "borderWidth": "0 0 3px 0",
-    //       "borderStyle": "solid",
-    //       "borderColor": "rgba(187, 196, 136, 1)",
-    //       "color": "currentColor"
-    //     }
-    //   }
-    // },
-    // "tailwindcss-highlight.customVariantsConfig": {
-    //   "#08D9D6": [
-    //     "sm",
-    //     "md",
-    //     "lg",
-    //     "xl",
-    //     "2xl"
-    //   ],
-    //   "#FFB6C1": [
-    //     "focus",
-    //     "focus-within",
-    //     "focus-visible"
-    //   ],
-    // }
+    {
+      "tag": "?",
+      "color": "#8be9fd",
+      "strikethrough": false,
+      "underline": false,
+      "backgroundColor": "transparent",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "tag": "//",
+      "color": "#50fa7b",
+      "strikethrough": false,
+      "underline": false,
+      "backgroundColor": "transparent",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "tag": "///",
+      "color": "#50fa7b",
+      "strikethrough": true,
+      "underline": false,
+      "backgroundColor": "transparent",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "tag": "$",
+      "color": "#50fa7b",
+      "strikethrough": false,
+      "underline": false,
+      "backgroundColor": "transparent",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "tag": "@",
+      "color": "#ffb86c",
+      "strikethrough": false,
+      "underline": false,
+      "backgroundColor": "transparent",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "tag": "fixme",
+      "color": "#6272a4",
+      "strikethrough": false,
+      "underline": false,
+      "backgroundColor": "transparent",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "tag": "fixit",
+      "color": "#6272a4",
+      "strikethrough": false,
+      "underline": false,
+      "backgroundColor": "transparent",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "tag": "fix",
+      "color": "#6272a4",
+      "strikethrough": false,
+      "underline": false,
+      "backgroundColor": "transparent",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "tag": "#",
+      "color": "#ff5555",
+      "strikethrough": false,
+      "underline": false,
+      "backgroundColor": "transparent",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "tag": "*",
+      "color": "#ff79c6",
+      "strikethrough": false,
+      "underline": false,
+      "backgroundColor": "transparent",
+      "bold": true,
+      "italic": false
+    },
+    {
+      "tag": "&",
+      "color": "#D6ACFF",
+      "strikethrough": false,
+      "underline": false,
+      "backgroundColor": "transparent",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "tag": "region",
+      "color": "#BD93F9",
+      "strikethrough": false,
+      "underline": false,
+      "backgroundColor": "transparent",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "tag": "endregion",
+      "color": "#BD93F9",
+      "strikethrough": false,
+      "underline": false,
+      "backgroundColor": "transparent",
+      "bold": false,
+      "italic": false
+    }
+  ],
+  // ==========================================================================
+  //      ⚙️ INDENT RAINBOW SETTINGS
+  // ==========================================================================
+  "indentRainbow.indicatorStyle": "classic",
+  "indentRainbow.lightIndicatorStyleLineWidth": 1,
+  "indentRainbow.colorOnWhiteSpaceOnly": true,
+  "indentRainbow.updateDelay": 100,
+  "indentRainbow.errorColor": "rgba(128,32,32,0.6)",
+  "indentRainbow.tabmixColor": "rgba(128,32,96,0.6)",
+  "indentRainbow.colors": [
+    "rgba(255,255,64,0.07)",
+    "rgba(127,255,127,0.07)",
+    "rgba(255,127,255,0.07)",
+    "rgba(79,236,236,0.07)"
+  ],
+  // ==========================================================================
+  //      🎨 COLORIZE SETTINGS
+  // ==========================================================================
+  "colorize.decoration_type": "background",
+  "colorize.enable_search_variables": true,
+  "colorize.hide_current_line_decorations": true,
+  "colorize.colorized_colors": [
+    "HEXA",
+    "ARGB",
+    "RGB",
+    "HSL",
+    "OKLAB",
+    "OKLCH"
+  ],
+  "colorize.languages": [
+    "css",
+    "scss",
+    "sass",
+    "less",
+    "html",
+    "javascript",
+    "javascriptreact",
+    "typescript",
+    "typescriptreact",
+    "json",
+    "jsonc",
+    "toml",
+    "python",
+    "java",
+    "powershell",
+    "ps1",
+    "psd1",
+    "markdown",
+    "md",
+    "mdx"
+  ],
+  "colorize.include": [
+    "**/src/**",
+    "*.html"
+  ],
+  "colorize.exclude": [
+    "**/node_modules/**",
+    "**/ALL/**"
+  ],
+  "colorize.colorized_variables": [
+    "LESS"
+  ],
+  // ==========================================================================
+  //      🎨 HIGHLIGHT SETTINGS
+  // ==========================================================================
+  //
+  // Dracula Classic:
+  // Token	        Hex	        Usage
+  // --------------------------------------------------------------------------
+  // Background	    #282A36	    Main background
+  // Current Line	  #6272A4	    Semantic current line highlight token
+  // Selection	    #44475A	    Text selection
+  // Foreground	    #F8F8F2	    Default text
+  // Comment	      #6272A4	    Comments, disabled code
+  // Red	          #FF5555	    Errors, warnings, deletion
+  // Orange	        #FFB86C	    Numbers, constants, booleans
+  // Yellow	        #F1FA8C	    Strings, text content
+  // Green	        #50FA7B	    Functions, methods, inherited classes
+  // Cyan	          #8BE9FD	    Classes, types, support, regex
+  // Purple	        #BD93F9	    Instance reserved words, constants
+  // Pink	          #FF79C6	    Keywords, storage types
+  //
+  //
+  "highlight.decorations": {},
+  "highlight.regexFlags": "g",
+  "highlight.regexes": {
+    //$ Highlight file paths in comments with a specific format, e.g.:
+    //~ FILE-PATH: src/styles.css
+    // ~ FILE-PATH: src/styles.css
+    //~ file-path: src/styles.css
+    // ~ file-path: src/styles.css
+    // FILE-PATH: src/styles.css
+    //FILE-PATH: src/styles.css
+    // file-path: src/styles.css
+    //file-path: src/styles.css
+    //\  # FILE-PATH: TESTING
+    //
+    "/(^|[ \\t]?(\/\/)\\s?(~?)\\s?(file-path)\\s{0}(:)\\s{1}(.*)[ \\t]?)$/gim": {
+      //"filterLanguageRegex": "(javascript|typescript|js|ts|jsx|tsx|json|jsonc|toml|yaml|yml|fish|ps1])",
+      "filterFilepaths": true,
+      "decorations": [
+        { // Group 1
+          "overviewRulerColor": "#FFB86C",
+          "backgroundColor": "#44475A",
+          "borderRadius": "4px",
+          "border": "1px dotted #FFB86C",
+          "rangeBehavior": 1
+        },
+        { // Group 2
+          "color": "#FFB86C"
+        },
+        { // Group 3
+          "color": "#FFB86C"
+        },
+        { // Group 4
+          "color": "#FF79C6"
+        },
+        { // Group 5
+          "color": "#FFB86C"
+        },
+        { // Group 6
+          "color": "#BD93F9",
+          "textDecoration": "none; padding: 0 8px 0 0;",
+          "after": {
+            "contentText": ""
+          }
+        }
+      ]
+    },
+    "/(^|[ \\t]?(#)\\s?(~?)\\s?(file-path)\\s{0}(:)\\s{1}(.*)[ \\t]?)$/gim": {
+      "filterLanguageRegex": "(javascript|typescript|js|ts|jsx|tsx|json|jsonc|toml|yaml|yml|fish|ps1])",
+      "filterFilepaths": true,
+      "decorations": [
+        { // Group 1
+          "overviewRulerColor": "#FFB86C",
+          "backgroundColor": "#44475A",
+          "borderRadius": "4px",
+          "border": "1px dotted #FFB86C",
+          "rangeBehavior": 1
+        },
+        { // Group 2
+          "color": "#FFB86C"
+        },
+        { // Group 3
+          "color": "#FFB86C"
+        },
+        { // Group 4
+          "color": "#FF79C6"
+        },
+        { // Group 5
+          "color": "#FFB86C"
+        },
+        { // Group 6
+          "color": "#BD93F9",
+          "textDecoration": "none; padding: 0 8px 0 0;",
+          "after": {
+            "contentText": ""
+          }
+        }
+      ]
+    },
+    //$ Highlight web URLs in comments with a specific format, e.g.:
+    // https://www.example.com
+    // http://localhost
+    // https://localhost:8080/dashboard#metrics
+    // http://127.0.0.1:3000
+    // https://cspell.org
+    // ftp://files.local/shared/data.csv
+    //
+    "/(\\s?([a-zA-Z0-9+.-]+:\\/\\/[a-zA-Z0-9@:%._\\+~#=\\-]{1,256}(?::\\d+)?(?:[-a-zA-Z0-9()@:%_\\+.~#?&\\/=]*))\\h?)/gim": {
+      "filterLanguageRegex": "(javascript|typescript|js|ts|jsx|tsx|json|jsonc|toml|yaml|yml])",
+      "decorations": [
+        {
+          "backgroundColor": "#44475A",
+          "borderRadius": "4px",
+          "border": "0.5px dashed #FFB86C",
+          "padding": "0 0 0 8px",
+          "before": {
+            "contentText": ""
+          }
+        },
+        {
+          "color": "#FFB86C",
+          "backgroundColor": "transparent",
+          "fontWeight": "normal",
+          "textDecoration": "none; padding: 0 8px 0 0;",
+          "after": {
+            "contentText": ""
+          }
+        }
+      ]
+    }
+  },
+  "[svg]": {
+    "editor.formatOnSave": false,
+    "editor.defaultFormatter": "jock.svg"
+  },
+  "svg.preview.autoShow": true,
+  "[html]": {
+    "editor.formatOnSave": false
+  },
+  "html.format.wrapAttributes": "force-expand-multiline",
+  "splitHTMLAttributes.tabSize": 2,
+  "splitHTMLAttributes.useSpacesForTabs": true,
+  "splitHTMLAttributes.closingBracketOnNewLine": true,
+  "splitHTMLAttributes.sortOrder": [
+    "^xmlns",
+    "^role",
+    "^viewBox",
+    "^key",
+    "^:",
+    "^id$",
+    "^class$",
+    "^x1?$",
+    "^y1?$",
+    "^x2$",
+    "^y2$",
+    "^cx$",
+    "^cy$",
+    "^r$",
+    "^width$",
+    "^height$",
+    "^fill",
+    "^stroke",
+    "^style",
+    "^d$",
+    "^points$",
+    "^.*=\""
+  ],
+  "svg.preview.background": "dark-transparent",
+  "tailwindcss-highlight.languages": [
+    "html",
+    "javascript",
+    "javascriptreact",
+    "typescript",
+    "typescriptreact",
+    "vue",
+    "php",
+    "svelte"
+  ],
+  "tailwindcss-highlight.enabledUtilities": [
+    "padding",
+    "margin",
+    "space",
+    "width",
+    "height",
+    "flex",
+    "grid",
+    "position"
+  ],
+  "markdown.validate.ignoredLinks": [
+    "./src/config/config.toml"
+  ],
+  // "tailwindcss-highlight.customUtilitiesConfig": {
+  //   "padding": {
+  //     "style": {
+  //       "backgroundColor": "",
+  //       "borderWidth": "0 0 3px 0",
+  //       "borderStyle": "solid",
+  //       "borderColor": "rgba(187, 196, 136, 1)",
+  //       "color": "currentColor"
+  //     }
+  //   }
+  // },
+  // "tailwindcss-highlight.customVariantsConfig": {
+  //   "#08D9D6": [
+  //     "sm",
+  //     "md",
+  //     "lg",
+  //     "xl",
+  //     "2xl"
+  //   ],
+  //   "#FFB6C1": [
+  //     "focus",
+  //     "focus-within",
+  //     "focus-visible"
+  //   ],
+  // }
 }

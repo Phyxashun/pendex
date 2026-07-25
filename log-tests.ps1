@@ -1,4 +1,4 @@
-# FILE-PATH: ./log-tests.ps1
+﻿# FILE-PATH: ./log-tests.ps1
 
 # Make sure this .ps1 script file is explicitly saved with the
 # encoding UTF-8 with BOM. If saved as raw UTF-8 without BOM,

@@ -20,9 +20,10 @@
     "compile": "bun run packages/compile/src/Compile.ts",
     "split": "bun run packages/split/src/Split.ts",
     "git:push": "git add . && git commit -m 'Updates' && git push origin main",
-    "test": "bun test ; bun run --filter '*' test",
+    "test:bun": "bun test; bun run --filter '*' test",
+    "test": "bun test; r1=$?; bun run --filter '*' test; r2=$?; exit $(( r1 > r2 ? r1 : r2 ))",
     "test:log:win": "powershell -ExecutionPolicy Bypass -File ./log-tests.ps1",
-    "test:log": "fish ./log-tests.fish"
+    "test:log": "./log-tests.fish"
   },
   "dependencies": {
     "@pendex/color": "workspace:*",

@@ -8,6 +8,7 @@ bandaid
 BLOCKEND
 BLOCKNAME
 BLOCKSTART
+brblue
 browserslistrc
 bun
 bunfig
@@ -28,6 +29,7 @@ FILECONFIG
 FILESCONFIG
 fontkit
 gulpfile
+horiz
 IGNORECONFIG
 IGNORELIST
 indent_size

@@ -1,13 +1,12 @@
 #!/usr/bin/fish
 
 # FILE-PATH: ./log-tests.fish
-#
-# Save this file as plain UTF-8 (no BOM). Fish reads UTF-8 source
-# natively, unlike Windows PowerShell 5.1, which needs a BOM to
-# interpret non-ASCII string literals correctly.
+
 
 # ==========================================
-# 1. VIEW-MODEL — box-drawing & symbol glyphs (inspired by @clack/prompts)
+# VIEW-MODEL —
+# box-drawing & symbol glyphs
+# (inspired by @clack/prompts)
 # ==========================================
 
 set -g CHAR_TOP_LEFT ╭
@@ -27,7 +26,7 @@ set -g GREEN_CHECK (set_color -o green)"$CHAR_CHECK"(set_color normal)
 set -g SPINNER_FRAMES ◒ ◐ ◓ ◑
 
 # ==========================================
-# 2. SPINNER DAEMON MODE
+# SPINNER DAEMON MODE
 # ==========================================
 # Fish does not reliably background a plain function/builtin job
 # (no fork happens without an external command), so the spinner is
@@ -47,7 +46,8 @@ if test (count $argv) -ge 3; and test "$argv[1]" = "--spinner-daemon"
 end
 
 # ==========================================
-# 3. MODEL — configuration
+# MODEL —
+# configuration
 # ==========================================
 
 function get_script_configuration
@@ -60,7 +60,12 @@ function get_script_configuration
     set -g MAX_WIDTH 50
     set -g LOG_MAX_WIDTH 140
     set -g SCRIPT_FOLDER $script_folder
-    set -g TESTS_PATH "$script_folder/tests"
+    # NOTE: no TESTS_PATH here anymore — see invoke_tests. Pinning this
+    # to "$script_folder/tests" is exactly the bug that was silently
+    # limiting every run to the root suite: it scoped bun test to one
+    # directory, so packages/*/tests never ran. `bun run test` is now
+    # the single place that knows how to run everything (root + every
+    # workspace package); this script just calls it and captures output.
     set -g LOG_DIR "$script_folder/logs"
     set -g APPENDAGE $appendage
     set -g LOG_FILE $log_file
@@ -90,7 +95,8 @@ function manage_log
 end
 
 # ==========================================
-# 4. VIEW — rendering (inspired by @clack/prompts)
+# VIEW —
+# rendering (inspired by @clack/prompts)
 # ==========================================
 
 function write_pill
@@ -230,7 +236,8 @@ function write_outro
 end
 
 # ==========================================
-# 5. CONTROLLER — main orchestration
+# CONTROLLER —
+# main orchestration
 # ==========================================
 
 function invoke_tests
@@ -250,7 +257,9 @@ function invoke_tests
     disown $spinner_pid 2>/dev/null
 
     set -x COLUMNS $LOG_MAX_WIDTH
-    bun test --coverage $TESTS_PATH >$LOG_FILE_PATH 2>&1
+    bun run test >$LOG_FILE_PATH 2>&1
+
+    bun test --coverage $config_tests_path &| string sub -l $config_log_max_width > $LOG_FILE_PATH
     set -l exit_code $status
 
     # Stop spinner and clear its line
@@ -279,6 +288,6 @@ function invoke_tests
 end
 
 # ==========================================
-# 6. EXECUTE
+# EXECUTE
 # ==========================================
 invoke_tests
