@@ -1,0 +1,40 @@
+# EditorConfig is awesome: https://editorconfig.org
+
+# Top-Most EditorConfig File
+root = true
+
+# All Files
+[*]
+charset = utf-8
+indent_style = space
+indent_size = 2
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
+
+max_line_length = 80
+spaces_around_operators = true
+spaces_around_brackets = true
+indent_brace_style = K&R
+
+# TypeScript
+[*.{ts}]
+quote_type = single
+insert_pragmas = false
+
+# Markdown and JSON files
+[*.{md,json,jsonc}]
+quote_type = double
+indent_brace_style = Allman
+insert_final_newline = ignore
+trim_trailing_whitespace = false
+
+# TOML
+[*.{toml}]
+quote_type = single
+insert_pragmas = false
+
+# Mermaid
+[*.{mermaid}]
+quote_type = single
+insert_pragmas = false

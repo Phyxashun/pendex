@@ -1,0 +1,14 @@
+[test]
+preload = ["./tests/preload.ts"]
+coverage = true
+coverageSkipTestFiles = true
+
+# Standalone utilities are out of scope for the px command set (see
+# README "Header comments") — their interactive flows would otherwise
+# drag the coverage number down without adding signal:
+coveragePathIgnorePatterns = [
+    "src/utils/HeaderComments.ts",
+    "src/utils/update-config.ts",
+    "node_modules",
+    "tests",
+]

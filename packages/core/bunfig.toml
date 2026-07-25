@@ -1,0 +1,4 @@
+[test]
+preload = ["./tests/preload.ts"]
+coverage = true
+coverageSkipTestFiles = true

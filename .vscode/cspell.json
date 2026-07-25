@@ -1,0 +1,81 @@
+{
+  // ~ FILE-PATH: .vscode/cspell.json
+  // Add this to .vscode/settings.json to ensure the custom dictionary is recognized:
+  // "cSpell.customDictionaries": {
+  //   "cspell-dictionary": {
+  //     "name": "cspell-dictionary",
+  //     "path": "${workspaceFolder:unicode-cheat-sheet}/.vscode/cspell-dictionary.txt",
+  //     "addWords": true,
+  //     "scope": "workspace"
+  //   }
+  // }
+  //
+  // Also add this to .vscode/extensions.json to enable pre-built technical dictionaries:
+  // "cSpell.enabledDictionaries": [
+  //    "en_US",
+  //    "typescript",
+  //    "javascript",
+  //    "html",
+  //    "css",
+  //    "markdown",
+  //    "npm",
+  //    "node",
+  //    "react-components",
+  //    "software-terms"
+  // ],
+  "version": "0.2",
+  "language": "en",
+  "words": [
+    "brblue",
+    "ENOENT",
+    "errno",
+    "Funcs",
+    "horiz",
+    "pendex",
+    "phyxashun",
+    "syscall"
+  ],
+  "flagWords": [
+    //
+  ],
+  "ignoreWords": [
+    // Add any specific words you want to ignore here
+  ],
+  "ignorePaths": [
+    "**/node_modules/**",
+    "**/ALL/**",
+    "**/dist/**",
+    "**/build/**",
+    "**/.vscode/**",
+    "**/.git/**"
+  ],
+  "maxNumberOfProblems": 10000,
+  "minWordLength": 4,
+  "allowCompoundWords": false,
+  "dictionaries": [
+    "cspell-dictionary"
+  ],
+  "dictionaryDefinitions": [
+    {
+      "name": "cspell-dictionary",
+      "path": "./cspell-dictionary.txt",
+      "addWords": true,
+      "scope": "workspace"
+    }
+  ],
+  "ignoreRegExpList": [
+    //
+  ],
+  "includeRegExpList": [
+    //
+  ],
+  "patterns": [
+    // Define any custom patterns if needed
+  ],
+  "languageSettings": [
+    // https://cspell.org/docs/Configuration/language-settings#languagesettings
+  ],
+  "import": [
+    // Import other cspell configuration files if necessary
+  ]
+}

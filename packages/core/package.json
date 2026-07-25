@@ -1,0 +1,18 @@
+{
+    "name": "@pendex/core",
+    "version": "2.0.2",
+    "description": "Pendex turns an entire source tree into portable, plain-text archives — ideal for AI prompts, code reviews, backups, and sharing. Compile a project into banner-delimited `.txt` files grouped by job (source, web, style,  terminal, configuration, documentation, testing, misc), then reconstruct the whole tree later with `px split`.",
+    "author": "Dustin `Dusty` Dew (Phyxashun) <phyxashun@gmail.com>",
+    "license": "MIT",
+    "private": true,
+    "type": "module",
+    "main": "./src/index.ts",
+    "types": "./src/index.ts",
+    "exports": { ".": "./src/index.ts" },
+    "scripts": { "typecheck": "tsc --noEmit", "test": "bun test" },
+    "dependencies": {
+        "@pendex/color": "workspace:*",
+        "@pendex/theme": "workspace:*"
+    },
+    "devDependencies": { "@types/bun": "latest", "typescript": "^5" }
+}

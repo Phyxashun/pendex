@@ -1,0 +1,15 @@
+{
+    "name": "@pendex/compile",
+    "version": "0.1.0",
+    "private": true,
+    "type": "module",
+    "main": "./src/index.ts",
+    "types": "./src/index.ts",
+    "exports": { ".": "./src/index.ts" },
+    "scripts": { "typecheck": "tsc --noEmit", "test": "bun test" },
+    "dependencies": {
+        "@pendex/core": "workspace:*",
+        "@clack/prompts": "^1.7.0"
+    },
+    "devDependencies": { "@types/bun": "latest", "typescript": "^5" }
+}
