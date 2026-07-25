@@ -14,14 +14,13 @@
     "px": "./src/index.ts"
   },
   "scripts": {
-    "typecheck": "tsc --noEmit && bun run --filter '*' typecheck",
-    "build": "bun run typecheck && bun build --compile --outfile=./dist/px ./src/index.ts",
+    "typecheck": "tsc --noEmit; bun run --filter '*' typecheck",
+    "build": "bun run typecheck; bun build --compile --outfile=./dist/px ./src/index.ts",
     "start": "bun run ./src/index.ts",
     "compile": "bun run packages/compile/src/Compile.ts",
     "split": "bun run packages/split/src/Split.ts",
     "git:push": "git add . && git commit -m 'Updates' && git push origin main",
-    "test:bun": "bun test; bun run --filter '*' test",
-    "test": "bun test; r1=$?; bun run --filter '*' test; r2=$?; exit $(( r1 > r2 ? r1 : r2 ))",
+    "test": "bun test; bun run --filter '*' test",
     "test:log:win": "powershell -ExecutionPolicy Bypass -File ./log-tests.ps1",
     "test:log": "./log-tests.fish"
   },

@@ -8,8 +8,15 @@ bandaid
 BLOCKEND
 BLOCKNAME
 BLOCKSTART
+brblack
 brblue
+brcyan
+brgreen
+brmagenta
 browserslistrc
+brred
+brwhite
+bryellow
 bun
 bunfig
 Cheatsheet
@@ -17,6 +24,7 @@ clike
 clsx
 crustjs
 daisyui
+darkgray
 deconsolidate
 Deconsolidation
 deconsolidator

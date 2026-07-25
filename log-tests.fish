@@ -1,293 +1,297 @@
-#!/usr/bin/fish
+#!/usr/bin/env fish
 
 # FILE-PATH: ./log-tests.fish
 
+# Make sure this .fish script file is explicitly saved with the
+# encoding UTF-8 *without* BOM. Fish is UTF-8 native and a BOM
+# would be parsed as part of the first command.
 
-# ==========================================
-# VIEW-MODEL —
-# box-drawing & symbol glyphs
-# (inspired by @clack/prompts)
-# ==========================================
+# Ensure console handles UTF-8 box characters correctly
+if not string match -qir 'utf-?8' -- "$LANG$LC_ALL$LC_CTYPE"
+    set -gx LC_ALL C.UTF-8
+end
 
-set -g CHAR_TOP_LEFT ╭
-set -g CHAR_TOP_RIGHT ╮
-set -g CHAR_BOT_LEFT ╰
-set -g CHAR_BOT_RIGHT ╯
-set -g CHAR_HORIZONTAL ─
-set -g CHAR_VERTICAL │
-set -g CHAR_RIGHT_TEE ├
-set -g CHAR_LEFT_TEE ┤
-set -g CHAR_CHECK ✓
-set -g CHAR_PILL_LEFT
-set -g CHAR_PILL_RIGHT
-set -g CHAR_BLOCK █
-
-set -g GREEN_CHECK (set_color -o green)"$CHAR_CHECK"(set_color normal)
-set -g SPINNER_FRAMES ◒ ◐ ◓ ◑
-
-# ==========================================
-# SPINNER DAEMON MODE
-# ==========================================
-# Fish does not reliably background a plain function/builtin job
-# (no fork happens without an external command), so the spinner is
-# rendered by re-invoking this same script file as a child `fish`
-# process, which backgrounds like any other external command.
-if test (count $argv) -ge 3; and test "$argv[1]" = "--spinner-daemon"
-    set -l message $argv[2]
-    set -l prefix $argv[3]
-    set -l i 1
-    while true
-        set -l frame $SPINNER_FRAMES[(math "($i - 1) % 4 + 1")]
-        printf '\r%s %s%s%s %s' "$prefix" (set_color brblue) "$frame" (set_color normal) "$message"
-        sleep 0.1
-        set i (math $i + 1)
+#----------------------------------------
+# Model
+#----------------------------------------
+function Get-ScriptConfiguration
+    set -l scriptFolder (status dirname)
+    if test -z "$scriptFolder"
+        set scriptFolder "."
     end
-    exit 0
+    # $PSScriptRoot is absolute, so resolve the relative dirname too
+    set scriptFolder (path resolve $scriptFolder)
+    set -l timestamp (date +"%Y-%m-%d_%H%M%S")
+    set -l appendage "_tests.results.log"
+    set -l logFileName "$timestamp$appendage"
+
+    set -g config_MaxLogs      5
+    set -g config_MaxWidth     50
+    set -g config_LogMaxWidth  100
+    set -g config_ScriptFolder "$scriptFolder"
+    set -g config_TestsPath    "$scriptFolder/tests"
+    set -g config_LogDir       "$scriptFolder/logs"
+    set -g config_Appendage    "$appendage"
+    set -g config_LogFile      "$logFileName"
+    set -g config_LogFilePath  "$scriptFolder/logs/$logFileName"
+    set -g config_BorderColor  "Gray"
+    set -g config_BoxColor     "Yellow"
 end
 
-# ==========================================
-# MODEL —
-# configuration
-# ==========================================
-
-function get_script_configuration
-    set -l script_folder (dirname (status -f))
-    set -l timestamp (date +%Y-%m-%d_%H%M%S)
-    set -l appendage _tests.results.log
-    set -l log_file "$timestamp$appendage"
-
-    set -g MAX_LOGS 5
-    set -g MAX_WIDTH 50
-    set -g LOG_MAX_WIDTH 140
-    set -g SCRIPT_FOLDER $script_folder
-    # NOTE: no TESTS_PATH here anymore — see invoke_tests. Pinning this
-    # to "$script_folder/tests" is exactly the bug that was silently
-    # limiting every run to the root suite: it scoped bun test to one
-    # directory, so packages/*/tests never ran. `bun run test` is now
-    # the single place that knows how to run everything (root + every
-    # workspace package); this script just calls it and captures output.
-    set -g LOG_DIR "$script_folder/logs"
-    set -g APPENDAGE $appendage
-    set -g LOG_FILE $log_file
-    set -g LOG_FILE_PATH "$LOG_DIR/$log_file"
-    set -g BORDER_COLOR white
-    set -g BOX_COLOR yellow
-end
-
-function initialize_environment
-    if not test -d $LOG_DIR
-        mkdir -p $LOG_DIR
+function Initialize-Environment --argument-names LogDir
+    if not test -d "$LogDir"
+        mkdir -p "$LogDir"
     end
 end
 
-function manage_log
-    set -l existing_logs (find $LOG_DIR -maxdepth 1 -type f -name "*$APPENDAGE" | sort)
-    set -l current_count (count $existing_logs)
+function Manage-Log --argument-names LogDir MaxLogs Appendage
+    set -l existingLogs (find "$LogDir" -maxdepth 1 -type f -name "*$Appendage" | sort)
 
-    if test $current_count -gt $MAX_LOGS
-        set -l remove_count (math $current_count - $MAX_LOGS)
-        for f in $existing_logs[1..$remove_count]
-            rm -f $f
-        end
+    set -l currentCount (count $existingLogs)
+
+    if test $currentCount -gt $MaxLogs
+        set -l logsToRemoveCount (math $currentCount - $MaxLogs)
+
+        # Select the oldest ones and force remove them
+        rm -f -- $existingLogs[1..$logsToRemoveCount]
         return 0
     end
     return 1
 end
 
-# ==========================================
-# VIEW —
-# rendering (inspired by @clack/prompts)
-# ==========================================
+function test_bun --description 'Run root and workspace bun tests natively in Fish'
+    # Forward arguments ($argv) to the root test run
+    bun test $argv
+    set -l r1 $status
 
-function write_pill
-    set -l text $argv[1]
-    set -l pill_color magenta
-    set -l text_color black
-    set -l bold 0
-    if test (count $argv) -ge 2; and test -n "$argv[2]"
-        set pill_color $argv[2]
-    end
-    if test (count $argv) -ge 3; and test -n "$argv[3]"
-        set text_color $argv[3]
-    end
-    if test (count $argv) -ge 4; and test "$argv[4]" = bold
-        set bold 1
-    end
+    # Forward arguments ($argv) to workspace tests if they accept them
+    bun run --filter '*' test -- $argv
+    set -l r2 $status
 
-    set_color $pill_color
-    printf '%s%s' $CHAR_PILL_LEFT $CHAR_BLOCK
-    set_color normal
-
-    if test $bold -eq 1
-        set_color -o $text_color -b $pill_color
+    if test $r1 -gt $r2
+        return $r1
     else
-        set_color $text_color -b $pill_color
+        return $r2
     end
-    printf ' %s ' "$text"
-    set_color normal
+end
 
-    set_color $pill_color
-    printf '%s%s\n' $CHAR_BLOCK $CHAR_PILL_RIGHT
+#----------------------------------------
+# View-Model - Inspired by @clack/prompts
+#----------------------------------------
+set -g Line_TopLeft    \u256D # ╭
+set -g Line_TopRight   \u256E # ╮
+set -g Line_BotLeft    \u2570 # ╰
+set -g Line_BotRight   \u256F # ╯
+set -g Line_Horizontal \u2500 # ─
+set -g Line_Vertical   \u2502 # │
+set -g Line_RightTee   \u251C # ├
+set -g Line_LeftTee    \u2524 # ┤
+set -g Line_Check      \u2713 # ✓
+set -g Line_Arrowhead  \u25B6 # ▶
+set -g GreenCheck \e"[92m$Line_Check"\e"[0m"
+
+#----------------------------------------
+# View - Inspired by @clack/prompts
+#----------------------------------------
+function Get-TerminalLine --argument-names Key
+    set -l name Line_$Key
+    echo -n $$name
+end
+
+function Get-GreenCheck
+    echo -n $GreenCheck
+end
+
+function Get-ConsoleColor --argument-names Name
+    switch (string lower -- "$Name")
+        case gray
+            echo -n white
+        case white
+            echo -n brwhite
+        case black
+            echo -n black
+        case darkgray
+            echo -n brblack
+        case red
+            echo -n brred
+        case green
+            echo -n brgreen
+        case yellow
+            echo -n bryellow
+        case blue
+            echo -n brblue
+        case magenta
+            echo -n brmagenta
+        case cyan
+            echo -n brcyan
+        case '*'
+            echo -n normal
+    end
+end
+
+function Write-Pill --argument-names Text PillColor TextColor
+    test -n "$PillColor"; or set PillColor 'Magenta'
+    test -n "$TextColor"; or set TextColor 'Black'
+    set_color (Get-ConsoleColor $PillColor)
+    printf '%s%s' \ue0b6 \u2588
+    set_color (Get-ConsoleColor $TextColor) -b (Get-ConsoleColor $PillColor)
+    printf ' %s ' "$Text"
+    set_color normal
+    set_color (Get-ConsoleColor $PillColor)
+    printf '%s%s\n' \u2588 \ue0b4
     set_color normal
 end
 
-function write_intro
-    set -l title $argv[1]
+function Write-Intro --argument-names Title BorderColor
+    test -n "$BorderColor"; or set BorderColor "Gray"
     echo
-    set_color $BORDER_COLOR
-    printf '%s%s' $CHAR_TOP_LEFT $CHAR_HORIZONTAL
+    set_color (Get-ConsoleColor $BorderColor)
+    printf '%s%s' $Line_TopLeft $Line_Horizontal
     set_color normal
-    write_pill $title magenta black bold
-    set_color $BORDER_COLOR
-    echo $CHAR_VERTICAL
-    set_color normal
-end
-
-function write_step
-    set -l message $argv[1]
-    set -l message_color white
-    if test (count $argv) -ge 2; and test -n "$argv[2]"
-        set message_color $argv[2]
-    end
-
-    set_color $BORDER_COLOR
-    printf '%s%s ' $CHAR_RIGHT_TEE $CHAR_HORIZONTAL
-    set_color normal
-    set_color $message_color
-    echo $message
-    set_color normal
-    set_color $BORDER_COLOR
-    echo $CHAR_VERTICAL
+    Write-Pill \e"[1m $Title " Magenta Black
+    set_color (Get-ConsoleColor $BorderColor)
+    printf '%s\n' $Line_Vertical
     set_color normal
 end
 
-function write_box
-    set -l text $argv[1]
-    set -l max_width $MAX_WIDTH
-
-    if test (string length -- "$text") -gt (math $max_width - 10)
-        set text (string sub -l (math $max_width - 13) -- "$text")"..."
-    end
-
-    set -l inner_width (math $max_width - 2)
-    set -l labeled_text "📜 $text"
-    set -l label_len (math (string length -- "$labeled_text") + 1)
-    set -l total_padding (math $inner_width - $label_len)
-    set -l left_pad 0
-    set -l right_pad 0
-    if test $total_padding -gt 0
-        set left_pad (math -s0 "$total_padding / 2")
-        set right_pad (math "$total_padding - $left_pad")
-    end
-
-    set -l left_spaces ""
-    set -l right_spaces ""
-    if test $left_pad -gt 0
-        set left_spaces (string repeat -n $left_pad " ")
-    end
-    if test $right_pad -gt 0
-        set right_spaces (string repeat -n $right_pad " ")
-    end
-
-    set -l horiz (string repeat -n (math $max_width - 2) $CHAR_HORIZONTAL)
-
-    set_color $BORDER_COLOR
-    printf '%s ' $CHAR_VERTICAL
-    set_color $BOX_COLOR
-    printf '%s%s%s\n' $CHAR_TOP_LEFT "$horiz" $CHAR_TOP_RIGHT
-    set_color normal
-
-    set_color $BORDER_COLOR
-    printf '%s ' $CHAR_VERTICAL
-    set_color $BOX_COLOR
-    printf '%s' $CHAR_VERTICAL
-    set_color magenta
-    printf '%s%s%s' "$left_spaces" "$labeled_text" "$right_spaces"
-    set_color $BOX_COLOR
-    printf '%s\n' $CHAR_VERTICAL
-    set_color normal
-
-    set_color $BORDER_COLOR
-    printf '%s ' $CHAR_VERTICAL
-    set_color $BOX_COLOR
-    printf '%s%s%s\n' $CHAR_BOT_LEFT "$horiz" $CHAR_BOT_RIGHT
-    set_color normal
-
-    set_color $BORDER_COLOR
-    echo $CHAR_VERTICAL
+function Write-Step --argument-names Message MessageColor BorderColor
+    test -n "$MessageColor"; or set MessageColor "White"
+    test -n "$BorderColor"; or set BorderColor "Gray"
+    set_color (Get-ConsoleColor $BorderColor)
+    printf '%s%s ' $Line_RightTee $Line_Horizontal
+    set_color (Get-ConsoleColor $MessageColor)
+    printf '%s\n' "$Message"
+    set_color (Get-ConsoleColor $BorderColor)
+    printf '%s\n' $Line_Vertical
     set_color normal
 end
 
-function write_outro
-    set -l message $argv[1]
-    set -l success $argv[2]
+function Write-Box --argument-names Text MaxWidth BorderColor BoxColor
+    test -n "$MaxWidth"; or set MaxWidth 50
+    test -n "$BorderColor"; or set BorderColor "Gray"
+    test -n "$BoxColor"; or set BoxColor "Yellow"
+    if test (string length -- "$Text") -gt (math $MaxWidth - 10)
+        set Text (string sub -l (math $MaxWidth - 13) -- "$Text")"..."
+    end
+    set -l innerBoxWidth (math $MaxWidth - 2)
+    set -l textWithEmoji "📜 $Text"
+    set -l totalPadding (math $innerBoxWidth - (string length --visible -- "$textWithEmoji"))
+    set -l centeredText (printf '%*s%s%*s' (math "floor($totalPadding / 2)") "" "$textWithEmoji" (math "ceil($totalPadding / 2)") "")
 
-    set_color $BORDER_COLOR
-    printf '%s%s ' $CHAR_BOT_LEFT $CHAR_HORIZONTAL
+    set_color (Get-ConsoleColor $BorderColor)
+    printf '%s ' $Line_Vertical
+    set_color (Get-ConsoleColor $BoxColor)
+    printf '%s%s%s\n' $Line_TopLeft (string repeat -n (math $MaxWidth - 2) -- $Line_Horizontal) $Line_TopRight
+    set_color (Get-ConsoleColor $BorderColor)
+    printf '%s ' $Line_Vertical
+    set_color (Get-ConsoleColor $BoxColor)
+    printf '%s' $Line_Vertical
+    set_color (Get-ConsoleColor Magenta)
+    printf '%s' "$centeredText"
+    set_color (Get-ConsoleColor $BoxColor)
+    printf '%s\n' $Line_Vertical
+    set_color (Get-ConsoleColor $BorderColor)
+    printf '%s ' $Line_Vertical
+    set_color (Get-ConsoleColor $BoxColor)
+    printf '%s%s%s\n' $Line_BotLeft (string repeat -n (math $MaxWidth - 2) -- $Line_Horizontal) $Line_BotRight
+    set_color (Get-ConsoleColor $BorderColor)
+    printf '%s\n' $Line_Vertical
     set_color normal
+end
 
-    if test "$success" = true
-        set_color green
+function Write-Outro --argument-names Message Success BorderColor
+    test -n "$BorderColor"; or set BorderColor "Gray"
+    set_color (Get-ConsoleColor $BorderColor)
+    printf '%s%s ' $Line_BotLeft $Line_Horizontal
+
+    if test "$Success" = true
+        set_color (Get-ConsoleColor Green)
+        printf '%s\n' "$Message"
     else
-        set_color red
+        set_color (Get-ConsoleColor Red)
+        printf '%s\n' "$Message"
     end
-    echo $message
     set_color normal
 end
 
-# ==========================================
-# CONTROLLER —
-# main orchestration
-# ==========================================
-
-function invoke_tests
+#----------------------------------------
+# Controller - Main Script Orchestration
+#----------------------------------------
+function Invoke-Tests
     # Pull settings from Model
-    get_script_configuration
-    initialize_environment
+    Get-ScriptConfiguration
+    Initialize-Environment $config_LogDir
 
     # Render initial View layouts
-    write_intro "EXECUTING TESTS"
-    write_step "Running tests and logging output to:" cyan
-    write_box $LOG_FILE
+    Write-Intro "EXECUTING TESTS" $config_BorderColor
+    Write-Step "Running tests and logging output to:" Cyan $config_BorderColor
+    Write-Box $config_LogFile $config_MaxWidth $config_BorderColor $config_BoxColor
 
-    # Kick off the spinner as a background child process
-    set -l spinner_prefix "$CHAR_BOT_LEFT$CHAR_HORIZONTAL"
-    fish (status -f) --spinner-daemon "Executing bun tests..." $spinner_prefix &
-    set -l spinner_pid $last_pid
-    disown $spinner_pid 2>/dev/null
+    # Pull presentation symbols from ViewModel
+    set -l prefix (Get-TerminalLine 'BotLeft')(Get-TerminalLine 'Horizontal')
+    set -l greenCheck (Get-GreenCheck)
 
-    set -x COLUMNS $LOG_MAX_WIDTH
-    bun run test >$LOG_FILE_PATH 2>&1
+    # Asynchronous Spinner Thread
+    fish -c '
+        set -l SpinnerChars (string split "" -- $argv[1])
+        set -l Message $argv[2]
+        set -l Prefix $argv[3]
+        set -l blue \e"[94m"
+        set -l reset \e"[0m"
+        set -l i 0
+        while true
+            set -l spinnerChar $SpinnerChars[(math "$i % "(count $SpinnerChars)" + 1")]
+            printf "\r%s %s%s%s %s" $Prefix $blue $spinnerChar $reset $Message
+            sleep 0.1
+            set i (math $i + 1)
+        end
+    ' '◒◐◓◑' "Executing bun tests..." "$prefix" &
+    set -l spinnerPid $last_pid
 
-    bun test --coverage $config_tests_path &| string sub -l $config_log_max_width > $LOG_FILE_PATH
-    set -l exit_code $status
+# Store regex expressions safely using hex characters
+set -l strip_colors 's/\x1b\x5b[0-9;]*m//g'
+set -l strip_prefix 's|^[^[:space:]]+ test:[[:space:]]?||'
 
-    # Stop spinner and clear its line
-    kill $spinner_pid 2>/dev/null
-    sleep 0.15
-    printf '\r%s\r' (string repeat -n 60 " ")
+# 1. Matches lines that start with optional spaces and have "bun test v"
+# 2. Capture Group 1 (\1): The entire line text block
+# 3. Capture Group 2 (\2): Extracted test file path at the end of the line
+set -l add_styled_blocks 's@^[[:space:]]*(bun test v.*[[:space:]]+([^[:space:]]+):)@\n//=====================================-< START >-=====================================\n// TEST: \2\n//=====================================-< START >-=====================================\n\n\1@'
+
+# Run the fixed pipeline safely on one line
+test_bun --coverage $config_TestsPath |& sed -E -e "$strip_colors" -e "$strip_prefix" -e "$add_styled_blocks" | fold -s -w $config_LogMaxWidth > $config_LogFilePath
+
+# Capture the exit code cleanly
+set -l exitCode $pipestatus[1]
+
+
+    # Stop Spinner UI and clear line
+    kill $spinnerPid 2>/dev/null
+    wait $spinnerPid 2>/dev/null
+    printf '\r%*s\r' 50 ""
 
     # Update layout results
-    write_step "$GREEN_CHECK Executing bun tests... Completed." white
+    Write-Step "$greenCheck Executing bun tests... Completed." Gray $config_BorderColor
 
     # Safely invoke log removal utility
-    if manage_log
-        write_step "$GREEN_CHECK Oldest log file(s) removed to maintain retention cap." white
+    if Manage-Log $config_LogDir $config_MaxLogs $config_Appendage
+        Write-Step "$greenCheck Oldest log file(s) removed to maintain retention cap." Gray $config_BorderColor
     end
 
-    if test $exit_code -eq 0
-        write_outro "✨ Tests completed successfully. All tests passed." true
+    if test $exitCode -eq 0
+        Write-Outro "✨ Tests completed successfully. All tests passed." true $config_BorderColor
+        echo
+        exit 0
     else
-        write_outro "⚠️  Some tests failed. See log for details: $LOG_FILE_PATH" false
-        printf '\n'
+        Write-Outro "⚠️  Some tests failed. See log for details." false $config_BorderColor
+        echo
         exit 0
     end
 
-    printf '\n'
-    exit 0
+    echo
+    exit $exitCode
 end
 
-# ==========================================
-# EXECUTE
-# ==========================================
-invoke_tests
+#----------------------------------------
+# Execute
+#----------------------------------------
+Invoke-Tests

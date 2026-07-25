@@ -3,12 +3,21 @@ preload = ["./tests/preload.ts"]
 coverage = true
 coverageSkipTestFiles = true
 
+# Without this, bun test's default recursive discovery walks into
+# ALL/ and ALL_REBUILT/ (Pendex's own compile/split output dirs) and
+# re-runs every test a second time from the copies sitting there —
+# bun only excludes node_modules/ and dot-directories by default, it
+# does not consult .gitignore for test discovery. This is what was
+# doubling "Ran N tests across M files" and reporting every failure
+# twice.
+pathIgnorePatterns = ["ALL/**", "ALL_REBUILT/**"]
+
 # Standalone utilities are out of scope for the px command set (see
 # README "Header comments") — their interactive flows would otherwise
 # drag the coverage number down without adding signal:
 coveragePathIgnorePatterns = [
-    "src/utils/HeaderComments.ts",
-    "src/utils/update-config.ts",
-    "node_modules",
-    "tests",
+  "src/utils/HeaderComments.ts",
+  "src/utils/update-config.ts",
+  "node_modules",
+  "tests",
 ]
