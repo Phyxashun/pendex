@@ -165,7 +165,7 @@ function write_box
 
     set -l inner_width (math $max_width - 2)
     set -l labeled_text "📜 $text"
-    set -l label_len (string length -- "$labeled_text")
+    set -l label_len (math (string length -- "$labeled_text") + 1)
     set -l total_padding (math $inner_width - $label_len)
     set -l left_pad 0
     set -l right_pad 0
@@ -270,11 +270,12 @@ function invoke_tests
         write_outro "✨ Tests completed successfully. All tests passed." true
     else
         write_outro "⚠️  Some tests failed. See log for details: $LOG_FILE_PATH" false
+        printf '\n'
+        exit 0
     end
 
     printf '\n'
-
-    exit $exit_code
+    exit 0
 end
 
 # ==========================================

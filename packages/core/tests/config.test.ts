@@ -1,20 +1,22 @@
-
 import { afterEach, beforeEach, describe, expect, test } from 'bun:test';
-import { rmSync, writeFileSync } from 'node:fs';
+import { writeFileSync } from 'node:fs';
 import { ConfigManager, Constants, assignKey } from '../src';
 import { cleanupSandbox, createSandbox } from './setup';
 
 const SANDBOX_DIR = './test-sandbox-config';
 
 describe('Configuration Logic (Config.ts)', () => {
+    const originalCwd = process.cwd();
+
     beforeEach(async () => {
         await createSandbox(SANDBOX_DIR);
+        process.chdir(SANDBOX_DIR);
         ConfigManager.resetInstance();
     });
 
     afterEach(async () => {
+        process.chdir(originalCwd);
         await cleanupSandbox(SANDBOX_DIR);
-        rmSync(Constants.RUNTIME_CONFIG_PATH, { force: true });
         ConfigManager.resetInstance();
     });
 

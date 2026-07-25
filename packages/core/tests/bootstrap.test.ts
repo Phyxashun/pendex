@@ -6,25 +6,28 @@
 // runtime-config override naming a different theme file, and both the
 // present and absent [brand] table cases.
 
-import { afterEach, beforeEach, describe, expect, test } from 'bun:test';
-import { rmSync, writeFileSync } from 'node:fs';
 import { Colors } from '@pendex/color';
 import { ThemeManager } from '@pendex/theme';
+import { afterEach, beforeEach, describe, expect, test } from 'bun:test';
+import { writeFileSync } from 'node:fs';
 import { ConfigManager, Constants, resolveRunnerDeps } from '../src';
 import { cleanupSandbox, createSandbox } from './setup';
 
-const SANDBOX = './test-sandbox';   // matches preload.ts's redirected RUNTIME_CONFIG_PATH
+const SANDBOX = './test-sandbox';
 
 describe('bootstrap.resolveRunnerDeps', () => {
+    const originalCwd = process.cwd();
+
     beforeEach(async () => {
         Colors.enable();
         await createSandbox(SANDBOX);
+        process.chdir(SANDBOX);
         ConfigManager.resetInstance();
         ThemeManager.resetInstance();
     });
 
     afterEach(async () => {
-        rmSync(Constants.RUNTIME_CONFIG_PATH, { force: true });
+        process.chdir(originalCwd);
         await cleanupSandbox(SANDBOX);
         ConfigManager.resetInstance();
         ThemeManager.resetInstance();

@@ -7,13 +7,13 @@
 // manifest in practice). It lives in the root pendex package because
 // that's the only package that depends on both.
 
-import { afterEach, beforeEach, describe, expect, test } from 'bun:test';
-import { mkdirSync, writeFileSync } from 'node:fs';
-import { join } from 'node:path';
 import { Compile } from '@pendex/compile';
+import { ConfigManager, type Config, type Manifest } from '@pendex/core';
 import { Split, SplitView } from '@pendex/split';
 import { FallbackTheme } from '@pendex/theme';
-import { ConfigManager, type Config, type Manifest } from '@pendex/core';
+import { afterEach, beforeEach, describe, expect, test } from 'bun:test';
+import { existsSync, mkdirSync, statSync, writeFileSync } from 'node:fs';
+import { join } from 'node:path';
 import { cleanupSandbox, createSandbox } from './setup';
 
 const SANDBOX = './test-sandbox-integration';
@@ -109,7 +109,8 @@ describe('Compile → Split round trip (cross-package)', () => {
 
         await new Split(state).execute();
 
-        const dirs = await Array.fromAsync(new Bun.Glob('**/').scan({ cwd: 'REBUILT', onlyFiles: false }));
-        expect(dirs.map(d => d.replace(/\\/g, '/'))).toContain('src/empty-dir/');
+        const rebuiltEmptyDir = join('REBUILT', 'src', 'empty-dir');
+        expect(existsSync(rebuiltEmptyDir)).toBe(true);
+        expect(statSync(rebuiltEmptyDir).isDirectory()).toBe(true);
     });
 });

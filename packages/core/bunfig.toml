@@ -1,4 +1,8 @@
 [test]
-preload = ["./tests/preload.ts"]
+# No preload needed: Constants.BASE_DIR (and everything derived from it)
+# is a live getter over process.cwd(), so a plain process.chdir() in a
+# test's beforeEach is sufficient — no module mock required. (It used to
+# need one, before Constants.ts's fields were fixed to stop freezing
+# BASE_DIR at first import.)
 coverage = true
 coverageSkipTestFiles = true

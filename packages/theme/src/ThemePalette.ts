@@ -169,7 +169,12 @@ function extractColors(raw: Record<string, unknown>): ThemeColors {
 /** Extracts one named [section] as a flat string map, dropping any non-string entries. */
 function extractTable(raw: Record<string, unknown>, key: string): Record<string, string> | undefined {
     const value = raw[key];
-    if (!value || typeof value !== 'object') return undefined;
+    // typeof [] === 'object' in JS, so Array.isArray must be checked
+    // explicitly — otherwise a TOML array under a table-shaped key (e.g.
+    // `syntax = ["array"]`) would pass this guard and get turned into a
+    // bogus { '0': 'array' } table via Object.entries() below, instead
+    // of correctly degrading to undefined like any other malformed table.
+    if (!value || typeof value !== 'object' || Array.isArray(value)) return undefined;
 
     const table: Record<string, string> = {};
     for (const [entryKey, entryValue] of Object.entries(value as Record<string, unknown>)) {

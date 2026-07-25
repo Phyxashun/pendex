@@ -33,18 +33,24 @@ export const joinPath = (...segments: string[]): string =>
         .replace(/\/{2,}/g, '/');
 
 class ConstantsManager {
-    public readonly BASE_DIR = process.cwd();
+    // Getters, not frozen fields: BASE_DIR (and anything derived from it)
+    // must reflect the CURRENT process.cwd() at the moment it's read, not
+    // whatever cwd happened to be true the first time this singleton was
+    // constructed. A `readonly BASE_DIR = process.cwd()` field freezes at
+    // module-first-import time — any later process.chdir() (every test
+    // sandbox does this) would be invisible to it, silently pointing
+    // .gitignore/runtime.config.json lookups at the wrong directory.
+    public get BASE_DIR(): string { return process.cwd(); }
     public readonly OUTPUT_DIR = 'ALL';
     public readonly REBUILT_DIR = 'ALL_REBUILT';
-    public readonly GITIGNORE_PATH = joinPath(this.BASE_DIR, '.gitignore');
-    public readonly RUNTIME_CONFIG_PATH = joinPath(this.BASE_DIR, 'runtime.config.json');
+    public get GITIGNORE_PATH(): string { return joinPath(this.BASE_DIR, '.gitignore'); }
+    public get RUNTIME_CONFIG_PATH(): string { return joinPath(this.BASE_DIR, 'runtime.config.json'); }
     public readonly ENCODING = 'utf-8';
 
     private readonly BLOCK = '█';
     private readonly WIDTH = 40;
 
     public readonly DIVIDER = this.BLOCK.repeat(this.WIDTH);
-    public readonly TEARLINE_MARKER = `// ${'-'.repeat(this.WIDTH)}TEARLINE${'-'.repeat(this.WIDTH)}`;
 }
 
 export const Constants = new ConstantsManager();
