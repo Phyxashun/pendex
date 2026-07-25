@@ -1,0 +1,513 @@
+# Software tools
+Actionlint
+ActiveMQ
+Adminer
+ADTF
+airbrake
+AirWatch
+AKS
+Alacritty
+Alibaba
+all-contributorsrc # Configuration file used by the All Contributors CLI
+alpine # Alpine Linux Distribution
+anaconda
+Android
+Anka
+Ansible
+Antergos
+Apparmor
+appcenter
+Appveyor
+Arch # Arch Linux Distribution
+ArchWiki # Wiki of Arch Linux Distribution
+ArgoCD
+ArgoProj
+ariakit
+Artifactory
+ASAM
+asammdf
+asdf
+Atlaskit
+autodocstring
+autogen
+automake
+Autoware
+AutowareFoundation
+Avro
+AWS
+Bacula
+Bazel
+Berkshelf
+Bitbucket
+bittorrent
+Buildkite
+bundler
+busybox
+bzip
+Ccache
+ccmake
+CentOS
+CentOS # CentOS Linux Distribution
+Ceph
+Checkov
+ChefSpec
+chmod
+chown
+chpasswd
+chroot
+CircleCI
+clangd
+Cloudera
+cloudflared
+Cloudkick
+CloudStack
+cmake
+cobertura
+CockroachDB # CockroachDB Database
+Codebeamer
+codecov
+codeium
+codeql
+codicon
+codicons
+collectd
+conda
+containerd
+conventionalcommits
+corepack
+Couchbase # Couchbase Database
+CouchDB
+cpplint
+cpptools
+Crashlytics
+cron
+CSharpier
+cspell
+cspellcache
+ctag
+ctags
+cygpath
+cygwin
+Databricks
+deadsnakes
+Debian # Debian GNU/Linux Distribution
+Deno
+develocity
+DigitalOcean
+Django
+dmesg
+dmidecode
+docker
+dockerd
+DocuSign
+dogstatsd
+dosu
+doxygen
+dprint
+DragonFlyBSD
+Dubbo
+easycla
+Edubuntu # Ubuntu Linux Distribution
+egrep
+EKS
+El Capitan
+Entra ID
+EntraID
+eslintconfig
+eslintignore
+eslintplugin
+esmini
+etcd
+Ethr
+ethtool
+Facebook
+Fedora # Fedora Linux Distribution
+fizzbuzz
+flagd
+flatpak
+Fluentd
+FreeBSD
+freedesktop
+fsck
+fstrim
+ftrace
+GCP
+Genava
+genrsa
+Gentoo # Gentoo Linux Distribution
+GEOS
+Gerrit
+gimu
+gimuy
+git
+gitdm
+GitHub
+Gitkraken
+GitLab
+Gitleaks
+gitleaksignore
+Gitpod
+Gitter
+GKE
+globbed
+globbing
+GMail
+gmake
+GNOME # GNOME Desktop Environment
+Goland # GoLand IDE
+Google
+googleapis
+googletest
+greasemonkey
+groupadd
+groupdel
+groupmod
+Gruntwork
+Gruvbox
+grype
+gtest
+gunzip
+gzip
+hadolint
+Halp
+haproxy
+HashiCorp
+hdiutil
+HelloSign
+helm # Package manager for k8s
+helmfile # Declarative spec for deploying helm charts
+helmify
+Hibernate Envers
+HipChat
+homebrew
+Horovod
+hostnamectl
+hotmail
+htmlhintrc
+httpbin
+httpie
+Hunspell
+Hyprland # Hyprland Wayland Compositor
+ifcfg
+ifconfig
+ifttt
+Infisical
+initramfs
+InSpec
+Instana
+integr8ly
+Integreatly
+IntelliJ
+IntelliJ # IntelliJ IDEA IDE
+iputils
+Istio
+Jama
+Jetbrains
+Jira
+JOSM
+journald
+jq
+jsonpath
+jwhois
+K8s
+Kafka
+KairosDB
+KDE # KDE Plasma Desktop Environment
+keepalived
+Keptn
+Kibana
+Knative
+Korn
+Kube
+kubectl
+Kubernetes
+kubespec
+Kubuntu # Ubuntu Linux Distribution
+Kuma
+Kustomize
+Last.fm
+Lastfm
+launchctl
+launchd
+LaunchDarkly
+Lazygit
+libcurl
+lightdm
+Lightstep
+Linkerd
+Linode
+Linux
+linuxserver
+llvm
+loginctl
+logman
+logrotate
+lsattr
+lsblk
+lscpu
+lsmod
+lsof
+lspci
+lsscsi
+lualine
+Lubuntu # Ubuntu Linux Distribution
+Lucene
+LXDE # Lightweight X11 Desktop Environment
+lxdm
+lxqt
+LXQt # The Lightweight Qt Desktop Environment
+macOS # macOS Operating System
+MailHog # Web and API based SMTP testing
+Mailtrap
+Mandriva
+Mangeia
+Manjaro
+MariaDB # MariaDB Database
+markdownlint
+markdownlintignore
+MATE # Another fork of GNOME 2
+MCAP
+mdast
+mdformat
+MegaLinter
+Microsoft
+Miniconda
+minikube
+minio
+Mint # Linux Mint Distribution
+mitmproxy
+mkdir
+mongod
+MongoDB
+MongoDB # MongoDB Database
+monit
+mootools
+MS Teams
+msedge
+MSSQL
+MSTeams
+MySQL
+Nagios
+nano
+NATS
+Neovide
+Neovim
+NestJS
+NetBSD
+Netlify
+New Relic
+NGINX
+nobreak
+nocomma
+npm
+npmrc
+nproc
+npx
+NRIA
+nuPlan
+nuScenes
+Nushell
+Octicons
+octokit
+oh-my-zsh
+Ohai
+ohmyzsh
+OmniOS
+OpenAPI
+OpenBSD
+OpenCL
+OpenCV
+OpenDRIVE
+OpenGL
+openindiana
+OpenIndiana
+openjdk
+openldap
+OpenLLMetry
+OpenMP
+OpenNebula
+OpenNMT
+OpenNN
+OpenResty
+OpenSCENARIO
+OpenShift
+OpenSolaris
+OpenSSH
+OpenSSL
+OpenStack
+openSUSE
+openSUSE # openSUSE Linux Distribution
+OpenTofu # Open source fork of Terraform
+OpenTSDB
+OpenVINO
+OpenVPN
+OpenVZ
+OSMC
+Ouroboros
+OXSecurity
+Packagecloud
+pbcopy
+pbpaste
+Pentoo
+Perfetto
+PerfView
+perl
+Phabricator # Open source suite of web-based development collaboration tools
+Phorge # Community fork of Phabricator
+php
+Pidora
+pip
+pixi
+pkgadd
+pkginfo
+pkgutil
+PlantUML
+pnpm
+Podman
+Polarion
+Portainer
+PostCSS
+PostgreSQL # PostgreSQL Database
+PostgresSQL
+postmarketOS
+Prepper
+prettier
+prettierd
+Promxy
+proselint
+proselintrc
+pspings
+ptrace
+pwsh
+PyCharm
+Pylance
+Pyright
+qmake
+Quarkus
+RabbitMQ
+rclone
+Redis
+Redis # Redis Database
+Redshift
+RHEL
+RHEL # Red Hat Enterprise Linux Distribution
+ripgrep
+rmwc
+robocopy
+RocketMQ
+rsyslog
+rsyslogd
+runc
+rustfix
+rustfmt
+scapy
+ScyllaDB # ScyllaDB Database
+sddm
+Secretlint
+secretlintignore
+secretlintrc
+setfacl
+Sharpier
+shellcheckrc
+SlackAPI
+Slackware # Slackware Linux Distribution
+SmartOS
+snmpd
+snmptrapd
+sockperf
+Sourcetree
+spdlog
+speedtest
+Splunk
+SQLite
+SQLite # SQLite Database
+sshd
+sssd
+StackDriver
+Strimzi
+stylelint
+stylelintrc
+SUSE # SuSE Linux Distribution
+SVGO
+sway # Sway Wayland Compositor
+syslog
+sysmon
+sysprep
+systemctl
+systemd
+Tailscale
+TailwindCSS
+TeamCity
+Techetio
+Tekton
+telnetd
+Terraform
+Terragrunt
+testcontainers
+textmate
+tmux
+tools
+Tracefmt
+Tracelog
+Traefik
+Trello
+trex
+Trivy
+trivyignore
+trufflehog
+tsbuild
+TSConfigs
+tzinfo
+tzutil
+ublox
+ubuntu
+Ubuntu
+Ubuntu # Ubuntu Linux Distribution
+ulimit
+ultradns
+umask
+umount
+Upstash
+Valgrind
+VBoxManage
+vCenter
+vcpkg
+Veertu
+visudo
+Vitess
+vsce
+vscode
+vscodium
+Wayland # Wayland Compositor
+wget
+whoami
+winsw
+Wiremock
+wkhtmltopdf
+wlroots # modular Wayland compositor library
+wrlinux
+X11 # X Window System
+xcode
+xcodebuild
+Xeon
+xfce
+Xfce # Xfce Desktop Environment
+xfonts
+xfwm
+xinit
+Xubuntu # Ubuntu Linux Distribution
+yamlfmt
+yamllint
+yarn
+Zabbix
+Zellij
+Zendesk
+Zenoss
+ZenServer
+Zensical
+ZeroMQ
+Zipkin
+zoxide
+zsh
+Zuul
+Zypper

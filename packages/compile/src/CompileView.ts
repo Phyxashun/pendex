@@ -11,9 +11,9 @@
 // session, and Application clears the console between sessions anyway.
 
 import { intro, log, note, outro, tasks } from '@clack/prompts';
-import { compileSingleJob, finalizeCompile, initializeCompile } from './CompileService';
 import type { State } from '@pendex/core';
 import { View } from '@pendex/core';
+import { compileSingleJob, finalizeCompile, initializeCompile } from './CompileService';
 
 export class CompileView extends View {
     private readonly STRINGS = {
@@ -93,6 +93,10 @@ export class CompileView extends View {
         } catch (err) {
             log.error(`${theme.error(this.STRINGS.error)}`);
             if (err instanceof Error) log.error(`${theme.error(err.message)}`);
+            // TEMP DIAGNOSTIC — log.error is mocked to a no-op in tests,
+            // so failures here were invisible. Remove once the root cause
+            // of the integration-test ENOENTs is found.
+            console.error('[CompileView diagnostic]', err);
             outro(`${theme.error(this.STRINGS.outroFailure)}`);
         }
     }
