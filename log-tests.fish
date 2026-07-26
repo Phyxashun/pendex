@@ -313,14 +313,19 @@ end
 
 function Show-TestSummary --argument-names ExitCode
     # Pull presentation symbols from ViewModel
+    set -l prefix (Get-TerminalLine 'BotLeft')(Get-TerminalLine 'Horizontal')
     set -l greenCheck (Get-GreenCheck)
 
     # Update layout results
-    Write-Step "$greenCheck Executing bun tests... Completed." Gray $config_BorderColor
+    Write-Step "$greenCheck All tests have executed." Gray $config_BorderColor
 
     # Safely invoke log removal utility
     if Manage-Log $config_LogDir $config_MaxLogs $config_Appendage
-        Write-Step "$greenCheck Oldest log file(s) removed to maintain retention cap." Gray $config_BorderColor
+        Start-Spinner "Analyzing old logs..." "$prefix"
+        sleep 3
+        Stop-Spinner
+        Write-Step "$greenCheck Log file directory cleaned up." Gray $config_BorderColor
+
     end
 
     if test $ExitCode -eq 0
@@ -350,6 +355,7 @@ function Invoke-Tests
     # Controller
     Get-Bun-Test-Results $config_TestsPath $config_LogFilePath $config_LogMaxWidth $config_BarKey
     set -l exitCode $status
+    sleep 3
 
     # View
     Stop-Spinner
