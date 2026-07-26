@@ -59,6 +59,7 @@ pcss
 pendex
 𝒫endex
 phyxashun
+prefersdark
 prettierrc
 Propo
 pycache
