@@ -37,6 +37,7 @@ FILECONFIG
 FILESCONFIG
 fontkit
 gulpfile
+headlessly
 horiz
 Howitworks
 IGNORECONFIG

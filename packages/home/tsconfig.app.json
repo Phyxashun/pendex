@@ -16,13 +16,13 @@
       "react-dom"
     ],
     "skipLibCheck": true,
-    "composite": true,
     /* Bundler mode */
     "moduleResolution": "bundler",
+    "composite": true,
+    "emitDeclarationOnly": true,
     "allowImportingTsExtensions": true,
     "verbatimModuleSyntax": true,
     "moduleDetection": "force",
-    "noEmit": true,
     "jsx": "react-jsx",
     /* Linting */
     "strict": true,

@@ -1,7 +1,7 @@
-import compileImg from '/compile.png';
-import manifestImg from '/manifest.png';
-import scannerImg from '/scanner.png';
-import splitImg from '/split.png';
+import compileImg from '../assets/compile.png';
+import manifestImg from '../assets/manifest.png';
+import scannerImg from '../assets/scanner.png';
+import splitImg from '../assets/split.png';
 
 const steps = [
   {

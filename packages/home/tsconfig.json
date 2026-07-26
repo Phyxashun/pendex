@@ -1,5 +1,8 @@
 {
   "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "noEmit": false
+  },
   "references": [
     {
       "path": "./tsconfig.app.json"
@@ -12,5 +15,5 @@
     "vite.config.ts",
     "public",
     "src"
-  ],
+  ]
 }
