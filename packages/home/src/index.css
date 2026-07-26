@@ -1,114 +1,92 @@
 @import "tailwindcss";
 @plugin "daisyui";
 
-:root {
-  --text: #6b6375;
-  --text-h: #08060d;
-  --bg: #fff;
-  --border: #e5e4e7;
-  --code-bg: #f4f3ec;
-  --accent: #aa3bff;
-  --accent-bg: rgba(170, 59, 255, 0.1);
-  --accent-border: rgba(170, 59, 255, 0.5);
-  --social-bg: rgba(244, 243, 236, 0.5);
-  --shadow:
-    rgba(0, 0, 0, 0.1) 0 10px 15px -3px, rgba(0, 0, 0, 0.05) 0 4px 6px -2px;
+/* ============================================================================
+ * Pendex website theme
+ * Colors sourced from packages/theme/themes/pendex.toml [website] + [brand]
+ * This is the ONE site identity — independent of the CLI's swappable
+ * terminal themes (dracula, etc).
+ * ============================================================================ */
 
-  --sans: system-ui, 'Segoe UI', Roboto, sans-serif;
-  --heading: system-ui, 'Segoe UI', Roboto, sans-serif;
-  --mono: ui-monospace, Consolas, monospace;
+@plugin "daisyui/theme" {
+  name: "pendex";
+  default: true;
+  prefersdark: false;
+  color-scheme: light;
 
-  font: 18px/145% var(--sans);
-  letter-spacing: 0.18px;
-  color-scheme: light dark;
-  color: var(--text);
-  background: var(--bg);
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  --color-primary: #d6a448; /* brass — buttonPrimary */
+  --color-primary-content: #1a1a1a; /* buttonText */
+  --color-secondary: #6f92b0; /* blueprint — link */
+  --color-secondary-content: #f7f2e8;
+  --color-accent: #6aafb5; /* teal — linkHover */
+  --color-accent-content: #1a1a1a;
+  --color-neutral: #2e2a27; /* heading */
+  --color-neutral-content: #f7f2e8;
 
-  @media (max-width: 1024px) {
-    font-size: 16px;
-  }
+  --color-base-100: #f7f2e8; /* cream — heroBackground */
+  --color-base-200: #ece3d4; /* cardBackground */
+  --color-base-300: #ddd2c2; /* grid */
+  --color-base-content: #443e39; /* body */
+
+  --radius-selector: 0.5rem;
+  --radius-field: 0.5rem;
+  --radius-box: 1rem;
+  --border: 1px;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --text: #9ca3af;
-    --text-h: #f3f4f6;
-    --bg: #16171d;
-    --border: #2e303a;
-    --code-bg: #1f2028;
-    --accent: #c084fc;
-    --accent-bg: rgba(192, 132, 252, 0.15);
-    --accent-border: rgba(192, 132, 252, 0.5);
-    --social-bg: rgba(47, 48, 58, 0.5);
-    --shadow:
-      rgba(0, 0, 0, 0.4) 0 10px 15px -3px, rgba(0, 0, 0, 0.25) 0 4px 6px -2px;
-  }
+@theme {
+  --font-display: Georgia, "Iowan Old Style", "Palatino Linotype", serif;
+  --font-body:
+    system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-mono: ui-monospace, "SF Mono", Consolas, monospace;
 
-  #social .button-icon {
-    filter: invert(1) brightness(2);
-  }
+  --color-math: #8b5e3c;
+  --color-book-cover: #24303a;
+  --color-book-spine: #2f3b45;
+  --color-outline: #000000;
+
+  --color-source: #799470;
+  --color-web: #6f92b0;
+  --color-style: #d99c5a;
+  --color-terminal-cat: #3a352f;
+  --color-configuration: #c78c5c;
+  --color-documentation: #6f92b0;
+  --color-testing: #a183b2;
+  --color-misc: #7b746b;
 }
 
-#root {
-  width: 1126px;
-  max-width: 100%;
-  margin: 0 auto;
-  text-align: center;
-  border-inline: 1px solid var(--border);
-  min-height: 100svh;
-  display: flex;
-  flex-direction: column;
-  box-sizing: border-box;
+html {
+  scroll-behavior: smooth;
 }
 
 body {
-  margin: 0;
+  font-family: var(--font-body);
+  background: var(--color-base-100);
+  color: var(--color-base-content);
 }
 
 h1,
-h2 {
-  font-family: var(--heading);
-  font-weight: 500;
-  color: var(--text-h);
-}
-
-h1 {
-  font-size: 56px;
-  letter-spacing: -1.68px;
-  margin: 32px 0;
-  @media (max-width: 1024px) {
-    font-size: 36px;
-    margin: 20px 0;
-  }
-}
-h2 {
-  font-size: 24px;
-  line-height: 118%;
-  letter-spacing: -0.24px;
-  margin: 0 0 8px;
-  @media (max-width: 1024px) {
-    font-size: 20px;
-  }
-}
-p {
-  margin: 0;
+h2,
+h3,
+.font-display {
+  font-family: var(--font-display);
 }
 
 code,
-.counter {
-  font-family: var(--mono);
-  display: inline-flex;
-  border-radius: 4px;
-  color: var(--text-h);
+pre,
+.font-mono {
+  font-family: var(--font-mono);
 }
 
-code {
-  font-size: 15px;
-  line-height: 135%;
-  padding: 4px 8px;
-  background: var(--code-bg);
+/* Hand-drawn parchment card outline used throughout the site */
+.pendex-card {
+  border: 2px solid var(--color-outline);
+  border-radius: 0.75rem;
+  background: var(--color-base-200);
+  box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.15);
+}
+
+.pendex-outline-btn {
+  border: 2px solid var(--color-outline);
+  box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.2);
 }

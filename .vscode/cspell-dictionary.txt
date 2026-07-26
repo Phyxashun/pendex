@@ -38,6 +38,7 @@ FILESCONFIG
 fontkit
 gulpfile
 horiz
+Howitworks
 IGNORECONFIG
 IGNORELIST
 indent_size
@@ -56,6 +57,7 @@ nodir
 ntvs
 pcss
 pendex
+𝒫endex
 phyxashun
 prettierrc
 Propo
