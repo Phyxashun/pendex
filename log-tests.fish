@@ -27,7 +27,7 @@ function Get-ScriptConfiguration
     set -l appendage "_tests.results.log"
     set -l logFileName "$timestamp$appendage"
 
-    set -g config_Sleep        2
+    set -g config_Sleep        1
     set -g config_MaxLogs      5
     set -g config_MaxWidth     50
     set -g config_LogMaxWidth  100
@@ -182,14 +182,9 @@ function Format-Log --argument-names LogMaxWidth BarKey
     # Replacement template uses fish-native $1 instead of \1
     set -l replacement_template "$bar\nTEST:\t\$1\n$bar\n"
 
-    # The leading `bat` or `cat` is required: a `string` builtin used as the first
+    # The leading `cat` is required: a `string` builtin used as the first
     # command of a function body does not inherit the pipeline's stdin
-    set -l cmd bat
-    if not type -q $cmd
-        set cmd cat
-    end
-
-    $cmd |
+    cat |
         string replace -ra $strip_colors '' |
         string replace -ra $strip_prefix '' |
         string replace -r $match_pattern $replacement_template |
