@@ -1,10 +1,10 @@
-import CodeBlock from './CodeBlock'
+import CodeBlock from './CodeBlock';
 
 export default function Footer() {
   return (
     <footer className="px-6 py-20 text-center">
       <div className="max-w-lg mx-auto flex flex-col items-center gap-6">
-        <h2 className="font-display text-3xl text-[var(--color-neutral)]">
+        <h2 className="font-display text-3xl text-(--color-neutral)">
           Get started
         </h2>
         <CodeBlock label="pendex" lines={['bun install', 'bun run start']} />
@@ -13,7 +13,7 @@ export default function Footer() {
             href="https://github.com/Phyxashun/pendex"
             target="_blank"
             rel="noreferrer"
-            className="hover:text-[var(--color-accent)] transition-colors"
+            className="hover:text-(--color-accent) transition-colors"
           >
             GitHub
           </a>
@@ -22,7 +22,7 @@ export default function Footer() {
             href="https://github.com/Phyxashun/pendex/blob/main/LICENSE"
             target="_blank"
             rel="noreferrer"
-            className="hover:text-[var(--color-accent)] transition-colors"
+            className="hover:text-(--color-accent) transition-colors"
           >
             License
           </a>
@@ -31,7 +31,7 @@ export default function Footer() {
             href="https://bun.sh"
             target="_blank"
             rel="noreferrer"
-            className="hover:text-[var(--color-accent)] transition-colors"
+            className="hover:text-(--color-accent) transition-colors"
           >
             Built with Bun
           </a>

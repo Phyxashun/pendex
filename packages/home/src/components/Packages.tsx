@@ -9,9 +9,9 @@ const packages = [
 
 export default function Packages() {
   return (
-    <section id="packages" className="px-6 py-20 bg-[var(--color-base-200)] border-y-2 border-[var(--color-outline)]">
+    <section id="packages" className="px-6 py-20 bg-(--color-base-200) border-y-2 border-outline">
       <div className="max-w-4xl mx-auto text-center">
-        <h2 className="font-display text-3xl sm:text-4xl text-[var(--color-neutral)] mb-3">
+        <h2 className="font-display text-3xl sm:text-4xl text-(--color-neutral) mb-3">
           A Bun workspace monorepo
         </h2>
         <p className="max-w-xl mx-auto mb-12">

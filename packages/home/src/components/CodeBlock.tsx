@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState } from 'react';
 
 interface CodeBlockProps {
   lines: string[]
@@ -10,7 +10,12 @@ export default function CodeBlock({ lines, label = 'terminal' }: CodeBlockProps)
 
   const handleCopy = async () => {
     try {
-      await navigator.clipboard.writeText(lines.join('\n'))
+      const write = (navigator as any).clipboard?.writeText
+      if (typeof write === 'function') {
+        await write(lines.join('\n'))
+      } else {
+        throw new Error('clipboard unavailable')
+      }
       setCopied(true)
       setTimeout(() => setCopied(false), 1500)
     } catch {
@@ -20,11 +25,11 @@ export default function CodeBlock({ lines, label = 'terminal' }: CodeBlockProps)
 
   return (
     <div className="pendex-card overflow-hidden text-left w-full max-w-lg mx-auto">
-      <div className="flex items-center justify-between px-4 py-2 border-b-2 border-[var(--color-outline)] bg-[var(--color-terminal-cat)]">
+      <div className="flex items-center justify-between px-4 py-2 border-b-2 border-outline bg-terminal-cat">
         <div className="flex items-center gap-2">
-          <span className="w-2.5 h-2.5 rounded-full bg-[var(--color-style)]" />
-          <span className="w-2.5 h-2.5 rounded-full bg-[var(--color-source)]" />
-          <span className="w-2.5 h-2.5 rounded-full bg-[var(--color-web)]" />
+          <span className="w-2.5 h-2.5 rounded-full bg-style" />
+          <span className="w-2.5 h-2.5 rounded-full bg-source" />
+          <span className="w-2.5 h-2.5 rounded-full bg-(--color-web)" />
           <span className="ml-2 text-xs font-mono text-[#e9e0d2]">{label}</span>
         </div>
         <button
@@ -38,7 +43,7 @@ export default function CodeBlock({ lines, label = 'terminal' }: CodeBlockProps)
       <div className="px-4 py-3 font-mono text-sm bg-[#1a1a1a] text-[#e9e0d2]">
         {lines.map((line) => (
           <div key={line}>
-            <span className="text-[var(--color-primary)] select-none">$ </span>
+            <span className="text-(--color-primary) select-none">$ </span>
             {line}
           </div>
         ))}

@@ -1,5 +1,5 @@
-import heroImg from '../assets/hero.png';
 import CodeBlock from './CodeBlock';
+import heroImg from '/hero.png';
 
 export default function Hero() {
   return (

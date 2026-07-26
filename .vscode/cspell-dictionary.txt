@@ -74,6 +74,7 @@ TEARLINE
 Terminess
 toml
 trim_trailing_whitespace
+Truecolor
 tsgo
 𝕌NICODE
 vbhtml

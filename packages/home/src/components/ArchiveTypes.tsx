@@ -1,10 +1,10 @@
-import codeImg from '../assets/code.png';
-import configImg from '../assets/config.png';
-import docsImg from '../assets/docs.png';
-import sourceImg from '../assets/source.png';
-import styleImg from '../assets/style.png';
-import terminalImg from '../assets/terminal.png';
-import webImg from '../assets/web.png';
+import codeImg from '/code.png';
+import configImg from '/config.png';
+import docsImg from '/docs.png';
+import sourceImg from '/source.png';
+import styleImg from '/style.png';
+import terminalImg from '/terminal.png';
+import webImg from '/web.png';
 
 const jobs = [
   { name: 'Source', file: 'source.txt', img: sourceImg, color: 'var(--color-source)' },

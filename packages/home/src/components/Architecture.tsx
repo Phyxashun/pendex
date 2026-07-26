@@ -1,4 +1,4 @@
-import codexImg from '../assets/codex.png';
+import codexImg from '/codex.png';
 
 const layers = [
   {
