@@ -1,5 +1,4 @@
 ![Pendex Github Banner](packages/home/src/assets/pendex-github-banner.png)
-<img src="packages/home/src/assets/pendex-github-banner.png" alt="Description of the image" width="100%">
 
 # Pendex (`px`)
 
