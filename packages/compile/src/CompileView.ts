@@ -73,7 +73,19 @@ export class CompileView extends View {
                         const rawDesc1 = `${rawDesc.charAt(0).toUpperCase()}`;
                         const rawDesc2 = `${rawDesc.slice(1).toLowerCase()}`;
                         const formattedDesc = resultStyle(`${rawDesc1}${rawDesc2} ${this.STRINGS.pastAction}`);
-                        const styledCount = `${theme.bold(theme.warning(`${outcome.fileCount}`))}`;
+                        // theme.warning(...) must be coerced to a plain string
+                        // with its own template literal BEFORE being handed to
+                        // theme.bold(...) as an argument — passing its raw
+                        // return value directly (the old
+                        // `theme.bold(theme.warning(x))`) fed the chaining
+                        // engine's not-yet-primitive result back into itself,
+                        // which is what triggered "Symbol.toPrimitive
+                        // returned an object". Every other themed value in
+                        // this codebase already follows the coerce-
+                        // immediately convention; this was the one place
+                        // that didn't.
+                        const warningCount = `${theme.warning(`${outcome.fileCount}`)}`;
+                        const styledCount = `${theme.bold(warningCount)}`;
 
                         return `${styledCount} ${formattedDesc}`;
                     }
@@ -93,10 +105,6 @@ export class CompileView extends View {
         } catch (err) {
             log.error(`${theme.error(this.STRINGS.error)}`);
             if (err instanceof Error) log.error(`${theme.error(err.message)}`);
-            // TEMP DIAGNOSTIC — log.error is mocked to a no-op in tests,
-            // so failures here were invisible. Remove once the root cause
-            // of the integration-test ENOENTs is found.
-            console.error('[CompileView diagnostic]', err);
             outro(`${theme.error(this.STRINGS.outroFailure)}`);
         }
     }

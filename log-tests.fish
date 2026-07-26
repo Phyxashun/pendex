@@ -65,24 +65,21 @@ function Manage-Log --argument-names LogDir MaxLogs Appendage
     return 1
 end
 
-function Invoke-Bun-Test --description 'Run root and workspace bun tests natively in Fish'
-    # Forward arguments ($argv) to the root test run
-    bun test $argv
-    set -l r1 $status
-
-    # Forward arguments ($argv) to workspace tests if they accept them
-    bun run --filter '*' test -- $argv
-    set -l r2 $status
-
-    if test $r1 -gt $r2
-        return $r1
-    else
-        return $r2
-    end
+function Invoke-Bun-Test --description 'Run every test suite (root + every workspace package) via bun run test'
+    # Forward any extra args ($argv, e.g. --coverage) straight through.
+    # Deliberately does NOT scope this to a single tests/ directory —
+    # `bun run test` (package.json) is the one place that knows how to
+    # run root AND every packages/*/tests suite with a correctly
+    # combined exit code. Reimplementing that scoping here (as an
+    # earlier version of this script did, with `bun test $TestsPath`)
+    # is exactly what silently limited every run to the root suite —
+    # the fix is for this script to stop knowing the shape of "run
+    # everything" at all, not to widen its own copy of that knowledge.
+    bun run test $argv
 end
 
-function Get-Test-Results --argument-names TestsPath LogFilePath LogMaxWidth BarKey
-    Invoke-Bun-Test --coverage $TestsPath &| Format-Log $LogMaxWidth $BarKey >$LogFilePath
+function Get-Test-Results --argument-names LogFilePath LogMaxWidth BarKey
+    Invoke-Bun-Test &| Format-Log $LogMaxWidth $BarKey >$LogFilePath
 
     # Capture the exit code cleanly
     return $pipestatus[1]
@@ -356,7 +353,6 @@ function Invoke-Tests
     # Controller
     Get-Test-Results $config_TestsPath $config_LogFilePath $config_LogMaxWidth $config_BarKey
     set -l exitCode $status
-
 
     # View
     sleep $config_Sleep

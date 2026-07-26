@@ -88,11 +88,22 @@ export async function findEmptyDirectories(
     const excludeGlobs = excludes.map(pattern => new Bun.Glob(pattern));
     GLOB_OPTIONS.cwd = cwd;
 
+    // Match a candidate directory against the exclude globs in BOTH
+    // trailing-slash forms. Some exclude patterns are written with a
+    // trailing slash ("node_modules/"), some without ("node_modules/**")
+    // — matching only the slash-stripped candidate against a pattern
+    // that still has its own trailing slash never succeeds (they're
+    // different strings), regardless of glob engine. That asymmetry is
+    // what let an excluded directory silently survive depending on
+    // which style its pattern happened to be written in.
+    const isExcludedDir = (posixDir: string): boolean =>
+        excludeGlobs.some(glob => glob.match(posixDir) || glob.match(`${posixDir}/`));
+
     // Get all directories.
     const allDirs = new Set<string>();
     for await (const dir of new Bun.Glob('**/').scan({ ...GLOB_OPTIONS, onlyFiles: false })) {
         const posixDir = toPosixPath(dir).replace(REGEX_TRAILING_SLASH, '');
-        if (posixDir && !excludeGlobs.some(glob => glob.match(posixDir))) {
+        if (posixDir && !isExcludedDir(posixDir)) {
             allDirs.add(posixDir);
         }
     }
