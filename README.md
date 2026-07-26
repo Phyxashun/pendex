@@ -1,3 +1,5 @@
+![Pendex Github Banner](https://phyxashun.github.io/pendex/src/assets/pendex-banner.png)
+
 # Pendex (`px`)
 
 > **Your project's portable codex.**
