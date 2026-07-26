@@ -80,7 +80,7 @@ function Invoke-Bun-Test --description 'Run root and workspace bun tests nativel
     end
 end
 
-function Get-Bun-Test-Results --argument-names TestsPath LogFilePath LogMaxWidth BarKey
+function Get-Test-Results --argument-names TestsPath LogFilePath LogMaxWidth BarKey
     Invoke-Bun-Test --coverage $TestsPath &| Format-Log $LogMaxWidth $BarKey >$LogFilePath
 
     # Capture the exit code cleanly
@@ -304,14 +304,14 @@ function Stop-Spinner
     printf '\r%*s\r' 50 ""
 end
 
-function Show-Header
+function Write-Header --description ""
     # Render initial View layouts
     Write-Intro "EXECUTING TESTS" $config_BorderColor
     Write-Step "Running tests and logging output to:" Cyan $config_BorderColor
     Write-Box $config_LogFile $config_MaxWidth $config_BorderColor $config_BoxColor
 end
 
-function Show-TestSummary --argument-names ExitCode
+function Write-Summary --argument-names ExitCode
     # Pull presentation symbols from ViewModel
     set -l prefix (Get-TerminalLine 'BotLeft')(Get-TerminalLine 'Horizontal')
     set -l greenCheck (Get-GreenCheck)
@@ -349,17 +349,18 @@ function Invoke-Tests
     set -l prefix (Get-TerminalLine 'BotLeft')(Get-TerminalLine 'Horizontal')
 
     # View
-    Show-Header
+    Write-Header
     Start-Spinner "Executing bun tests..." "$prefix"
 
     # Controller
-    Get-Bun-Test-Results $config_TestsPath $config_LogFilePath $config_LogMaxWidth $config_BarKey
+    Get-Test-Results $config_TestsPath $config_LogFilePath $config_LogMaxWidth $config_BarKey
     set -l exitCode $status
-    sleep 3
+
 
     # View
+    sleep 3
     Stop-Spinner
-    Show-TestSummary $exitCode
+    Write-Summary $exitCode
 
     exit 0
 end
