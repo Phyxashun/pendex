@@ -348,7 +348,7 @@ function Invoke-Tests
 
     # View
     Write-Header
-    Start-Spinner "Executing bun tests..." "$prefix"
+    Start-Spinner 'Executing bun tests...' "$prefix"
 
     # Controller
     Get-Test-Results $config_TestsPath $config_LogFilePath $config_LogMaxWidth $config_BarKey

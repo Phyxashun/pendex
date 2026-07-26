@@ -1,3 +1,4 @@
+
 //
 // SINGLE RESPONSIBILITY: answering "which files match?" — glob resolution,
 // exclude-list loading, empty-directory detection. Nothing in this file
@@ -14,7 +15,6 @@ const GLOB_OPTIONS: Bun.GlobScanOptions = {
     dot: true,
     absolute: false
 };
-const REGEX_TRAILING_SLASH = /\/$/;
 const REGEX_ALL_BACKSLASH = /\\/g;
 const toPosixPath = (p: string): string => p.replace(REGEX_ALL_BACKSLASH, '/');
 
@@ -91,37 +91,48 @@ export async function findEmptyDirectories(
     // Match a candidate directory against the exclude globs in BOTH
     // trailing-slash forms. Some exclude patterns are written with a
     // trailing slash ("node_modules/"), some without ("node_modules/**")
-    // — matching only the slash-stripped candidate against a pattern
-    // that still has its own trailing slash never succeeds (they're
-    // different strings), regardless of glob engine. That asymmetry is
-    // what let an excluded directory silently survive depending on
-    // which style its pattern happened to be written in.
+    // — matching only one form silently let excluded directories through
+    // depending on which style the caller used.
     const isExcludedDir = (posixDir: string): boolean =>
         excludeGlobs.some(glob => glob.match(posixDir) || glob.match(`${posixDir}/`));
 
-    // Get all directories.
-    const allDirs = new Set<string>();
-    for await (const dir of new Bun.Glob('**/').scan({ ...GLOB_OPTIONS, onlyFiles: false })) {
-        const posixDir = toPosixPath(dir).replace(REGEX_TRAILING_SLASH, '');
-        if (posixDir && !isExcludedDir(posixDir)) {
-            allDirs.add(posixDir);
-        }
+    // Every file AND directory entry under cwd. Bun.Glob('**/') (the
+    // directory-only shorthand) does NOT reliably surface a directory
+    // whose entire subtree contains no files — verified directly: given
+    // src/nested-empty (zero files anywhere beneath it) alongside
+    // src/a.ts, '**/' finds "src" (it contains a file) but never finds
+    // "src/nested-empty". '**/*' with onlyFiles:false does not have that
+    // gap, so it's used for both loops below; the directory list is
+    // derived by set difference (every entry that isn't a known file)
+    // instead of trusting a directory-only pattern or a trailing-slash
+    // convention on the results (glob results carry no trailing slash
+    // for directories either way, in either pattern).
+    const allEntries = new Set<string>();
+    for await (const entry of new Bun.Glob('**/*').scan({ ...GLOB_OPTIONS, onlyFiles: false })) {
+        allEntries.add(toPosixPath(entry));
     }
 
-    // Get all directories that contain at least one file.
+    // Files, and (from their parent chain) every directory that contains
+    // at least one file at any depth.
+    const allFiles = new Set<string>();
     const nonEmptyDirs = new Set<string>();
     for await (const file of new Bun.Glob('**/*').scan({ ...GLOB_OPTIONS, onlyFiles: true })) {
+        const posixFile = toPosixPath(file);
+        allFiles.add(posixFile);
+
         let parent = dirName(file);
         while (parent && parent !== '.') {
-            const posixParent = toPosixPath(parent);
-            if (!nonEmptyDirs.has(posixParent)) {
-                nonEmptyDirs.add(posixParent);
-            }
+            nonEmptyDirs.add(toPosixPath(parent));
             parent = dirName(parent);
         }
     }
 
-    // The difference between the two sets is our empty directories.
+    const allDirs = new Set<string>();
+    for (const entry of allEntries) {
+        if (allFiles.has(entry)) continue; // it's a file, not a directory
+        if (entry && !isExcludedDir(entry)) allDirs.add(entry);
+    }
+
     const emptyDirs: string[] = [];
     for (const dir of allDirs) {
         if (!nonEmptyDirs.has(dir)) {
