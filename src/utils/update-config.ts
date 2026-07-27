@@ -1,12 +1,23 @@
+/**
+ * @module update-config
+ *
+ * Standalone dev utility: scans the current project for file
+ * extensions in use, buckets them into Pendex's standard job
+ * categories, and writes a fresh `src/config/jobs.toml`. Meant to be
+ * run once against a new project to bootstrap a starting config, not
+ * as part of the compile/split pipeline.
+ */
 
 import { Glob } from 'bun';
 import { extname } from 'path';
 
+/** Paths this tool reads from and writes to. */
 const Constants = {
     GITIGNORE_PATH: '.gitignore',
     OUT_PATH: 'src/config/jobs.toml'
 };
 
+/** Extension/pattern lists used to bucket discovered files into job categories. */
 const CATEGORIES = {
     SOURCE_FILES: ['.js', '.jsx', '.mjs', '.cjs', '.ts', '.tsx', '.mts', '.cts', '.vue', '.svelte', '.astro', '.py', '.pyw', '.sh', '.bash', '.ps1', '.c', '.h', '.cpp', '.hpp', '.cc', '.hh', '.rs', '.zig', '.java', '.kt', '.kts', '.scala', '.groovy', '.cs', '.fs', '.vb', '.swift', '.m', '.mm', '.dart', '.go', '.rb', '.rbw', '.php', '.hs', '.ex', '.exs', '.erl', '.clj', '.sql'],
     WEB_FILES: ['.html', '.htm', '.xhtml', '.xht', '.mhtml', '.vue', '.svelte', '.astro', '.riot', '.jsx', '.tsx', '.ejs', '.pug', '.jade', '.handlebars', '.hbs', '.mustache', '.twig', '.nunjucks', '.njk', '.php', '.phtml', '.jsp', '.jspx', '.asp', '.aspx', '.cshtml', '.vbhtml', '.j2', '.jinja', '.jinja2', '.erb', '.webmanifest'],
@@ -16,6 +27,7 @@ const CATEGORIES = {
     DOC_FILES: ['README*', 'readme*', 'LICENSE*', 'license*', 'COPYING*', 'NOTICE*', 'CHANGELOG*', 'changelog*', 'HISTORY*', 'RELEASES*', '.md', '.markdown', '.mdx', '.rst', '.adoc', '.asciidoc', '.txt', 'CONTRIBUTING*', 'contributing*', 'CODE_OF_CONDUCT*', 'code_of_conduct*', 'SECURITY*', 'SUPPORT*', 'docs/**/*', 'doc/**/*', '.github/ISSUE_TEMPLATE/**/*', '.github/PULL_REQUEST_TEMPLATE/**/*'],
 };
 
+/** Glob patterns excluded from every scan performed by this tool. */
 const GLOBAL_EXCLUDES = [
     '**/node_modules/**',
     '**/.git/**',
@@ -47,11 +59,17 @@ const GLOBAL_EXCLUDES = [
     '**/__mocks__/**/*'
 ];
 
+/** Scans the project, categorizes discovered file extensions, and writes a generated `jobs.toml`. */
 class ConfigUpdater {
     private gitignore: string[] = [];
     private foundExtensions: Set<string> = new Set();
 
-    // Convert glob-style gitignore patterns to simple regex for basic filtering
+    /**
+     * Convert glob-style gitignore patterns to simple regex for basic filtering
+     *
+     * @param filePath - Candidate path to check.
+     * @returns Whether the path is ignored (matches `.gitignore` or a hardcoded exclusion).
+     */
     private isIgnored(filePath: string): boolean {
         // Quick check against standard hardcoded exclusions
         if (filePath.includes('node_modules/') || filePath.includes('.git/')) return true;
@@ -65,6 +83,7 @@ class ConfigUpdater {
         return false;
     }
 
+    /** Loads `.gitignore` patterns (if present) into {@link gitignore}. */
     private async loadGitignore(): Promise<void> {
         const gitignoreFile = Bun.file(Constants.GITIGNORE_PATH);
         if (await gitignoreFile.exists()) {
@@ -73,6 +92,7 @@ class ConfigUpdater {
         }
     }
 
+    /** Scans every file under `process.cwd()` and records its extension (or test-file pattern) into {@link foundExtensions}. */
     private async scanFiles(): Promise<void> {
         const glob = new Glob('**/*');
 
@@ -92,6 +112,12 @@ class ConfigUpdater {
         }
     }
 
+    /**
+     * Builds the full `jobs.toml` content from every discovered extension,
+     * bucketed into categories and formatted as job entries.
+     *
+     * @returns The generated TOML text.
+     */
     private generateTOML(): string {
         const allFoundExts = Array.from(this.foundExtensions);
         const jobMappings: Record<string, string[]> = {
@@ -155,6 +181,7 @@ class ConfigUpdater {
         return tomlString.trim() + '\n';
     }
 
+    /** Orchestrates a full run: load `.gitignore`, scan files, generate TOML, and write it to {@link Constants.OUT_PATH}. */
     public async run(): Promise<void> {
         console.log('Loading .gitignore...');
         await this.loadGitignore();

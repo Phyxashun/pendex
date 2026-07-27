@@ -1,14 +1,18 @@
-
-//
-// SINGLE RESPONSIBILITY: answering "which files match?" — glob resolution,
-// exclude-list loading, empty-directory detection. Nothing in this file
-// writes an archive, prints anything, or knows about Config/Job shapes
-// beyond the plain string arrays it's handed. It's the "model" layer:
-// pure enough to unit test with a temp directory and zero mocks.
+/**
+ * @module FileScanner
+ *
+ * Single responsibility: answering "which files match?" — glob
+ * resolution, exclude-list loading, empty-directory detection. Nothing
+ * in this file writes an archive, prints anything, or knows about
+ * Config/Job shapes beyond the plain string arrays it's handed. It's
+ * the "model" layer: pure enough to unit test with a temp directory
+ * and zero mocks.
+ */
 
 import { dirName } from './Constants';
 import type { Job } from './types';
 
+/** Base glob-scan options shared by every scan in this file; `cwd` is set per-call. */
 const GLOB_OPTIONS: Bun.GlobScanOptions = {
     cwd: '',
     followSymlinks: false,
@@ -16,11 +20,21 @@ const GLOB_OPTIONS: Bun.GlobScanOptions = {
     absolute: false
 };
 const REGEX_ALL_BACKSLASH = /\\/g;
+
+/**
+ * Converts a path to POSIX-style forward slashes.
+ *
+ * @param p - Path to convert.
+ * @returns `p` with all backslashes replaced by forward slashes.
+ */
 const toPosixPath = (p: string): string => p.replace(REGEX_ALL_BACKSLASH, '/');
 
 /**
  * Reads a .gitignore-style file into a flat list of patterns (comments/
  * blank lines stripped).
+ *
+ * @param filePath - Path to the ignore-pattern file.
+ * @returns The non-comment, non-blank lines, or `[]` if the file doesn't exist.
  */
 export async function loadIgnorePatterns(filePath: string): Promise<string[]> {
     const file = Bun.file(filePath);
@@ -42,6 +56,12 @@ export async function loadIgnorePatterns(filePath: string): Promise<string[]> {
  * by the caller across jobs — this function only reads it, so job order
  * matters (remainder jobs must run after the jobs whose leftovers they're
  * meant to catch; config.toml lists MISC last for this reason).
+ *
+ * @param job - The job to resolve files for.
+ * @param excludes - Glob patterns to exclude from the result.
+ * @param claimedPaths - Paths already claimed by earlier jobs (read-only; not mutated here).
+ * @param cwd - Directory to scan from (default `'.'`).
+ * @returns The list of file paths this job matches.
  */
 export async function resolveJobFiles(
     job: Job,
@@ -80,6 +100,10 @@ export async function resolveJobFiles(
 /**
  * Finds directories under `cwd` (excluding `excludes`) that contain no
  * files or subdirectories.
+ *
+ * @param cwd - Directory to scan from.
+ * @param excludes - Glob patterns for directories to skip.
+ * @returns Paths of directories with an entirely empty subtree.
  */
 export async function findEmptyDirectories(
     cwd: string,

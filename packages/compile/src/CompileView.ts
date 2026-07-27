@@ -1,21 +1,26 @@
-//
-// SINGLE RESPONSIBILITY: render the compile flow to the terminal — the
-// only @clack/prompts caller for `compile`.
-//
-// A VIEW OWNS ITS WHOLE CLACK SESSION, intro THROUGH outro. Every exit
-// path here (success, error) closes the session with outro(). This is
-// what fixes the dangling-session look when Compile runs standalone —
-// previously the outro lived nowhere (bandaid: in the Command, which
-// put presentation in the wrong layer). Inside the interactive shell
-// this is also correct: each command render is its own complete clack
-// session, and Application clears the console between sessions anyway.
+/**
+ * @module CompileView
+ *
+ * Single responsibility: render the compile flow to the terminal — the
+ * only `@clack/prompts` caller for `compile`.
+ *
+ * A VIEW OWNS ITS WHOLE CLACK SESSION, intro THROUGH outro. Every exit
+ * path here (success, error) closes the session with `outro()`. This is
+ * what fixes the dangling-session look when Compile runs standalone —
+ * previously the outro lived nowhere (bandaid: in the Command, which
+ * put presentation in the wrong layer). Inside the interactive shell
+ * this is also correct: each command render is its own complete clack
+ * session, and `Application` clears the console between sessions anyway.
+ */
 
 import { intro, log, note, outro, tasks } from '@clack/prompts';
 import type { State } from '@pendex/core';
 import { View } from '@pendex/core';
 import { compileSingleJob, finalizeCompile, initializeCompile } from './CompileService';
 
+/** Renders the interactive compile session: intro, per-job progress, summary, and outro. */
 export class CompileView extends View {
+    /** User-facing copy for this view's clack session. */
     private readonly STRINGS = {
         title: 'RUNNING PENDEX COMPILATION',
         excludedTitle: 'Excluded Patterns',
@@ -30,6 +35,9 @@ export class CompileView extends View {
         outroFailure: 'Compilation failed — see errors above.',
     } as const;
 
+    /**
+     * @param state - Shared application state (theme, config, category colors) to render against.
+     */
     constructor(state: State) {
         // Forward `state` whole — rebuilding a {theme, config} literal
         // here (the previous version) silently dropped categoryColors,
@@ -38,6 +46,7 @@ export class CompileView extends View {
         super(state);
     }
 
+    /** Runs and renders the full compile session, from intro to outro. */
     public override async render(): Promise<void> {
         const { theme, config } = this.state;
         let totalFiles = 0;
@@ -109,6 +118,11 @@ export class CompileView extends View {
         }
     }
 
+    /**
+     * Renders the post-compile summary note (output dir, file count, job count).
+     *
+     * @param fileCount - Total files compiled across all jobs.
+     */
     private renderSummary(fileCount: number): void {
         const theme = this.state.theme;
 

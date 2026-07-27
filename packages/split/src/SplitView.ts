@@ -1,31 +1,38 @@
-// FILE-PATH: src/views/SplitView.ts
-//
-// SINGLE RESPONSIBILITY: render the split flow to the terminal — the
-// only @clack/prompts caller for `split`. Owns its whole clack session:
-// every exit path (success, missing manifest, error) closes with
-// outro(), so a standalone run never leaves the session dangling.
-//
-// REAL LIVE PROGRESS, NOT A REPLAY. The previous version drove this
-// through SplitHooks passed into runSplit(): onFileStart/onFileSuccess
-// fired *inside* runSplit's own loop, which meant every file was already
-// split by the time control returned here — the later `tasks()` call had
-// no real async work left to do, just canned strings replayed through a
-// spinner. It also tried to smuggle each result back out by assigning a
-// property onto the `filename` string parameter (`(filename as
-// any).__clackResult = ...`) — filename is a primitive, so that write
-// autoboxes a throwaway wrapper and never persists; every task rendered
-// blank. Calling splitSingleFile() *inside* each task() callback below
-// fixes both problems at once: the disk work and the spinner are
-// genuinely synchronized (matches CompileView's pattern), and each
-// task's own closure holds its own result — nothing needs smuggling
-// through a shared mutable key, and there's no `any` anywhere.
+/**
+ * @module SplitView
+ * @file FILE-PATH: src/views/SplitView.ts
+ *
+ * Single responsibility: render the split flow to the terminal — the
+ * only `@clack/prompts` caller for `split`. Owns its whole clack
+ * session: every exit path (success, missing manifest, error) closes
+ * with `outro()`, so a standalone run never leaves the session
+ * dangling.
+ *
+ * REAL LIVE PROGRESS, NOT A REPLAY. The previous version drove this
+ * through `SplitHooks` passed into `runSplit()`: `onFileStart`/
+ * `onFileSuccess` fired *inside* `runSplit`'s own loop, which meant
+ * every file was already split by the time control returned here — the
+ * later `tasks()` call had no real async work left to do, just canned
+ * strings replayed through a spinner. It also tried to smuggle each
+ * result back out by assigning a property onto the `filename` string
+ * parameter (`(filename as any).__clackResult = ...`) — filename is a
+ * primitive, so that write autoboxes a throwaway wrapper and never
+ * persists; every task rendered blank. Calling `splitSingleFile()`
+ * *inside* each `task()` callback below fixes both problems at once:
+ * the disk work and the spinner are genuinely synchronized (matches
+ * `CompileView`'s pattern), and each task's own closure holds its own
+ * result — nothing needs smuggling through a shared mutable key, and
+ * there's no `any` anywhere.
+ */
 
 import { intro, log, note, outro, tasks } from '@clack/prompts';
 import { initializeSplit, splitSingleFile } from './SplitService';
 import type { State } from '@pendex/core';
 import { View } from '@pendex/core';
 
+/** Renders the interactive split session: intro, per-file progress, summary, and outro. */
 export class SplitView extends View {
+    /** User-facing copy for this view's clack session. */
     private readonly STRINGS = {
         title: 'RUNNING PENDEX SPLIT',
         excludedTitle: 'Excluded Patterns',
@@ -42,11 +49,15 @@ export class SplitView extends View {
         outroFailure: 'Split failed — see errors above.',
     } as const;
 
+    /**
+     * @param state - Shared application state (theme, config, category colors) to render against.
+     */
     constructor(state: State) {
         // Forward `state` whole — see CompileView.ts / View.ts for why.
         super(state);
     }
 
+    /** Runs and renders the full split session, from intro to outro. */
     public override async render(): Promise<void> {
         const { theme, config } = this.state;
         const { outputDir, rebuiltDir, exclude } = config;

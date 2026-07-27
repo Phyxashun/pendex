@@ -1,3 +1,13 @@
+/**
+ * @module HeaderComments
+ *
+ * Standalone dev utility: injects or strips a `// FILE-PATH: <path>`
+ * header comment across every matching project file. Runs as its own
+ * interactive `@clack/prompts` session (`bun run src/utils/HeaderComments.ts`)
+ * with its own minimal `Command` shape and dark theme — deliberately
+ * decoupled from `@pendex/core`'s `Command`/theme system since this is a
+ * one-off maintenance tool, not part of the compile/split pipeline.
+ */
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { cancel, confirm, intro, isCancel, log, note, outro, select, spinner } from '@clack/prompts';
@@ -14,6 +24,7 @@ import { Colors } from '@pendex/color';
  * TYPES
  */
 
+/** Minimal theme contract this standalone tool needs (a subset of `@pendex/theme`'s `DefaultTheme`). */
 interface Theme {
     primary(text: string): string;
     success(text: string): string;
@@ -21,6 +32,7 @@ interface Theme {
     muted(text: string): string;
 }
 
+/** A fixed dark theme used when this tool runs standalone (no `@pendex/theme` dependency). */
 const DarkTheme: Theme = {
     primary: (txt) => Colors.bgCyan(Colors.black(` ${txt} `)),
     success: (txt) => Colors.green(txt),
@@ -28,6 +40,7 @@ const DarkTheme: Theme = {
     muted: (txt) => Colors.dim(txt),
 };
 
+/** Dependencies this tool needs: a theme and the subset of Config relevant to file scanning. */
 interface HeaderCommentsDeps {
     theme: Theme,
     config: {
@@ -36,24 +49,34 @@ interface HeaderCommentsDeps {
     };
 }
 
+/** Result of attempting to add/remove a header comment on one file. */
 interface HeaderUpdate {
+    /** Whether the file's content was actually changed. */
     modified: boolean;
+    /** Why nothing changed, when `modified` is `false`. */
     reason?: string;
 }
 
+/** Aggregate counts from a full inject/strip batch run. */
 interface ScanSummary {
+    /** Total files scanned. */
     total: number;
+    /** Files actually modified. */
     processed: number;
+    /** Files left unchanged (already correct, or excluded). */
     skipped: number;
+    /** Files that errored during processing. */
     failed: number;
 }
 
+/** The menu choices this tool's interactive session offers. */
 type HeaderAction = 'inject' | 'strip' | 'exit';
 
 /**
  * MAIN CLASSES
  */
 
+/** Minimal local command contract for this standalone tool (independent of `@pendex/core`'s `Command`). */
 export abstract class Command {
     abstract readonly key: string;
     abstract readonly label: string;
@@ -62,6 +85,7 @@ export abstract class Command {
     abstract execute(): Promise<void>;
 }
 
+/** Interactive tool that injects or strips `// FILE-PATH:` header comments across the project. */
 export class HeaderComments extends Command {
     readonly key = 'headercomments';
     readonly label = 'HeaderComments Manager';
@@ -92,15 +116,33 @@ export class HeaderComments extends Command {
         comment: '💬',
     } as const;
 
+    /**
+     * @param deps - Theme and config subset this tool needs.
+     */
     constructor(deps: HeaderCommentsDeps) {
         super(deps);
         this.deps = deps;
     }
 
+    /**
+     * Converts a path to POSIX-style forward slashes.
+     *
+     * @param p - Path to convert.
+     * @returns `p` with all backslashes replaced by forward slashes.
+     */
     private toUnixPath(p: string): string {
         return p.replace(/\\/g, '/');
     }
 
+    /**
+     * Whether a path should be skipped: inside `node_modules`/`.git`,
+     * inside the compiled output directory, or matching a configured
+     * exclude glob.
+     *
+     * @param filePath - Candidate path (relative or absolute).
+     * @param compiledExcludes - Pre-compiled `Bun.Glob` exclude patterns.
+     * @returns Whether the path should be ignored.
+     */
     private isIgnorePath(filePath: string, compiledExcludes: any[]): boolean {
         const unixPath = this.toUnixPath(filePath);
         return unixPath.startsWith('node_modules/') ||
@@ -109,6 +151,14 @@ export class HeaderComments extends Command {
             compiledExcludes.some(glob => glob.match(filePath));
     }
 
+    /**
+     * Adds a `// FILE-PATH:` header comment to a file, unless one is
+     * already present. Placed after a shebang line if the file starts
+     * with one.
+     *
+     * @param absolutePath - Absolute path to the file to update.
+     * @returns Whether the file was modified.
+     */
     public async enforceHeaderComments(absolutePath: string): Promise<HeaderUpdate> {
         const file = Bun.file(absolutePath);
         const contents = await file.text();
@@ -138,6 +188,13 @@ export class HeaderComments extends Command {
         return { modified: true };
     }
 
+    /**
+     * Removes a `// FILE-PATH:` header comment from a file, if present.
+     * Handles both shebang-prefixed and plain files.
+     *
+     * @param absolutePath - Absolute path to the file to update.
+     * @returns Whether the file was modified.
+     */
     public async removeHeaderComments(absolutePath: string): Promise<HeaderUpdate> {
         const file = Bun.file(absolutePath);
         const contents = await file.text();
@@ -173,6 +230,13 @@ export class HeaderComments extends Command {
         return { modified: true };
     }
 
+    /**
+     * Scans every matching file under {@link BASE_DIR} and applies
+     * `inject` or `strip` to each non-excluded file.
+     *
+     * @param action - Whether to inject or strip header comments.
+     * @returns Aggregate counts for the run.
+     */
     private async processBatch(action: 'inject' | 'strip'): Promise<ScanSummary> {
         const summary: ScanSummary = { total: 0, processed: 0, skipped: 0, failed: 0 };
         const extensionsList = this.FILE_EXTENSIONS.join(',');
@@ -210,6 +274,7 @@ export class HeaderComments extends Command {
         return summary;
     }
 
+    /** Runs the interactive inject/strip session: menu, confirmation, batch run, and summary report. */
     async execute(): Promise<void> {
         console.clear();
         intro(`${Colors.bgYellow(Colors.black(' HEADERCOMMENTS '))} ${Colors.yellow(Colors.dim('Scans and Synchronizes Headers'))}`);

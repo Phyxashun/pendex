@@ -1,3 +1,12 @@
+/**
+ * @module View
+ *
+ * Base class for Pendex's view layer: holds the shared {@link State}
+ * (theme + config + optional category colors) and provides
+ * {@link View.categoryStyle}, the one shared piece of category-color
+ * behavior every concrete view (CompileView, SplitView, ...) needs.
+ */
+
 import { Colors } from '@pendex/color';
 import type { Category, State } from './types';
 
@@ -11,9 +20,16 @@ export function identity<T>(value: T): T {
     return value;
 }
 
+/**
+ * Base class for a Pendex view. Concrete views (e.g. `CompileView`,
+ * `SplitView`) extend this to render output for a given {@link State}.
+ */
 export class View {
     protected readonly state: State;
 
+    /**
+     * @param state - The shared application state (theme, config, and optional category colors) this view renders against.
+     */
     constructor(state: State) {
         // No `theme` fallback here: State.theme is a required Theme, not
         // Theme | undefined, and every real caller (Application.init(),
@@ -29,6 +45,7 @@ export class View {
         this.state = state;
     }
 
+    /** Renders this view's output. Base implementation is a no-op; subclasses override. */
     public async render(): Promise<void> {
         return;
     }
@@ -41,6 +58,10 @@ export class View {
      * including every theme that has no [brand] table at all — so a
      * view can always call this and get sensible output regardless of
      * which theme is active.
+     *
+     * @param category - The category to look up a brand color for.
+     * @param fallback - Style function to use when no brand color is defined for `category`.
+     * @returns A style function: either the resolved brand-color styler, or `fallback`.
      */
     protected categoryStyle(category: Category, fallback: (text: string) => string): (text: string) => string {
         const hex = this.state.categoryColors?.[category];

@@ -1,19 +1,29 @@
-// FILE-PATH: src/components/ThemeManager.ts
-//
-// SINGLE RESPONSIBILITY: own the process's active Theme, exactly the way
-// ConfigManager owns the active Config. Loads src/themes/<name>.toml via
-// Bun.TOML.parse, hands the raw object to ThemePalette.parsePendexTheme()
-// for validation, builds a DefaultTheme from its `colors` through
-// ThemePalette.buildTheme, wraps it in useTheme's chaining engine, and
-// hands the same Theme instance to every caller. Unknown theme names,
-// missing files, or malformed TOML degrade to the brand palette, never
-// crash — the theme is cosmetic and must never take the app down.
+/**
+ * @module ThemeManager
+ * @file FILE-PATH: src/components/ThemeManager.ts
+ *
+ * Single responsibility: own the process's active Theme, exactly the way
+ * `ConfigManager` owns the active Config. Loads `src/themes/<name>.toml`
+ * via `Bun.TOML.parse`, hands the raw object to
+ * `ThemePalette.parsePendexTheme()` for validation, builds a
+ * `DefaultTheme` from its `colors` through `ThemePalette.buildTheme`,
+ * wraps it in `useTheme`'s chaining engine, and hands the same `Theme`
+ * instance to every caller. Unknown theme names, missing files, or
+ * malformed TOML degrade to the brand palette, never crash — the theme
+ * is cosmetic and must never take the app down.
+ */
 
 import { buildTheme, parsePendexTheme, type PendexTheme, type ThemeName } from './ThemePalette';
 import { useTheme, type Theme } from './useTheme';
 
+/** Directory containing `<name>.toml` theme files (`packages/theme/themes/`). */
 const THEMES_DIR = `${import.meta.dir}/../themes`;   // packages/theme/themes/
 
+/**
+ * Process-wide singleton that owns the active {@link Theme}. Use
+ * {@link ThemeManager.getInstance} to obtain it; the constructor is
+ * private.
+ */
 export class ThemeManager {
     private static instance: ThemeManager | null = null;
 
@@ -27,7 +37,12 @@ export class ThemeManager {
         this.pendexTheme = pendexTheme;
     }
 
-    /** Reads and validates src/themes/<name>.toml into a full PendexTheme. */
+    /**
+     * Reads and validates `src/themes/<name>.toml` into a full PendexTheme.
+     *
+     * @param name - Theme name (file stem under `THEMES_DIR`).
+     * @returns The validated {@link PendexTheme}, degrading to the brand palette on any failure.
+     */
     private static async readPendexTheme(name: ThemeName): Promise<PendexTheme> {
         const file = Bun.file(`${THEMES_DIR}/${name}.toml`);
         if (!(await file.exists())) return parsePendexTheme(undefined, name);
@@ -45,6 +60,9 @@ export class ThemeManager {
      * The first call decides the theme for the process; subsequent calls
      * return the same instance regardless of the name passed — same
      * contract as ConfigManager.
+     *
+     * @param themeName - Theme to load on first call (default `'pendex'`); ignored on subsequent calls.
+     * @returns The shared {@link ThemeManager} instance.
      */
     public static async getInstance(themeName: ThemeName = 'pendex'): Promise<ThemeManager> {
         if (!this.instance) {

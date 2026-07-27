@@ -15,8 +15,20 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
+/**
+ * @module index
+ *
+ * The pendex CLI's process entry point: runs the interactive
+ * {@link App} shell and reports any uncaught error as a fatal crash.
+ */
+
 import App from './components/App';
 
+/**
+ * Logs a fatal, uncaught error to the console in a consistent format.
+ *
+ * @param msg - The error (or arbitrary thrown value) to report.
+ */
 export const Message = (msg: unknown): void => {
     if (msg instanceof Error) {
         console.error(`Fatal crash: ${msg.message}`);

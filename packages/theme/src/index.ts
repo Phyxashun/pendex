@@ -1,3 +1,12 @@
+/**
+ * @module @pendex/theme
+ *
+ * Public entry point for the `@pendex/theme` package: the singleton
+ * {@link ThemeManager}, the palette/schema types from `ThemePalette`,
+ * the {@link useTheme} chaining engine, and the synchronous
+ * {@link FallbackTheme} for contexts that can't await a file read.
+ */
+
 // FILE-PATH: packages/theme/src/index.ts
 export { ThemeManager } from './ThemeManager';
 export {

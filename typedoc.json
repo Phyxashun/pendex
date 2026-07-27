@@ -1,0 +1,24 @@
+{
+    "$schema": "https://typedoc.org/schema.json",
+    "entryPoints": [
+        "packages/color/src/index.ts",
+        "packages/theme/src/index.ts",
+        "packages/core/src/index.ts",
+        "packages/compile/src/index.ts",
+        "packages/split/src/index.ts"
+    ],
+    "out": "packages/api-docs/public/api",
+    "tsconfig": "tsconfig.typedoc.json",
+    "skipErrorChecking": true,
+    "name": "Pendex API Reference",
+    "readme": "none",
+    "excludePrivate": true,
+    "excludeInternal": true,
+    "excludeExternals": true,
+    "hideGenerator": true,
+    "categorizeByGroup": true,
+    "navigationLinks": {
+        "Guide": "../"
+    },
+    "sort": ["source-order"]
+}

@@ -1,5 +1,10 @@
 name: Deploy Pendex Frontend
 
+# Builds packages/home (the site root) and packages/api-docs (the
+# generated user guide + TypeDoc API reference), then combines them
+# into a single GitHub Pages artifact — home at /, api-docs nested at
+# /docs/. GitHub Pages only serves one artifact per repo, so both apps
+# have to land in one upload rather than two competing workflows.
 on:
   push:
     branches: [main] # Adjust if your base target branch is 'master'
@@ -22,13 +27,30 @@ jobs:
       - name: Install dependencies
         run: bun install
 
-      - name: Build app
+      - name: Build home
         run: bun run build:home
+
+      # typedoc runs first (via api-docs's own "build" script) and writes
+      # into packages/api-docs/public/api, so `vite build` picks it up as
+      # static assets and copies it into packages/api-docs/dist/api
+      # automatically.
+      - name: Build api-docs
+        run: bun run --cwd packages/api-docs build
+
+      # Stage both builds into one directory tree before upload: home's
+      # build becomes the site root, api-docs's build is nested under
+      # docs/ to match its vite.config.ts base of '/pendex/docs/'.
+      - name: Combine builds
+        run: |
+          mkdir -p site
+          cp -r packages/home/dist/. site/
+          mkdir -p site/docs
+          cp -r packages/api-docs/dist/. site/docs/
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: packages/home/dist # Direct path to your package build folder
+          path: site
 
   deploy:
     needs: build-and-deploy

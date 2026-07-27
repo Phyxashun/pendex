@@ -1,0 +1,31 @@
+{
+    "name": "@pendex/api-docs",
+    "version": "1.0.0",
+    "description": "User guide and API documentation hub for Pendex, deployed to GitHub Pages.",
+    "author": "Dustin `Dusty` Dew (Phyxashun) <phyxashun@gmail.com>",
+    "license": "MIT",
+    "private": true,
+    "type": "module",
+    "scripts": {
+        "dev": "vite",
+        "api-docs": "typedoc --options ../../typedoc.json",
+        "build": "bun run api-docs && tsc --noEmit && vite build",
+        "preview": "vite preview",
+        "typecheck": "tsc --noEmit"
+    },
+    "dependencies": {
+        "react": "^19.1.0",
+        "react-dom": "^19.1.0"
+    },
+    "devDependencies": {
+        "@types/react": "^19.1.2",
+        "@types/react-dom": "^19.1.2",
+        "@vitejs/plugin-react": "^4.3.4",
+        "@tailwindcss/vite": "^4.1.4",
+        "tailwindcss": "^4.1.4",
+        "daisyui": "^5.0.35",
+        "typedoc": "^0.27.9",
+        "typescript": "^5.8.3",
+        "vite": "^6.3.1"
+    }
+}
