@@ -1,4 +1,13 @@
 [test]
+# Scopes test discovery to the root tests/ directory only. Without this,
+# plain `bun test` (the first half of package.json's "test" script)
+# also recurses into packages/*/tests — which then run a SECOND time
+# when `bun run --filter '*' test` (the second half) explicitly invokes
+# each package's own test script. Same principle as each package's own
+# bunfig.toml `root = "."` — every test file should be discovered by
+# exactly one of these, never both.
+root = "tests"
+
 preload = ["./tests/preload.ts"]
 coverage = true
 coverageSkipTestFiles = true
@@ -7,9 +16,7 @@ coverageSkipTestFiles = true
 # ALL/ and ALL_REBUILT/ (Pendex's own compile/split output dirs) and
 # re-runs every test a second time from the copies sitting there —
 # bun only excludes node_modules/ and dot-directories by default, it
-# does not consult .gitignore for test discovery. This is what was
-# doubling "Ran N tests across M files" and reporting every failure
-# twice.
+# does not consult .gitignore for test discovery.
 pathIgnorePatterns = ["ALL/**", "ALL_REBUILT/**"]
 
 # Standalone utilities are out of scope for the px command set (see

@@ -19,6 +19,7 @@ brwhite
 bryellow
 bun
 bunfig
+chdir
 Cheatsheet
 clike
 clsx

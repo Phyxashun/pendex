@@ -1,4 +1,13 @@
 [test]
+# Scopes test discovery to THIS package only. Without this, `bun test`
+# run via `bun run --filter '*' test` (which runs every package's test
+# script in parallel) resolves "the project" as the whole workspace
+# root instead of this package's own directory — meaning every package
+# silently re-ran the entire suite (root tests/ included) on top of its
+# own, colliding on the same sandbox directories at the same time. This
+# is what produced the interleaved, duplicated log output.
+root = "."
+
 preload = ["./tests/preload.ts"]
 coverage = true
 coverageSkipTestFiles = true

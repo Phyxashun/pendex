@@ -1,6 +1,5 @@
 [test]
 root = "."
 
-preload = ["./tests/preload.ts"]
 coverage = true
 coverageSkipTestFiles = true

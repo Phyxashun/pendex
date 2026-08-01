@@ -4,5 +4,7 @@
 # test's beforeEach is sufficient — no module mock required. (It used to
 # need one, before Constants.ts's fields were fixed to stop freezing
 # BASE_DIR at first import.)
+root = "."
+
 coverage = true
 coverageSkipTestFiles = true
