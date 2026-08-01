@@ -70,15 +70,21 @@ class ConstantsManager {
     // sandbox does this) would be invisible to it, silently pointing
     // .gitignore/runtime.config.json lookups at the wrong directory.
     /** The current process's working directory, read live on every access. */
-    public get BASE_DIR(): string { return process.cwd(); }
+    public get BASE_DIR(): string {
+        return process.cwd();
+    }
     /** Default directory name for compiled output. */
     public readonly OUTPUT_DIR = 'ALL';
     /** Default directory name for split (rebuilt) output. */
     public readonly REBUILT_DIR = 'ALL_REBUILT';
     /** Absolute path to `.gitignore` under {@link BASE_DIR}. */
-    public get GITIGNORE_PATH(): string { return joinPath(this.BASE_DIR, '.gitignore'); }
+    public get GITIGNORE_PATH(): string {
+        return joinPath(this.BASE_DIR, '.gitignore');
+    }
     /** Absolute path to `runtime.config.json` under {@link BASE_DIR}. */
-    public get RUNTIME_CONFIG_PATH(): string { return joinPath(this.BASE_DIR, 'runtime.config.json'); }
+    public get RUNTIME_CONFIG_PATH(): string {
+        return joinPath(this.BASE_DIR, 'runtime.config.json');
+    }
     /** Text encoding used when reading/writing files. */
     public readonly ENCODING = 'utf-8';
 

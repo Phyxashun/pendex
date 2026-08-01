@@ -71,29 +71,35 @@ export class SplitView extends View {
             const ctx = await initializeSplit(outputDir, rebuiltDir);
 
             if (!ctx) {
-                log.error(`${theme.error(`${this.STRINGS.noManifest} /${outputDir}. ${this.STRINGS.pleaseCompile}`)}`);
+                log.error(
+                    `${theme.error(`${this.STRINGS.noManifest} /${outputDir}. ${this.STRINGS.pleaseCompile}`)}`,
+                );
                 outro(`${theme.muted(this.STRINGS.outroNoManifest)}`);
                 return;
             }
 
-            note(
-                exclude.join(', '),
-                this.STRINGS.excludedTitle,
-                { format: (text: string) => `${theme.muted(text)}` }
-            );
+            note(exclude.join(', '), this.STRINGS.excludedTitle, {
+                format: (text: string) => `${theme.muted(text)}`,
+            });
 
             let totalRecreated = 0;
 
             // splitSingleFile runs INSIDE task() — the real work and the
             // spinner are the same operation, not a replay of one.
-            const fileTasks = Object.keys(ctx.manifest.files).map((filename) => {
+            const fileTasks = Object.keys(ctx.manifest.files).map(filename => {
                 const category = ctx.manifest.categories?.[filename];
-                const titleStyle = category ? this.categoryStyle(category, theme.bold) : theme.bold;
+                const titleStyle = category
+                    ? this.categoryStyle(category, theme.bold)
+                    : theme.bold;
 
                 return {
                     title: `${this.STRINGS.presentAction} ${titleStyle(filename)}`,
                     task: async (): Promise<string> => {
-                        const outcome = await splitSingleFile(outputDir, rebuiltDir, filename);
+                        const outcome = await splitSingleFile(
+                            outputDir,
+                            rebuiltDir,
+                            filename,
+                        );
 
                         if (!outcome.archiveFound) {
                             return `${theme.muted(this.STRINGS.missingSource)}`;

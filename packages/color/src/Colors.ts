@@ -80,7 +80,10 @@ const bg = (code: number): Styler => style(`${ESC}${code}m`, `${ESC}49m`);
 const parseHex = (hex: string): [number, number, number] => {
     let value = hex.startsWith('#') ? hex.slice(1) : hex;
     if (value.length === 3) {
-        value = value.split('').map(ch => ch + ch).join('');
+        value = value
+            .split('')
+            .map(ch => ch + ch)
+            .join('');
     }
     if (!/^[0-9a-fA-F]{6}$/.test(value)) {
         throw new Error(`Colors: invalid hex color "${hex}"`);
@@ -105,11 +108,17 @@ const parseHex = (hex: string): [number, number, number] => {
  */
 export class Colors {
     /** Whether color output is currently enabled. For tests and explicit overrides; detection runs once at module load. */
-    static get isEnabled(): boolean { return enabled; }
+    static get isEnabled(): boolean {
+        return enabled;
+    }
     /** Force-enables ANSI color output, overriding auto-detection. */
-    static enable(): void { enabled = true; }
+    static enable(): void {
+        enabled = true;
+    }
     /** Force-disables ANSI color output, overriding auto-detection. */
-    static disable(): void { enabled = false; }
+    static disable(): void {
+        enabled = false;
+    }
 
     /** @category Modifiers */
     static readonly reset: Styler = style(`${ESC}0m`, `${ESC}0m`);

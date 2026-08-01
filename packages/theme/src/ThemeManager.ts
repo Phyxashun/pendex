@@ -13,11 +13,16 @@
  * is cosmetic and must never take the app down.
  */
 
-import { buildTheme, parsePendexTheme, type PendexTheme, type ThemeName } from './ThemePalette';
+import {
+    buildTheme,
+    parsePendexTheme,
+    type PendexTheme,
+    type ThemeName,
+} from './ThemePalette';
 import { useTheme, type Theme } from './useTheme';
 
 /** Directory containing `<name>.toml` theme files (`packages/theme/themes/`). */
-const THEMES_DIR = `${import.meta.dir}/../themes`;   // packages/theme/themes/
+const THEMES_DIR = `${import.meta.dir}/../themes`; // packages/theme/themes/
 
 /**
  * Process-wide singleton that owns the active {@link Theme}. Use
@@ -31,7 +36,11 @@ export class ThemeManager {
     private readonly themeName: ThemeName;
     private readonly pendexTheme: PendexTheme;
 
-    private constructor(themeName: ThemeName, theme: Theme, pendexTheme: PendexTheme) {
+    private constructor(
+        themeName: ThemeName,
+        theme: Theme,
+        pendexTheme: PendexTheme,
+    ) {
         this.themeName = themeName;
         this.theme = theme;
         this.pendexTheme = pendexTheme;
@@ -43,7 +52,9 @@ export class ThemeManager {
      * @param name - Theme name (file stem under `THEMES_DIR`).
      * @returns The validated {@link PendexTheme}, degrading to the brand palette on any failure.
      */
-    private static async readPendexTheme(name: ThemeName): Promise<PendexTheme> {
+    private static async readPendexTheme(
+        name: ThemeName,
+    ): Promise<PendexTheme> {
         const file = Bun.file(`${THEMES_DIR}/${name}.toml`);
         if (!(await file.exists())) return parsePendexTheme(undefined, name);
 
@@ -64,7 +75,9 @@ export class ThemeManager {
      * @param themeName - Theme to load on first call (default `'pendex'`); ignored on subsequent calls.
      * @returns The shared {@link ThemeManager} instance.
      */
-    public static async getInstance(themeName: ThemeName = 'pendex'): Promise<ThemeManager> {
+    public static async getInstance(
+        themeName: ThemeName = 'pendex',
+    ): Promise<ThemeManager> {
         if (!this.instance) {
             const pendexTheme = await this.readPendexTheme(themeName);
             const theme = useTheme(buildTheme(pendexTheme.colors));

@@ -1,12 +1,22 @@
-
 import { beforeAll, describe, expect, test } from 'bun:test';
 import { Colors } from '@pendex/color';
 import { FallbackTheme } from '../src';
 
 const ALL_STYLE_KEYS = [
-    'primary', 'secondary', 'success', 'warning', 'error', 'info', 'muted',
-    'title', 'subtitle',
-    'color', 'backgroundColor', 'bold', 'italic', 'textDecoration',
+    'primary',
+    'secondary',
+    'success',
+    'warning',
+    'error',
+    'info',
+    'muted',
+    'title',
+    'subtitle',
+    'color',
+    'backgroundColor',
+    'bold',
+    'italic',
+    'textDecoration',
 ] as const;
 
 describe('Theme System (chaining engine over the fallback brand theme)', () => {
@@ -37,7 +47,10 @@ describe('Theme System (chaining engine over the fallback brand theme)', () => {
     });
 
     test('unknown property resolves to undefined (Proxy fall-through)', () => {
-        const themeAsRecord = FallbackTheme as unknown as Record<string, unknown>;
+        const themeAsRecord = FallbackTheme as unknown as Record<
+            string,
+            unknown
+        >;
         expect(themeAsRecord['definitelyNotAStyle']).toBeUndefined();
     });
 });

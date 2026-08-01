@@ -38,7 +38,10 @@ export interface SplitHooks {
     /** Called before a job's archive starts splitting. */
     onFileStart?: (filename: string) => void | Promise<void>;
     /** Called after a job's archive finishes splitting. */
-    onFileSuccess?: (filename: string, outcome: SplitFileOutcome) => void | Promise<void>;
+    onFileSuccess?: (
+        filename: string,
+        outcome: SplitFileOutcome,
+    ) => void | Promise<void>;
 }
 
 /**
@@ -47,7 +50,9 @@ export interface SplitHooks {
  * @param outputDir - Directory to read `manifest.json` from.
  * @returns The parsed {@link Manifest}, or `null` if the file doesn't exist.
  */
-export async function readManifest(outputDir: string): Promise<Manifest | null> {
+export async function readManifest(
+    outputDir: string,
+): Promise<Manifest | null> {
     const manifestFile = Bun.file(joinPath(outputDir, 'manifest.json'));
     if (!(await manifestFile.exists())) return null;
     return manifestFile.json() as Promise<Manifest>;
@@ -68,9 +73,14 @@ export async function prepareRebuildDirectory(dir: string): Promise<void> {
  * @param rebuiltDir - Base rebuild directory.
  * @param emptyDirectories - Directory paths (relative to the original project root) to recreate.
  */
-export async function restoreEmptyDirectories(rebuiltDir: string, emptyDirectories: string[]): Promise<void> {
+export async function restoreEmptyDirectories(
+    rebuiltDir: string,
+    emptyDirectories: string[],
+): Promise<void> {
     await Promise.all(
-        emptyDirectories.map(dir => Bun.$`mkdir -p ${joinPath(rebuiltDir, dir)}`)
+        emptyDirectories.map(
+            dir => Bun.$`mkdir -p ${joinPath(rebuiltDir, dir)}`,
+        ),
     );
 }
 
@@ -86,7 +96,11 @@ export async function restoreEmptyDirectories(rebuiltDir: string, emptyDirectori
  * @param filename - The job's archive filename.
  * @returns The split outcome for this job.
  */
-export async function splitArchiveFile(outputDir: string, rebuiltDir: string, filename: string): Promise<SplitFileOutcome> {
+export async function splitArchiveFile(
+    outputDir: string,
+    rebuiltDir: string,
+    filename: string,
+): Promise<SplitFileOutcome> {
     const archiveFile = Bun.file(archivePathFor(outputDir, filename));
     if (!(await archiveFile.exists())) {
         return { filename, archiveFound: false, filesRecreated: 0 };
@@ -118,11 +132,15 @@ export async function splitArchiveFile(outputDir: string, rebuiltDir: string, fi
 export async function runSplit(
     outputDir: string,
     rebuiltDir: string,
-    hooks?: SplitHooks
+    hooks?: SplitHooks,
 ): Promise<SplitSummary> {
     const manifest = await readManifest(outputDir);
     if (!manifest) {
-        return { manifestFound: false, fileOutcomes: [], totalFilesRecreated: 0 };
+        return {
+            manifestFound: false,
+            fileOutcomes: [],
+            totalFilesRecreated: 0,
+        };
     }
 
     if (hooks?.onSplitStart) {
@@ -150,7 +168,10 @@ export async function runSplit(
     return {
         manifestFound: true,
         fileOutcomes,
-        totalFilesRecreated: fileOutcomes.reduce((sum, o) => sum + o.filesRecreated, 0),
+        totalFilesRecreated: fileOutcomes.reduce(
+            (sum, o) => sum + o.filesRecreated,
+            0,
+        ),
     };
 }
 
@@ -164,7 +185,10 @@ export async function runSplit(
  * @param rebuiltDir - Directory to recreate original files into.
  * @returns The read manifest, or `null` if `manifest.json` wasn't found.
  */
-export async function initializeSplit(outputDir: string, rebuiltDir: string): Promise<{ manifest: Manifest } | null> {
+export async function initializeSplit(
+    outputDir: string,
+    rebuiltDir: string,
+): Promise<{ manifest: Manifest } | null> {
     const manifest = await readManifest(outputDir);
     if (!manifest) return null;
 
@@ -183,6 +207,10 @@ export async function initializeSplit(outputDir: string, rebuiltDir: string): Pr
  * @param filename - The job's archive filename.
  * @returns The split outcome for this job.
  */
-export async function splitSingleFile(outputDir: string, rebuiltDir: string, filename: string): Promise<SplitFileOutcome> {
+export async function splitSingleFile(
+    outputDir: string,
+    rebuiltDir: string,
+    filename: string,
+): Promise<SplitFileOutcome> {
     return await splitArchiveFile(outputDir, rebuiltDir, filename);
 }

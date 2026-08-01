@@ -13,7 +13,7 @@ Built on [Bun](https://bun.sh) + TypeScript, using [`@clack/prompts`](https://ww
 
 ## About the name
 
-Pendex comes from two sources: the mathematical notation for a **power set** — 𝒫(A), the set of every subset of a set — and the Latin roots behind words like *index* and *codex* ("one who points out"; "book, collection"). Neither is literal — Pendex doesn't archive every possible subset of a project's files — but the name is meant to carry that same sense of *totality*: not a compressed export, but a complete, canonical textual representation of a project that can be explored, shared, and reconstructed.
+Pendex comes from two sources: the mathematical notation for a **power set** — 𝒫(A), the set of every subset of a set — and the Latin roots behind words like _index_ and _codex_ ("one who points out"; "book, collection"). Neither is literal — Pendex doesn't archive every possible subset of a project's files — but the name is meant to carry that same sense of _totality_: not a compressed export, but a complete, canonical textual representation of a project that can be explored, shared, and reconstructed.
 
 | Mathematics    | Pendex                                      |
 | -------------- | ------------------------------------------- |
@@ -181,11 +181,11 @@ classDiagram
 
 ### Why this split, and why not everywhere
 
-- **`ArchiveFormat.ts` exists because `Compile` and `Split` used to each have half-knowledge of the same text format** — banners were *written* in one file and *parsed* with separately-maintained regexes in another. That's the exact failure mode SoC prevents: two places that must agree on one thing, with nothing enforcing it. Now there's one file that owns the format in both directions.
+- **`ArchiveFormat.ts` exists because `Compile` and `Split` used to each have half-knowledge of the same text format** — banners were _written_ in one file and _parsed_ with separately-maintained regexes in another. That's the exact failure mode SoC prevents: two places that must agree on one thing, with nothing enforcing it. Now there's one file that owns the format in both directions.
 - **`CompileService`/`SplitService` never import `@clack/prompts`.** That's the actual test of the boundary — if a service needed the terminal to do its job, the split wouldn't be real. It also means `runCompile()` / `runSplit()` work headlessly (used by the standalone `import.meta.main` entry points) without dragging along interactive-only rendering.
-- **`Exit.ts` is deliberately *not* split** into command/service/view. It's one `outro()` call and a `process.exit()` — three files for that would be separation for its own sake. See the comment at the top of `Exit.ts`.
-- **`Application` (`App.ts`) is deliberately *not* split** either. It's the root — in the React analogy, the thing that mounts everything else — and its only real behavior (the menu select-loop) is inherently both state and render at once. Forcing that apart would add indirection without adding clarity.
-- **`ThemePalette.ts` / `useTheme.ts`** split the same way: palette (*what colors mean*) from the Proxy-based chaining engine (*how  composition works*). `useTheme.ts` doesn't know what a color is; `ThemePalette.ts` doesn't know how chaining works. This also means swapping `picocolors` for a custom `Color` class later only touches `ThemePalette.ts`.
+- **`Exit.ts` is deliberately _not_ split** into command/service/view. It's one `outro()` call and a `process.exit()` — three files for that would be separation for its own sake. See the comment at the top of `Exit.ts`.
+- **`Application` (`App.ts`) is deliberately _not_ split** either. It's the root — in the React analogy, the thing that mounts everything else — and its only real behavior (the menu select-loop) is inherently both state and render at once. Forcing that apart would add indirection without adding clarity.
+- **`ThemePalette.ts` / `useTheme.ts`** split the same way: palette (_what colors mean_) from the Proxy-based chaining engine (_how composition works_). `useTheme.ts` doesn't know what a color is; `ThemePalette.ts` doesn't know how chaining works. This also means swapping `picocolors` for a custom `Color` class later only touches `ThemePalette.ts`.
 
 ## Configuration
 
@@ -193,7 +193,7 @@ Defaults live in [`src/config/config.toml`](./src/config/config.toml):
 
 - `outputDir` / `rebuiltDir` — where `compile` writes archives and `split` rebuilds into, respectively.
 - `exclude` — glob patterns applied globally, on top of `.gitignore`.
-- `[[jobs]]` — one block per output `.txt` file: `filename`, `description`, `include` globs, and job-specific `exclude` globs. **A job with an empty `include` list is a *remainder* job** — it catches every file no earlier job claimed (see `8_MISC_FILES`) — and must stay last in the array.
+- `[[jobs]]` — one block per output `.txt` file: `filename`, `description`, `include` globs, and job-specific `exclude` globs. **A job with an empty `include` list is a _remainder_ job** — it catches every file no earlier job claimed (see `8_MISC_FILES`) — and must stay last in the array.
 
 At runtime, an optional `runtime.config.json` in the project root overrides any of the above. There's no interactive settings editor; edit `runtime.config.json` (or `config.toml` for the shipped defaults) directly.
 
@@ -213,7 +213,7 @@ At runtime, an optional `runtime.config.json` in the project root overrides any 
 // FILE-PATH: <path>
 ```
 
-comment at the top  of project files. Run it directly:
+comment at the top of project files. Run it directly:
 
 ```sh
 bun run src/utils/HeaderComments.ts
@@ -251,3 +251,4 @@ src/
     HeaderComments.ts
     update-config.ts
     validators.ts
+```

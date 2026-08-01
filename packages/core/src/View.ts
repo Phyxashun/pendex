@@ -63,7 +63,10 @@ export class View {
      * @param fallback - Style function to use when no brand color is defined for `category`.
      * @returns A style function: either the resolved brand-color styler, or `fallback`.
      */
-    protected categoryStyle(category: Category, fallback: (text: string) => string): (text: string) => string {
+    protected categoryStyle(
+        category: Category,
+        fallback: (text: string) => string,
+    ): (text: string) => string {
         const hex = this.state.categoryColors?.[category];
         if (!hex) return fallback;
         return (text: string) => Colors.bold(Colors.hex(hex)(text));

@@ -32,10 +32,15 @@ describe('Compile → Split round trip (cross-package)', () => {
 
         testConfig.outputDir = 'OUT';
         testConfig.rebuiltDir = 'REBUILT';
-        testConfig.jobs = [{
-            filename: 'code.txt', category: 'source', description: 'Source files',
-            include: ['src/**/*.ts'], exclude: ['**/ignore-me.ts'],
-        }];
+        testConfig.jobs = [
+            {
+                filename: 'code.txt',
+                category: 'source',
+                description: 'Source files',
+                include: ['src/**/*.ts'],
+                exclude: ['**/ignore-me.ts'],
+            },
+        ];
 
         mkdirSync('src/utils', { recursive: true });
         // Fixtures WITH trailing newlines — verbatim round-trip must
@@ -56,22 +61,30 @@ describe('Compile → Split round trip (cross-package)', () => {
         const state = { theme: FallbackTheme, config: testConfig };
         await new Compile(state).execute();
 
-        const manifest: Manifest = await Bun.file(join('OUT', 'manifest.json')).json();
+        const manifest: Manifest = await Bun.file(
+            join('OUT', 'manifest.json'),
+        ).json();
         expect(manifest.files['code.txt']).toContain('src/index.ts');
         expect(manifest.categories?.['code.txt']).toBe('source');
 
         await new Split(state).execute();
 
         const originalIndex = await Bun.file('src/index.ts').text();
-        const rebuiltIndex = await Bun.file(join('REBUILT', 'src', 'index.ts')).text();
+        const rebuiltIndex = await Bun.file(
+            join('REBUILT', 'src', 'index.ts'),
+        ).text();
         expect(rebuiltIndex).toBe(originalIndex);
 
         const originalHelper = await Bun.file('src/utils/helper.ts').text();
-        const rebuiltHelper = await Bun.file(join('REBUILT', 'src/utils/helper.ts')).text();
+        const rebuiltHelper = await Bun.file(
+            join('REBUILT', 'src/utils/helper.ts'),
+        ).text();
         expect(rebuiltHelper).toBe(originalHelper);
 
         // Excluded file must not be rebuilt:
-        expect(await Bun.file(join('REBUILT', 'src/utils/ignore-me.ts')).exists()).toBe(false);
+        expect(
+            await Bun.file(join('REBUILT', 'src/utils/ignore-me.ts')).exists(),
+        ).toBe(false);
     });
 
     test('SplitView performs a real split with live per-file progress', async () => {
@@ -84,19 +97,33 @@ describe('Compile → Split round trip (cross-package)', () => {
         const view = new SplitView(state);
         await expect(view.render()).resolves.toBeUndefined();
 
-        const rebuilt = await Bun.file(join('REBUILT', 'src', 'index.ts')).text();
+        const rebuilt = await Bun.file(
+            join('REBUILT', 'src', 'index.ts'),
+        ).text();
         expect(rebuilt).toBe('console.log("hello");\n');
     });
 
     test('Split handles a missing manifest without throwing', async () => {
-        const splitCmd = new Split({ theme: FallbackTheme, config: testConfig });
+        const splitCmd = new Split({
+            theme: FallbackTheme,
+            config: testConfig,
+        });
         await expect(splitCmd.execute()).resolves.toBeUndefined();
     });
 
     test('Split handles a missing archive file without throwing', async () => {
         mkdirSync('OUT', { recursive: true });
-        writeFileSync('OUT/manifest.json', JSON.stringify({ files: { 'missing.txt': [] }, emptyDirectories: [] }));
-        const splitCmd = new Split({ theme: FallbackTheme, config: testConfig });
+        writeFileSync(
+            'OUT/manifest.json',
+            JSON.stringify({
+                files: { 'missing.txt': [] },
+                emptyDirectories: [],
+            }),
+        );
+        const splitCmd = new Split({
+            theme: FallbackTheme,
+            config: testConfig,
+        });
         await expect(splitCmd.execute()).resolves.toBeUndefined();
     });
 
@@ -104,8 +131,12 @@ describe('Compile → Split round trip (cross-package)', () => {
         const state = { theme: FallbackTheme, config: testConfig };
         await new Compile(state).execute();
 
-        const manifest: Manifest = await Bun.file(join('OUT', 'manifest.json')).json();
-        expect(manifest.emptyDirectories.map(d => d.replace(/\\/g, '/'))).toContain('src/empty-dir');
+        const manifest: Manifest = await Bun.file(
+            join('OUT', 'manifest.json'),
+        ).json();
+        expect(
+            manifest.emptyDirectories.map(d => d.replace(/\\/g, '/')),
+        ).toContain('src/empty-dir');
 
         await new Split(state).execute();
 

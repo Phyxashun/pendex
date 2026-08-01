@@ -1,4 +1,3 @@
-
 import { describe, expect, test } from 'bun:test';
 import {
     archivePathFor,
@@ -10,7 +9,9 @@ import {
 describe('ArchiveFormat (frame-delimited, verbatim, no tearline)', () => {
     test('build → parse recovers path and content exactly', () => {
         const original = 'console.log("hello");';
-        const results = parseArchive(buildArchiveEntry('src/index.ts', original));
+        const results = parseArchive(
+            buildArchiveEntry('src/index.ts', original),
+        );
 
         expect(results).toHaveLength(1);
         expect(results[0]!.originalPath).toBe('src/index.ts');
@@ -18,8 +19,17 @@ describe('ArchiveFormat (frame-delimited, verbatim, no tearline)', () => {
     });
 
     test('verbatim edge cases: trailing newlines, empty file, CRLF, leading whitespace', () => {
-        for (const original of ['x\n', 'x\n\n', '', '\n', 'a\r\nb\r\n', '\n  indented\n']) {
-            const results = parseArchive(buildArchiveEntry('src/f.ts', original));
+        for (const original of [
+            'x\n',
+            'x\n\n',
+            '',
+            '\n',
+            'a\r\nb\r\n',
+            '\n  indented\n',
+        ]) {
+            const results = parseArchive(
+                buildArchiveEntry('src/f.ts', original),
+            );
             expect(results).toHaveLength(1);
             expect(results[0]!.content).toBe(original);
         }
@@ -40,7 +50,9 @@ describe('ArchiveFormat (frame-delimited, verbatim, no tearline)', () => {
     });
 
     test('rebuilt content contains no banner residue', () => {
-        const results = parseArchive(buildArchiveEntry('a/b.ts', 'const x = 1;'));
+        const results = parseArchive(
+            buildArchiveEntry('a/b.ts', 'const x = 1;'),
+        );
         const content = results[0]!.content;
 
         expect(content).not.toContain('■');
@@ -77,7 +89,10 @@ describe('ArchiveFormat (frame-delimited, verbatim, no tearline)', () => {
     });
 
     test('an unterminated START frame is skipped without consuming later entries', () => {
-        const startOnly = buildArchiveEntry('lost.ts', 'orphan').split('\n').slice(0, 8).join('\n');
+        const startOnly = buildArchiveEntry('lost.ts', 'orphan')
+            .split('\n')
+            .slice(0, 8)
+            .join('\n');
         const raw = `${startOnly}\n\n${buildArchiveEntry('ok.ts', 'fine')}`;
         const results = parseArchive(raw);
         expect(results).toHaveLength(1);
@@ -92,12 +107,14 @@ describe('ArchiveFormat (frame-delimited, verbatim, no tearline)', () => {
     test('a frame with a blank path is not treated as an entry', () => {
         const entry = buildArchiveEntry('src/x.ts', 'content');
         const lines = entry.split('\n');
-        lines[3] = '// PATH     :    ';   // start frame path blanked
+        lines[3] = '// PATH     :    '; // start frame path blanked
         expect(parseArchive(lines.join('\n'))).toHaveLength(0);
     });
 
     test('windows-style path separators are normalized to posix', () => {
-        const results = parseArchive(buildArchiveEntry('src\\utils\\helper.ts', 'x'));
+        const results = parseArchive(
+            buildArchiveEntry('src\\utils\\helper.ts', 'x'),
+        );
         expect(results[0]!.originalPath).toBe('src/utils/helper.ts');
     });
 

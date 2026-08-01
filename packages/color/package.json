@@ -12,10 +12,10 @@
     "typecheck": "tsc --noEmit",
     "test": "bun test"
   },
-  "peerDependencies": {
-    "typescript": "^7.0.2"
-  },
   "devDependencies": {
     "@types/bun": "^1.3.14"
+  },
+  "peerDependencies": {
+    "typescript": "^7.0.2"
   }
 }

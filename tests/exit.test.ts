@@ -1,4 +1,3 @@
-
 import { describe, expect, mock, test } from 'bun:test';
 import { Exit } from '../src/commands/Exit';
 import { FallbackTheme } from '@pendex/theme';
@@ -6,7 +5,7 @@ import './setup';
 
 describe('Exit Command', () => {
     test('should call exit function with code 0', async () => {
-        const exitMock = mock(() => { });
+        const exitMock = mock(() => {});
         const deps = {
             theme: FallbackTheme,
             config: {
@@ -26,7 +25,7 @@ describe('Exit Command', () => {
     });
 
     test('should have correct properties', () => {
-        const exitMock = mock(() => { });
+        const exitMock = mock(() => {});
         const deps = {
             theme: FallbackTheme,
             config: {

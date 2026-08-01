@@ -21,8 +21,20 @@ const baseConfig = (): Config => ({
     rebuiltDir: 'REBUILT',
     exclude: ['OUT/**', 'REBUILT/**'],
     jobs: [
-        { filename: 'code.txt', category: 'source', description: 'Source files', include: ['src/**/*.ts'], exclude: [] },
-        { filename: 'misc.txt', category: 'misc', description: 'Everything else', include: [], exclude: [] },
+        {
+            filename: 'code.txt',
+            category: 'source',
+            description: 'Source files',
+            include: ['src/**/*.ts'],
+            exclude: [],
+        },
+        {
+            filename: 'misc.txt',
+            category: 'misc',
+            description: 'Everything else',
+            include: [],
+            exclude: [],
+        },
     ],
 });
 
@@ -51,7 +63,9 @@ describe('@pendex/compile — CompileService (standalone)', () => {
     test('runCompile writes archives, manifest, and per-job categories', async () => {
         await runCompile(baseConfig());
 
-        const manifest: Manifest = await Bun.file(join('OUT', 'manifest.json')).json();
+        const manifest: Manifest = await Bun.file(
+            join('OUT', 'manifest.json'),
+        ).json();
         expect(manifest.files['code.txt']).toContain('src/index.ts');
         expect(manifest.categories?.['code.txt']).toBe('source');
         expect(manifest.categories?.['misc.txt']).toBe('misc');
@@ -61,8 +75,17 @@ describe('@pendex/compile — CompileService (standalone)', () => {
         mkdirSync('OUT', { recursive: true });
         const manifest: Manifest = { files: {}, emptyDirectories: [] };
         const outcome = await compileJob({
-            job: { filename: 'none.txt', category: 'web', description: 'x', include: ['**/*.nope'], exclude: [] },
-            excludes: [], outputDir: 'OUT', manifest, claimedPaths: new Set(),
+            job: {
+                filename: 'none.txt',
+                category: 'web',
+                description: 'x',
+                include: ['**/*.nope'],
+                exclude: [],
+            },
+            excludes: [],
+            outputDir: 'OUT',
+            manifest,
+            claimedPaths: new Set(),
         });
         expect(outcome.fileCount).toBe(0);
     });

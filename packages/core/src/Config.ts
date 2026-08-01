@@ -12,7 +12,7 @@ import type { Config, Job } from './types';
 import { Constants } from './Constants';
 
 /** Absolute path to the shipped default config TOML (`packages/core/config/`). */
-const BASE_CONFIG_PATH = `${import.meta.dir}/../config/config.toml`;   // packages/core/config/
+const BASE_CONFIG_PATH = `${import.meta.dir}/../config/config.toml`; // packages/core/config/
 
 /** The Config keys that a runtime.config.json override may selectively supply. */
 const CONFIG_KEYS = [
@@ -32,7 +32,11 @@ const CONFIG_KEYS = [
  * @param source - Partial object that may or may not define `key`.
  * @param key - The key to conditionally copy.
  */
-export function assignKey<T, K extends keyof T>(target: T, source: Partial<T>, key: K) {
+export function assignKey<T, K extends keyof T>(
+    target: T,
+    source: Partial<T>,
+    key: K,
+) {
     const value = source[key];
     if (value !== undefined) {
         target[key] = value;
@@ -71,7 +75,7 @@ export class ConfigManager {
         const parsed = Bun.TOML.parse(tomlText) as unknown as Config;
 
         // Preserve job-specific excludes without flattening them globally
-        const jobs = parsed.jobs.map((job) => ({
+        const jobs = parsed.jobs.map(job => ({
             ...job,
             exclude: job.exclude ?? [],
         })) as Job[];
@@ -98,7 +102,7 @@ export class ConfigManager {
         try {
             const merged: Config = { ...base };
             const parsed = (await overrideFile.json()) as Config;
-            CONFIG_KEYS.forEach((key) => assignKey(merged, parsed, key));
+            CONFIG_KEYS.forEach(key => assignKey(merged, parsed, key));
             return merged;
         } catch {
             return base;
@@ -156,6 +160,9 @@ export class ConfigManager {
 
     /** Persists the current in-memory config to runtime.config.json. */
     public async save(): Promise<void> {
-        await Bun.write(Constants.RUNTIME_CONFIG_PATH, JSON.stringify(this.config, null, 2));
+        await Bun.write(
+            Constants.RUNTIME_CONFIG_PATH,
+            JSON.stringify(this.config, null, 2),
+        );
     }
 }

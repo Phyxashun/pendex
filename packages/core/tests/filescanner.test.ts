@@ -1,4 +1,3 @@
-
 import { afterEach, beforeEach, describe, expect, test } from 'bun:test';
 import { mkdirSync, writeFileSync } from 'node:fs';
 import {
@@ -12,7 +11,11 @@ import { cleanupSandbox, createSandbox } from './setup';
 const SANDBOX = './test-sandbox-scanner';
 
 const makeJob = (include: string[], exclude: string[] = []): Job => ({
-    filename: 'x.txt', category: 'source', description: 'test job', include, exclude,
+    filename: 'x.txt',
+    category: 'source',
+    description: 'test job',
+    include,
+    exclude,
 });
 
 describe('FileScanner', () => {
@@ -35,11 +38,16 @@ describe('FileScanner', () => {
 
     describe('loadIgnorePatterns', () => {
         test('returns [] when the file does not exist', async () => {
-            expect(await loadIgnorePatterns('./no-such-ignore-file')).toEqual([]);
+            expect(await loadIgnorePatterns('./no-such-ignore-file')).toEqual(
+                [],
+            );
         });
 
         test('strips comments and blank lines', async () => {
-            writeFileSync('.testignore', '# comment\n\nnode_modules/\ndist/\n   \n');
+            writeFileSync(
+                '.testignore',
+                '# comment\n\nnode_modules/\ndist/\n   \n',
+            );
             const patterns = await loadIgnorePatterns('.testignore');
             expect(patterns).toEqual(['node_modules/', 'dist/']);
         });
@@ -47,12 +55,20 @@ describe('FileScanner', () => {
 
     describe('resolveJobFiles — normal jobs', () => {
         test('matches include globs minus excludes', async () => {
-            const files = await resolveJobFiles(makeJob(['src/**/*.ts'], ['**/b.ts']), ['**/b.ts'], new Set());
+            const files = await resolveJobFiles(
+                makeJob(['src/**/*.ts'], ['**/b.ts']),
+                ['**/b.ts'],
+                new Set(),
+            );
             expect(files.map(f => f.replace(/\\/g, '/'))).toEqual(['src/a.ts']);
         });
 
         test('deduplicates a file matched by multiple patterns', async () => {
-            const files = await resolveJobFiles(makeJob(['src/**/*.ts', '**/a.ts']), [], new Set());
+            const files = await resolveJobFiles(
+                makeJob(['src/**/*.ts', '**/a.ts']),
+                [],
+                new Set(),
+            );
             const posix = files.map(f => f.replace(/\\/g, '/'));
             expect(posix.filter(f => f === 'src/a.ts')).toHaveLength(1);
         });
@@ -61,13 +77,17 @@ describe('FileScanner', () => {
     describe('resolveJobFiles — remainder jobs (empty include)', () => {
         test('picks up everything not claimed and not excluded', async () => {
             const claimed = new Set(['src/a.ts', 'src/b.ts']);
-            const files = await resolveJobFiles(makeJob([]), ['**/*.log'], claimed);
+            const files = await resolveJobFiles(
+                makeJob([]),
+                ['**/*.log'],
+                claimed,
+            );
             const posix = files.map(f => f.replace(/\\/g, '/')).sort();
 
             expect(posix).toContain('notes.md');
-            expect(posix).not.toContain('src/a.ts');   // claimed
-            expect(posix).not.toContain('src/b.ts');   // claimed
-            expect(posix).not.toContain('skip.log');   // excluded
+            expect(posix).not.toContain('src/a.ts'); // claimed
+            expect(posix).not.toContain('src/b.ts'); // claimed
+            expect(posix).not.toContain('skip.log'); // excluded
         });
 
         test('with nothing claimed or excluded, sees all files', async () => {
@@ -82,8 +102,14 @@ describe('FileScanner', () => {
             mkdirSync('excluded-empty', { recursive: true });
             mkdirSync('src/nested-empty', { recursive: true });
 
-            const dirs = (await findEmptyDirectories('.', ['excluded-empty/**', 'excluded-empty/']))
-                .map(d => d.replace(/\\/g, '/')).sort();
+            const dirs = (
+                await findEmptyDirectories('.', [
+                    'excluded-empty/**',
+                    'excluded-empty/',
+                ])
+            )
+                .map(d => d.replace(/\\/g, '/'))
+                .sort();
 
             expect(dirs).toContain('empty-one');
             expect(dirs).toContain('src/nested-empty');

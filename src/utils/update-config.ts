@@ -14,17 +14,209 @@ import { extname } from 'path';
 /** Paths this tool reads from and writes to. */
 const Constants = {
     GITIGNORE_PATH: '.gitignore',
-    OUT_PATH: 'src/config/jobs.toml'
+    OUT_PATH: 'src/config/jobs.toml',
 };
 
 /** Extension/pattern lists used to bucket discovered files into job categories. */
 const CATEGORIES = {
-    SOURCE_FILES: ['.js', '.jsx', '.mjs', '.cjs', '.ts', '.tsx', '.mts', '.cts', '.vue', '.svelte', '.astro', '.py', '.pyw', '.sh', '.bash', '.ps1', '.c', '.h', '.cpp', '.hpp', '.cc', '.hh', '.rs', '.zig', '.java', '.kt', '.kts', '.scala', '.groovy', '.cs', '.fs', '.vb', '.swift', '.m', '.mm', '.dart', '.go', '.rb', '.rbw', '.php', '.hs', '.ex', '.exs', '.erl', '.clj', '.sql'],
-    WEB_FILES: ['.html', '.htm', '.xhtml', '.xht', '.mhtml', '.vue', '.svelte', '.astro', '.riot', '.jsx', '.tsx', '.ejs', '.pug', '.jade', '.handlebars', '.hbs', '.mustache', '.twig', '.nunjucks', '.njk', '.php', '.phtml', '.jsp', '.jspx', '.asp', '.aspx', '.cshtml', '.vbhtml', '.j2', '.jinja', '.jinja2', '.erb', '.webmanifest'],
-    STYLE_FILES: ['.css', '.scss', '.sass', '.less', '.styl', '.pcss', '.sss', '.wxss', '.acss'],
-    CONFIG_FILES: ['.json', '.jsonc', '.yaml', '.yml', '.toml', '.config.*', 'config.*', '.editorconfig', '.browserslistrc', 'browserslist', '*ignore', '.gitattributes', '.gitmodules', '.env*', 'Dockerfile*', 'docker-compose*.yml', '.github/workflows/*.yml', 'package.json', 'package-lock.json', 'yarn.lock', 'pnpm-lock.yaml', 'bun.lockb', 'composer.json', 'composer.lock', 'Cargo.toml', 'Cargo.lock', 'Gemfile', 'Gemfile.lock', '.eslintrc*', 'eslint.config.*', '.prettierrc*', 'prettier.config.*', '.stylelintrc*', 'stylelint.config.*', 'tsconfig*.json', '.babelrc*', 'babel.config.*', 'webpack.config.*', 'vite.config.*', 'rollup.config.*', 'next.config.*', 'nuxt.config.*', 'gatsby-config.*', 'gulpfile.*', '*/settings.json', '.vscode/**/*.json', '.idea/**/*.xml'],
-    TEST_FILES: ['*.test.*', '*.spec.*', '*_test.*', '*_spec.*', '*-test.*', 'test-*.*', 'test.*', 'test/**/*', 'test_*.py', '*Test.php', '*Spec.scala', '__tests__/**/*', '__snapshots__/**/*', '__mocks__/**/*', 'tests/**/*', 'specs/**/*', 'jest.config.*', 'vitest.config.*', 'playwright.config.*', 'cypress.config.*', 'karma.conf.*', 'setupTests.*', 'test-setup.*', 'test.setup.*'],
-    DOC_FILES: ['README*', 'readme*', 'LICENSE*', 'license*', 'COPYING*', 'NOTICE*', 'CHANGELOG*', 'changelog*', 'HISTORY*', 'RELEASES*', '.md', '.markdown', '.mdx', '.rst', '.adoc', '.asciidoc', '.txt', 'CONTRIBUTING*', 'contributing*', 'CODE_OF_CONDUCT*', 'code_of_conduct*', 'SECURITY*', 'SUPPORT*', 'docs/**/*', 'doc/**/*', '.github/ISSUE_TEMPLATE/**/*', '.github/PULL_REQUEST_TEMPLATE/**/*'],
+    SOURCE_FILES: [
+        '.js',
+        '.jsx',
+        '.mjs',
+        '.cjs',
+        '.ts',
+        '.tsx',
+        '.mts',
+        '.cts',
+        '.vue',
+        '.svelte',
+        '.astro',
+        '.py',
+        '.pyw',
+        '.sh',
+        '.bash',
+        '.ps1',
+        '.c',
+        '.h',
+        '.cpp',
+        '.hpp',
+        '.cc',
+        '.hh',
+        '.rs',
+        '.zig',
+        '.java',
+        '.kt',
+        '.kts',
+        '.scala',
+        '.groovy',
+        '.cs',
+        '.fs',
+        '.vb',
+        '.swift',
+        '.m',
+        '.mm',
+        '.dart',
+        '.go',
+        '.rb',
+        '.rbw',
+        '.php',
+        '.hs',
+        '.ex',
+        '.exs',
+        '.erl',
+        '.clj',
+        '.sql',
+    ],
+    WEB_FILES: [
+        '.html',
+        '.htm',
+        '.xhtml',
+        '.xht',
+        '.mhtml',
+        '.vue',
+        '.svelte',
+        '.astro',
+        '.riot',
+        '.jsx',
+        '.tsx',
+        '.ejs',
+        '.pug',
+        '.jade',
+        '.handlebars',
+        '.hbs',
+        '.mustache',
+        '.twig',
+        '.nunjucks',
+        '.njk',
+        '.php',
+        '.phtml',
+        '.jsp',
+        '.jspx',
+        '.asp',
+        '.aspx',
+        '.cshtml',
+        '.vbhtml',
+        '.j2',
+        '.jinja',
+        '.jinja2',
+        '.erb',
+        '.webmanifest',
+    ],
+    STYLE_FILES: [
+        '.css',
+        '.scss',
+        '.sass',
+        '.less',
+        '.styl',
+        '.pcss',
+        '.sss',
+        '.wxss',
+        '.acss',
+    ],
+    CONFIG_FILES: [
+        '.json',
+        '.jsonc',
+        '.yaml',
+        '.yml',
+        '.toml',
+        '.config.*',
+        'config.*',
+        '.editorconfig',
+        '.browserslistrc',
+        'browserslist',
+        '*ignore',
+        '.gitattributes',
+        '.gitmodules',
+        '.env*',
+        'Dockerfile*',
+        'docker-compose*.yml',
+        '.github/workflows/*.yml',
+        'package.json',
+        'package-lock.json',
+        'yarn.lock',
+        'pnpm-lock.yaml',
+        'bun.lockb',
+        'composer.json',
+        'composer.lock',
+        'Cargo.toml',
+        'Cargo.lock',
+        'Gemfile',
+        'Gemfile.lock',
+        '.eslintrc*',
+        'eslint.config.*',
+        '.prettierrc*',
+        'prettier.config.*',
+        '.stylelintrc*',
+        'stylelint.config.*',
+        'tsconfig*.json',
+        '.babelrc*',
+        'babel.config.*',
+        'webpack.config.*',
+        'vite.config.*',
+        'rollup.config.*',
+        'next.config.*',
+        'nuxt.config.*',
+        'gatsby-config.*',
+        'gulpfile.*',
+        '*/settings.json',
+        '.vscode/**/*.json',
+        '.idea/**/*.xml',
+    ],
+    TEST_FILES: [
+        '*.test.*',
+        '*.spec.*',
+        '*_test.*',
+        '*_spec.*',
+        '*-test.*',
+        'test-*.*',
+        'test.*',
+        'test/**/*',
+        'test_*.py',
+        '*Test.php',
+        '*Spec.scala',
+        '__tests__/**/*',
+        '__snapshots__/**/*',
+        '__mocks__/**/*',
+        'tests/**/*',
+        'specs/**/*',
+        'jest.config.*',
+        'vitest.config.*',
+        'playwright.config.*',
+        'cypress.config.*',
+        'karma.conf.*',
+        'setupTests.*',
+        'test-setup.*',
+        'test.setup.*',
+    ],
+    DOC_FILES: [
+        'README*',
+        'readme*',
+        'LICENSE*',
+        'license*',
+        'COPYING*',
+        'NOTICE*',
+        'CHANGELOG*',
+        'changelog*',
+        'HISTORY*',
+        'RELEASES*',
+        '.md',
+        '.markdown',
+        '.mdx',
+        '.rst',
+        '.adoc',
+        '.asciidoc',
+        '.txt',
+        'CONTRIBUTING*',
+        'contributing*',
+        'CODE_OF_CONDUCT*',
+        'code_of_conduct*',
+        'SECURITY*',
+        'SUPPORT*',
+        'docs/**/*',
+        'doc/**/*',
+        '.github/ISSUE_TEMPLATE/**/*',
+        '.github/PULL_REQUEST_TEMPLATE/**/*',
+    ],
 };
 
 /** Glob patterns excluded from every scan performed by this tool. */
@@ -56,7 +248,7 @@ const GLOBAL_EXCLUDES = [
     '**/.stylelintrc*',
     '**/stylelint.config.*',
     '**/__snapshots__/**/*',
-    '**/__mocks__/**/*'
+    '**/__mocks__/**/*',
 ];
 
 /** Scans the project, categorizes discovered file extensions, and writes a generated `jobs.toml`. */
@@ -72,7 +264,8 @@ class ConfigUpdater {
      */
     private isIgnored(filePath: string): boolean {
         // Quick check against standard hardcoded exclusions
-        if (filePath.includes('node_modules/') || filePath.includes('.git/')) return true;
+        if (filePath.includes('node_modules/') || filePath.includes('.git/'))
+            return true;
 
         for (const pattern of this.gitignore) {
             const cleanPattern = pattern.replace(/^\//, '').replace(/\/$/, '');
@@ -88,7 +281,9 @@ class ConfigUpdater {
         const gitignoreFile = Bun.file(Constants.GITIGNORE_PATH);
         if (await gitignoreFile.exists()) {
             const content = await gitignoreFile.text();
-            this.gitignore = content.split(/\r?\n/).filter(line => line.trim() && !line.startsWith('#'));
+            this.gitignore = content
+                .split(/\r?\n/)
+                .filter(line => line.trim() && !line.startsWith('#'));
         }
     }
 
@@ -97,13 +292,20 @@ class ConfigUpdater {
         const glob = new Glob('**/*');
 
         // Bun.Glob is insanely fast for scanning directories
-        for await (const file of glob.scan({ cwd: process.cwd(), onlyFiles: true })) {
+        for await (const file of glob.scan({
+            cwd: process.cwd(),
+            onlyFiles: true,
+        })) {
             if (this.isIgnored(file)) continue;
 
-            const isTestFile = CATEGORIES.TEST_FILES.some(testExt => file.endsWith(testExt));
+            const isTestFile = CATEGORIES.TEST_FILES.some(testExt =>
+                file.endsWith(testExt),
+            );
 
             if (isTestFile) {
-                const testExt = CATEGORIES.TEST_FILES.find(ext => file.endsWith(ext))!;
+                const testExt = CATEGORIES.TEST_FILES.find(ext =>
+                    file.endsWith(ext),
+                )!;
                 this.foundExtensions.add(testExt);
             } else {
                 const ext = extname(file).toLowerCase();
@@ -121,8 +323,14 @@ class ConfigUpdater {
     private generateTOML(): string {
         const allFoundExts = Array.from(this.foundExtensions);
         const jobMappings: Record<string, string[]> = {
-            SOURCE_FILES: [], WEB_FILES: [], STYLE_FILES: [], TERMINAL_FILES: [],
-            CONFIG_FILES: [], DOC_FILES: [], TEST_FILES: [], MISC_FILES: []
+            SOURCE_FILES: [],
+            WEB_FILES: [],
+            STYLE_FILES: [],
+            TERMINAL_FILES: [],
+            CONFIG_FILES: [],
+            DOC_FILES: [],
+            TEST_FILES: [],
+            MISC_FILES: [],
         };
 
         // Categorize found extensions
@@ -149,8 +357,14 @@ class ConfigUpdater {
         tomlString += `\n]\n\n`;
 
         const orderedJobNames = [
-            'SOURCE_FILES', 'WEB_FILES', 'STYLE_FILES', 'TERMINAL_FILES',
-            'CONFIG_FILES', 'DOC_FILES', 'TEST_FILES', 'MISC_FILES'
+            'SOURCE_FILES',
+            'WEB_FILES',
+            'STYLE_FILES',
+            'TERMINAL_FILES',
+            'CONFIG_FILES',
+            'DOC_FILES',
+            'TEST_FILES',
+            'MISC_FILES',
         ];
 
         let index = 1;
@@ -168,11 +382,15 @@ class ConfigUpdater {
             tomlString += `description = "${description}"\n`;
 
             tomlString += `include = [\n`;
-            if (includeGlobs!.length > 0) tomlString += includeGlobs!.map(inc => `  "${inc}"`).join(',\n') + `\n`;
+            if (includeGlobs!.length > 0)
+                tomlString +=
+                    includeGlobs!.map(inc => `  "${inc}"`).join(',\n') + `\n`;
             tomlString += `]\n`;
 
             tomlString += `exclude = [\n`;
-            if (excludeGlobs.length > 0) tomlString += excludeGlobs.map(ex => `  "${ex}"`).join(',\n') + `\n`;
+            if (excludeGlobs.length > 0)
+                tomlString +=
+                    excludeGlobs.map(ex => `  "${ex}"`).join(',\n') + `\n`;
             tomlString += `]\n\n`;
 
             index++;

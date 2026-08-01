@@ -32,22 +32,31 @@ describe('Configuration Logic (Config.ts)', () => {
     });
 
     test('merges a runtime.config.json file over defaults', async () => {
-        writeFileSync(Constants.RUNTIME_CONFIG_PATH, JSON.stringify({ theme: 'light', outputDir: 'CUSTOM_OUTPUT' }));
+        writeFileSync(
+            Constants.RUNTIME_CONFIG_PATH,
+            JSON.stringify({ theme: 'light', outputDir: 'CUSTOM_OUTPUT' }),
+        );
         const manager = await ConfigManager.getInstance();
         expect(manager.get().outputDir).toBe('CUSTOM_OUTPUT');
     });
 
     test('falls back to defaults when runtime.config.json is corrupt', async () => {
-        writeFileSync(Constants.RUNTIME_CONFIG_PATH, 'this is { not valid json');
+        writeFileSync(
+            Constants.RUNTIME_CONFIG_PATH,
+            'this is { not valid json',
+        );
         const manager = await ConfigManager.getInstance();
-        expect(manager.get().outputDir).toBe('ALL');   // defaults survived
+        expect(manager.get().outputDir).toBe('ALL'); // defaults survived
     });
 
     test('reload re-reads and applies disk changes', async () => {
         const manager = await ConfigManager.getInstance();
         expect(manager.get().outputDir).toBe('ALL');
 
-        writeFileSync(Constants.RUNTIME_CONFIG_PATH, JSON.stringify({ outputDir: 'RELOADED' }));
+        writeFileSync(
+            Constants.RUNTIME_CONFIG_PATH,
+            JSON.stringify({ outputDir: 'RELOADED' }),
+        );
         await manager.reload();
 
         expect(manager.get().outputDir).toBe('RELOADED');
@@ -68,7 +77,10 @@ describe('Configuration Logic (Config.ts)', () => {
     });
 
     test('resetToDefaults discards runtime overrides in memory without touching disk', async () => {
-        writeFileSync(Constants.RUNTIME_CONFIG_PATH, JSON.stringify({ outputDir: 'OVERRIDDEN' }));
+        writeFileSync(
+            Constants.RUNTIME_CONFIG_PATH,
+            JSON.stringify({ outputDir: 'OVERRIDDEN' }),
+        );
         const manager = await ConfigManager.getInstance();
         expect(manager.get().outputDir).toBe('OVERRIDDEN');
 
@@ -83,7 +95,7 @@ describe('Configuration Logic (Config.ts)', () => {
     test('assignKey copies defined values and skips undefined', () => {
         const target = { a: 1, b: 2 };
         assignKey(target, { a: 9 }, 'a');
-        assignKey(target, {}, 'b');   // undefined in source → b untouched
+        assignKey(target, {}, 'b'); // undefined in source → b untouched
         expect(target).toEqual({ a: 9, b: 2 });
     });
 });

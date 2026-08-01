@@ -14,7 +14,8 @@ export interface PackageInfo {
 export const PACKAGES: PackageInfo[] = [
     {
         name: '@pendex/color',
-        tagline: 'ANSI text styling — picocolors-compatible, plus 24-bit truecolor.',
+        tagline:
+            'ANSI text styling — picocolors-compatible, plus 24-bit truecolor.',
         apiPath: 'modules/color_src.html',
     },
     {
@@ -24,7 +25,8 @@ export const PACKAGES: PackageInfo[] = [
     },
     {
         name: '@pendex/core',
-        tagline: 'Shared domain types, config, file scanning, and the archive format.',
+        tagline:
+            'Shared domain types, config, file scanning, and the archive format.',
         apiPath: 'modules/core_src.html',
     },
     {

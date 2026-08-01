@@ -19,7 +19,6 @@ import type { Command, MainMenuOptions, State } from '@pendex/core';
 import { resolveRunnerDeps } from '@pendex/core';
 import { Exit } from '../commands/Exit';
 
-
 /**
  * Process-wide singleton that owns the interactive CLI shell: the
  * command list, the active {@link State}, and the select-loop that
@@ -41,11 +40,13 @@ export class Application {
     private _commands: Command[] = [];
     private mainMenuOptions: MainMenuOptions[] = [];
 
-    private constructor() { }
+    private constructor() {}
 
     /** Lazily creates (once per process) and returns the shared instance. */
     public static getInstance(): Application {
-        if (!this.instance) { this.instance = new Application(); }
+        if (!this.instance) {
+            this.instance = new Application();
+        }
         return this.instance;
     }
 
@@ -74,8 +75,16 @@ export class Application {
     public async init(exitFn: (code?: number) => void): Promise<void> {
         const deps = await resolveRunnerDeps();
         this._state = deps;
-        this._commands = [new Compile(deps), new Split(deps), new Exit({ ...deps, exit: exitFn })];
-        this.mainMenuOptions = this._commands.map(cmd => ({ value: cmd.key, label: cmd.label, hint: cmd.hint }));
+        this._commands = [
+            new Compile(deps),
+            new Split(deps),
+            new Exit({ ...deps, exit: exitFn }),
+        ];
+        this.mainMenuOptions = this._commands.map(cmd => ({
+            value: cmd.key,
+            label: cmd.label,
+            hint: cmd.hint,
+        }));
     }
 
     /**
@@ -101,7 +110,9 @@ export class Application {
             console.clear();
             await command.execute();
 
-            const wantsToReturn = await CLACK.confirm({ message: this.STRINGS.returnToMenu });
+            const wantsToReturn = await CLACK.confirm({
+                message: this.STRINGS.returnToMenu,
+            });
             if (CLACK.isCancel(wantsToReturn) || !wantsToReturn) {
                 return false; // Signal to terminate
             }

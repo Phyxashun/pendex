@@ -1,0 +1,28 @@
+{
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "plugins": ["typescript", "unicorn", "oxc", "react"],
+  "categories": {
+    "correctness": "error"
+  },
+  "env": {
+    "builtin": true,
+    "browser": true,
+    "node": true
+  },
+  "ignorePatterns": [
+    ".vscode/**",
+    "**/node_modules/**",
+    "**/public/**",
+    "**/dist/**",
+    "**/*.txt",
+    "**/*.pdf",
+    "**/ALL/**",
+    "**/ALL_REBUILT/**"
+  ],
+  "rules": {
+    "no-unused-vars": "off",
+    "typescript/no-unused-vars": ["error", { "argsIgnorePattern": "^_" }],
+    "typescript/no-explicit-any": ["warn", { "ignoreRestArgs": false }],
+    "no-console": "off"
+  }
+}

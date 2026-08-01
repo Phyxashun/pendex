@@ -1,4 +1,3 @@
-
 import { mock } from 'bun:test';
 
 // Globally mock @clack/prompts so tests don't hang waiting for user input

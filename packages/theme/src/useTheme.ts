@@ -82,10 +82,17 @@ export type Theme = ChainableTheme & string;
  * @param pendingStyles - Style keys queued to apply once text is supplied (internal recursion state).
  * @returns A {@link Theme} proxy supporting both function-call and chained-property styling.
  */
-export const useTheme = (activeTheme: DefaultTheme, initialTxt: string = '', pendingStyles: DefaultThemeKeys = []): Theme => {
+export const useTheme = (
+    activeTheme: DefaultTheme,
+    initialTxt: string = '',
+    pendingStyles: DefaultThemeKeys = [],
+): Theme => {
     // Computes styles on the text whenever string conversion is triggered or new text is supplied
     const compile = (textToStyle: string): string => {
-        return pendingStyles.reduce((result, styleKey) => activeTheme[styleKey](result), textToStyle);
+        return pendingStyles.reduce(
+            (result, styleKey) => activeTheme[styleKey](result),
+            textToStyle,
+        );
     };
 
     // The handler function allows calling the chain instance like a function: theme('TEXT') or theme.bold('TEXT')
@@ -100,7 +107,11 @@ export const useTheme = (activeTheme: DefaultTheme, initialTxt: string = '', pen
     return new Proxy(targetFunction, {
         get(_, prop) {
             // These symbols/methods intercept conversions to primitives (strings) automatically
-            if (prop === 'toString' || prop === 'valueOf' || prop === Symbol.toPrimitive) {
+            if (
+                prop === 'toString' ||
+                prop === 'valueOf' ||
+                prop === Symbol.toPrimitive
+            ) {
                 return () => compile(initialTxt);
             }
 
@@ -113,7 +124,10 @@ export const useTheme = (activeTheme: DefaultTheme, initialTxt: string = '', pen
                     return useTheme(activeTheme, nextText, pendingStyles);
                 }
 
-                return useTheme(activeTheme, initialTxt, [...pendingStyles, styleKey]);
+                return useTheme(activeTheme, initialTxt, [
+                    ...pendingStyles,
+                    styleKey,
+                ]);
             }
             return undefined;
         },

@@ -1,7 +1,7 @@
 # FILE-PATH: src/config/config.toml
 
 # DEFAULT THEME
-theme = "default"
+theme = "pendex"
 
 # DEFAULT OUTPUT DIRECTORIES
 outputDir  = "ALL"

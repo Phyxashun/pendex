@@ -8,20 +8,20 @@ import Packages from './components/Packages';
 import WhyTheName from './components/WhyTheName';
 
 function App() {
-  return (
-    <div className="min-h-screen">
-      <Nav />
-      <main>
-        <Hero />
-        <HowItWorks />
-        <WhyTheName />
-        <ArchiveTypes />
-        <Architecture />
-        <Packages />
-      </main>
-      <Footer />
-    </div>
-  )
+    return (
+        <div className='min-h-screen'>
+            <Nav />
+            <main>
+                <Hero />
+                <HowItWorks />
+                <WhyTheName />
+                <ArchiveTypes />
+                <Architecture />
+                <Packages />
+            </main>
+            <Footer />
+        </div>
+    );
 }
 
-export default App
+export default App;

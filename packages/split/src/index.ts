@@ -11,7 +11,14 @@
 export { Split } from './Split';
 export { SplitView } from './SplitView';
 export {
-    initializeSplit, prepareRebuildDirectory, readManifest,
-    restoreEmptyDirectories, runSplit, splitArchiveFile, splitSingleFile,
-    type SplitFileOutcome, type SplitHooks, type SplitSummary,
+    initializeSplit,
+    prepareRebuildDirectory,
+    readManifest,
+    restoreEmptyDirectories,
+    runSplit,
+    splitArchiveFile,
+    splitSingleFile,
+    type SplitFileOutcome,
+    type SplitHooks,
+    type SplitSummary,
 } from './SplitService';

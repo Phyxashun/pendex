@@ -27,7 +27,11 @@ mock.module('@clack/prompts', () => ({
         }
     }),
     log: {
-        success: mock(), warn: mock(), error: mock(),
-        info: mock(), step: mock(), message: mock(),
+        success: mock(),
+        warn: mock(),
+        error: mock(),
+        info: mock(),
+        step: mock(),
+        message: mock(),
     },
 }));

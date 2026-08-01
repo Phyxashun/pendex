@@ -97,16 +97,16 @@ export type DefaultThemeKeys = Array<keyof DefaultTheme>;
  * #262626, except `muted` (3:1 — intentionally de-emphasized text).
  */
 export const BRAND_PALETTE: ThemeColors = {
-    primary: '#D6A448',      // Brass
-    secondary: '#6F92B0',    // Blueprint
-    success: '#799470',      // Olive
-    warning: '#D99C5A',      // Copper
-    error: '#C57967',        // Brick
-    info: '#6AAFB5',         // Teal
-    muted: '#7B746B',        // Ash
-    foreground: '#E9E0D2',   // Parchment
-    background: '#1A1A1A',   // Charcoal
-    titleBg: '#262626',      // Graphite
+    primary: '#D6A448', // Brass
+    secondary: '#6F92B0', // Blueprint
+    success: '#799470', // Olive
+    warning: '#D99C5A', // Copper
+    error: '#C57967', // Brick
+    info: '#6AAFB5', // Teal
+    muted: '#7B746B', // Ash
+    foreground: '#E9E0D2', // Parchment
+    background: '#1A1A1A', // Charcoal
+    titleBg: '#262626', // Graphite
 };
 
 /**
@@ -127,15 +127,18 @@ export function buildTheme(colors: ThemeColors): DefaultTheme {
         info: Colors.hex(colors.info),
         muted: Colors.hex(colors.muted),
 
-        title: (txt) => Colors.bgHex(colors.titleBg)(Colors.bold(Colors.hex(colors.background)(` ${txt} `))),
-        subtitle: (txt) => Colors.dim(Colors.hex(colors.foreground)(txt)),
+        title: txt =>
+            Colors.bgHex(colors.titleBg)(
+                Colors.bold(Colors.hex(colors.background)(` ${txt} `)),
+            ),
+        subtitle: txt => Colors.dim(Colors.hex(colors.foreground)(txt)),
 
         color: Colors.hex(colors.foreground),
-        backgroundColor: (txt) => Colors.bgHex(colors.background)(` ${txt} `),
+        backgroundColor: txt => Colors.bgHex(colors.background)(` ${txt} `),
         bold: Colors.bold,
         italic: Colors.italic,
         textDecoration: Colors.underline,
-        textTransform: (txt) => txt.toUpperCase(),
+        textTransform: txt => txt.toUpperCase(),
     };
 }
 
@@ -202,14 +205,29 @@ export interface PendexTheme {
 
 /** The ten {@link ThemeColors} keys, used to walk a raw TOML object's root. */
 const THEME_COLOR_KEYS = [
-    'primary', 'secondary', 'success', 'warning', 'error',
-    'info', 'muted', 'foreground', 'background', 'titleBg',
+    'primary',
+    'secondary',
+    'success',
+    'warning',
+    'error',
+    'info',
+    'muted',
+    'foreground',
+    'background',
+    'titleBg',
 ] as const satisfies readonly (keyof ThemeColors)[];
 
 /** The optional extended-table keys on {@link PendexTheme}, used to walk a raw TOML object's sections. */
 const EXTENDED_TABLE_KEYS = [
-    'palette', 'website', 'terminal', 'ansi', 'syntax',
-    'git', 'diagnostics', 'diff', 'brand',
+    'palette',
+    'website',
+    'terminal',
+    'ansi',
+    'syntax',
+    'git',
+    'diagnostics',
+    'diff',
+    'brand',
 ] as const satisfies readonly (keyof PendexTheme)[];
 
 /**
@@ -237,17 +255,23 @@ function extractColors(raw: Record<string, unknown>): ThemeColors {
  * @param key - The section name to extract (e.g. `'syntax'`).
  * @returns A flat string map, or `undefined` if the section is missing, not an object, or an array.
  */
-function extractTable(raw: Record<string, unknown>, key: string): Record<string, string> | undefined {
+function extractTable(
+    raw: Record<string, unknown>,
+    key: string,
+): Record<string, string> | undefined {
     const value = raw[key];
     // typeof [] === 'object' in JS, so Array.isArray must be checked
     // explicitly — otherwise a TOML array under a table-shaped key (e.g.
     // `syntax = ["array"]`) would pass this guard and get turned into a
     // bogus { '0': 'array' } table via Object.entries() below, instead
     // of correctly degrading to undefined like any other malformed table.
-    if (!value || typeof value !== 'object' || Array.isArray(value)) return undefined;
+    if (!value || typeof value !== 'object' || Array.isArray(value))
+        return undefined;
 
     const table: Record<string, string> = {};
-    for (const [entryKey, entryValue] of Object.entries(value as Record<string, unknown>)) {
+    for (const [entryKey, entryValue] of Object.entries(
+        value as Record<string, unknown>,
+    )) {
         if (typeof entryValue === 'string') table[entryKey] = entryValue;
     }
     return table;
@@ -263,14 +287,21 @@ function extractTable(raw: Record<string, unknown>, key: string): Record<string,
  * @param fallbackName - Name to use if `raw` doesn't provide a valid `name` field.
  * @returns A validated {@link PendexTheme}.
  */
-export function parsePendexTheme(raw: unknown, fallbackName: string): PendexTheme {
-    const obj = (raw && typeof raw === 'object' ? raw : {}) as Record<string, unknown>;
+export function parsePendexTheme(
+    raw: unknown,
+    fallbackName: string,
+): PendexTheme {
+    const obj = (raw && typeof raw === 'object' ? raw : {}) as Record<
+        string,
+        unknown
+    >;
 
     const theme: { -readonly [K in keyof PendexTheme]: PendexTheme[K] } = {
         name: typeof obj.name === 'string' ? obj.name : fallbackName,
         author: typeof obj.author === 'string' ? obj.author : undefined,
         version: typeof obj.version === 'string' ? obj.version : undefined,
-        description: typeof obj.description === 'string' ? obj.description : undefined,
+        description:
+            typeof obj.description === 'string' ? obj.description : undefined,
         colors: extractColors(obj),
     };
 

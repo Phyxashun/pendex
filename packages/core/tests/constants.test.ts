@@ -1,4 +1,3 @@
-
 import { describe, expect, test } from 'bun:test';
 import { baseName, Constants, dirName, extName, joinPath } from '../src';
 
@@ -16,7 +15,7 @@ describe('Constants and Path Helpers', () => {
             expect(joinPath('a', '', 'b', 'c')).toBe('a/b/c');
         });
     });
- 
+
     describe('baseName', () => {
         test('returns the final segment of a posix path', () => {
             expect(baseName('src/utils/helper.ts')).toBe('helper.ts');
@@ -30,7 +29,7 @@ describe('Constants and Path Helpers', () => {
             expect(baseName('helper.ts')).toBe('helper.ts');
         });
     });
- 
+
     describe('extName', () => {
         test('returns the extension with leading dot', () => {
             expect(extName('src/index.ts')).toBe('.ts');
@@ -43,12 +42,12 @@ describe('Constants and Path Helpers', () => {
         test('returns empty string when there is no extension', () => {
             expect(extName('Makefile')).toBe('');
         });
- 
+
         test('returns empty string for dotfiles (dot at index 0)', () => {
             expect(extName('.gitignore')).toBe('');
         });
     });
- 
+
     describe('dirName', () => {
         test('returns the directory portion', () => {
             expect(dirName('src/utils/helper.ts')).toBe('src/utils');
@@ -62,7 +61,7 @@ describe('Constants and Path Helpers', () => {
             expect(dirName('helper.ts')).toBe('.');
         });
     });
- 
+
     describe('Constants object', () => {
         test('exposes the expected app-wide values', () => {
             expect(Constants.OUTPUT_DIR).toBe('ALL');

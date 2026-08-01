@@ -90,7 +90,15 @@ export interface Manifest {
 }
 
 /** The set of job categories Pendex recognizes for grouping and coloring output. */
-export type Category = 'source' | 'web' | 'style' | 'terminal' | 'configuration' | 'documentation' | 'testing' | 'misc';
+export type Category =
+    | 'source'
+    | 'web'
+    | 'style'
+    | 'terminal'
+    | 'configuration'
+    | 'documentation'
+    | 'testing'
+    | 'misc';
 
 /** A single compile job: a named output file built from a set of include/exclude glob patterns. */
 export interface Job {

@@ -17,7 +17,7 @@ const GLOB_OPTIONS: Bun.GlobScanOptions = {
     cwd: '',
     followSymlinks: false,
     dot: true,
-    absolute: false
+    absolute: false,
 };
 const REGEX_ALL_BACKSLASH = /\\/g;
 
@@ -40,7 +40,9 @@ export async function loadIgnorePatterns(filePath: string): Promise<string[]> {
     const file = Bun.file(filePath);
     if (!(await file.exists())) return [];
     const content = await file.text();
-    return content.split(/\r?\n/).filter(line => line.trim() && !line.startsWith('#'));
+    return content
+        .split(/\r?\n/)
+        .filter(line => line.trim() && !line.startsWith('#'));
 }
 
 /**
@@ -67,7 +69,7 @@ export async function resolveJobFiles(
     job: Job,
     excludes: string[],
     claimedPaths: ReadonlySet<string>,
-    cwd: string = '.'
+    cwd: string = '.',
 ): Promise<string[]> {
     const excludeGlobs = excludes.map(pattern => new Bun.Glob(pattern));
     const matches = new Set<string>();
@@ -89,7 +91,9 @@ export async function resolveJobFiles(
     for (const pattern of job.include) {
         const files = new Bun.Glob(pattern).scan(GLOB_OPTIONS);
         for await (const file of files) {
-            if (!excludeGlobs.some(exclude => exclude.match(toPosixPath(file)))) {
+            if (
+                !excludeGlobs.some(exclude => exclude.match(toPosixPath(file)))
+            ) {
                 matches.add(file);
             }
         }
@@ -107,7 +111,7 @@ export async function resolveJobFiles(
  */
 export async function findEmptyDirectories(
     cwd: string,
-    excludes: string[]
+    excludes: string[],
 ): Promise<string[]> {
     const excludeGlobs = excludes.map(pattern => new Bun.Glob(pattern));
     GLOB_OPTIONS.cwd = cwd;
@@ -118,7 +122,9 @@ export async function findEmptyDirectories(
     // — matching only one form silently let excluded directories through
     // depending on which style the caller used.
     const isExcludedDir = (posixDir: string): boolean =>
-        excludeGlobs.some(glob => glob.match(posixDir) || glob.match(`${posixDir}/`));
+        excludeGlobs.some(
+            glob => glob.match(posixDir) || glob.match(`${posixDir}/`),
+        );
 
     // Every file AND directory entry under cwd. Bun.Glob('**/') (the
     // directory-only shorthand) does NOT reliably surface a directory
@@ -132,7 +138,10 @@ export async function findEmptyDirectories(
     // convention on the results (glob results carry no trailing slash
     // for directories either way, in either pattern).
     const allEntries = new Set<string>();
-    for await (const entry of new Bun.Glob('**/*').scan({ ...GLOB_OPTIONS, onlyFiles: false })) {
+    for await (const entry of new Bun.Glob('**/*').scan({
+        ...GLOB_OPTIONS,
+        onlyFiles: false,
+    })) {
         allEntries.add(toPosixPath(entry));
     }
 
@@ -140,7 +149,10 @@ export async function findEmptyDirectories(
     // at least one file at any depth.
     const allFiles = new Set<string>();
     const nonEmptyDirs = new Set<string>();
-    for await (const file of new Bun.Glob('**/*').scan({ ...GLOB_OPTIONS, onlyFiles: true })) {
+    for await (const file of new Bun.Glob('**/*').scan({
+        ...GLOB_OPTIONS,
+        onlyFiles: true,
+    })) {
         const posixFile = toPosixPath(file);
         allFiles.add(posixFile);
 

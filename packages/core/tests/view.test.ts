@@ -11,17 +11,27 @@ import { FallbackTheme } from '@pendex/theme';
 import { View, type Config, type State } from '../src';
 
 class TestView extends View {
-    public getState(): State { return this.state; }
+    public getState(): State {
+        return this.state;
+    }
 }
 
 const baseConfig: Config = {
-    theme: 'pendex', outputDir: 'OUT', rebuiltDir: 'REBUILT', exclude: [], jobs: [],
+    theme: 'pendex',
+    outputDir: 'OUT',
+    rebuiltDir: 'REBUILT',
+    exclude: [],
+    jobs: [],
 };
 const categoryColors = { source: '#799470', web: '#6F92B0' };
 
 describe('View state construction', () => {
     test('View stores state as given, including categoryColors', () => {
-        const view = new TestView({ theme: FallbackTheme, config: baseConfig, categoryColors });
+        const view = new TestView({
+            theme: FallbackTheme,
+            config: baseConfig,
+            categoryColors,
+        });
         expect(view.getState().categoryColors).toBe(categoryColors);
     });
 

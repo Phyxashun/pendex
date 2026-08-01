@@ -10,9 +10,14 @@
 // FILE-PATH: packages/theme/src/index.ts
 export { ThemeManager } from './ThemeManager';
 export {
-    BRAND_PALETTE, buildTheme, parsePendexTheme,
-    type DefaultTheme, type DefaultThemeKeys,
-    type PendexTheme, type ThemeColors, type ThemeName,
+    BRAND_PALETTE,
+    buildTheme,
+    parsePendexTheme,
+    type DefaultTheme,
+    type DefaultThemeKeys,
+    type PendexTheme,
+    type ThemeColors,
+    type ThemeName,
 } from './ThemePalette';
 export { useTheme, type ChainableTheme, type Theme } from './useTheme';
 

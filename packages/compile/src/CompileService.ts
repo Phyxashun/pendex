@@ -13,8 +13,16 @@
 
 import { Constants, joinPath } from '@pendex/core';
 import type { Config, Job, Manifest } from '@pendex/core';
-import { archivePathFor, buildArchiveEntry, joinArchiveEntries } from '@pendex/core';
-import { findEmptyDirectories, loadIgnorePatterns, resolveJobFiles } from '@pendex/core';
+import {
+    archivePathFor,
+    buildArchiveEntry,
+    joinArchiveEntries,
+} from '@pendex/core';
+import {
+    findEmptyDirectories,
+    loadIgnorePatterns,
+    resolveJobFiles,
+} from '@pendex/core';
 
 /** Per-run accumulators shared across every job in a compile run, before any specific job is attached. */
 export interface InitializedCompileJob {
@@ -61,7 +69,10 @@ export interface CompileHooks {
     /** Called before a job starts compiling. */
     onJobStart?: (job: Job) => void | Promise<void>;
     /** Called after a job finishes compiling successfully. */
-    onJobSuccess?: (job: Job, outcome: CompileJobResult) => void | Promise<void>;
+    onJobSuccess?: (
+        job: Job,
+        outcome: CompileJobResult,
+    ) => void | Promise<void>;
     /** Called once, after every job has run, with the total file count. */
     onCompileSuccess?: (totalFiles: number) => void | Promise<void>;
 }
@@ -73,7 +84,9 @@ export interface CompileHooks {
  * @returns The deduplicated, combined exclude patterns.
  */
 export async function resolveExcludes(config: Config): Promise<string[]> {
-    const gitignorePatterns = await loadIgnorePatterns(Constants.GITIGNORE_PATH);
+    const gitignorePatterns = await loadIgnorePatterns(
+        Constants.GITIGNORE_PATH,
+    );
     return [...new Set([...config.exclude, ...gitignorePatterns])];
 }
 
@@ -96,7 +109,9 @@ export async function prepareOutputDirectory(dir: string): Promise<void> {
  * @param jobToDo - The job plus the shared per-run accumulators (excludes, output dir, manifest, claimed paths).
  * @returns The job and how many files it archived.
  */
-export async function compileJob(jobToDo: CompileJob): Promise<CompileJobResult> {
+export async function compileJob(
+    jobToDo: CompileJob,
+): Promise<CompileJobResult> {
     const { job, excludes, outputDir, manifest, claimedPaths } = jobToDo;
 
     const combinedExcludes = [...new Set([...excludes, ...job.exclude])];
@@ -109,16 +124,21 @@ export async function compileJob(jobToDo: CompileJob): Promise<CompileJobResult>
     manifest.categories[job.filename] = job.category;
     files.forEach(f => claimedPaths.add(f.replace(/\\/g, '/')));
 
-    const entries = await Promise.all(files.map(async (filePath) => {
-        const content = await Bun.file(filePath).text();
-        return buildArchiveEntry(filePath, content);
-    }));
+    const entries = await Promise.all(
+        files.map(async filePath => {
+            const content = await Bun.file(filePath).text();
+            return buildArchiveEntry(filePath, content);
+        }),
+    );
 
-    await Bun.write(archivePathFor(outputDir, job.filename), joinArchiveEntries(entries));
+    await Bun.write(
+        archivePathFor(outputDir, job.filename),
+        joinArchiveEntries(entries),
+    );
 
     return {
         job,
-        fileCount: files.length
+        fileCount: files.length,
     };
 }
 
@@ -128,10 +148,13 @@ export async function compileJob(jobToDo: CompileJob): Promise<CompileJobResult>
  * @param outputDir - Directory to write `manifest.json` into.
  * @param manifest - The manifest data to serialize.
  */
-export async function writeManifest(outputDir: string, manifest: Manifest): Promise<void> {
+export async function writeManifest(
+    outputDir: string,
+    manifest: Manifest,
+): Promise<void> {
     await Bun.write(
         joinPath(outputDir, 'manifest.json'),
-        JSON.stringify(manifest, null, 2)
+        JSON.stringify(manifest, null, 2),
     );
 }
 
@@ -153,7 +176,10 @@ export async function writeManifest(outputDir: string, manifest: Manifest): Prom
  * @param hooks - Optional progress callbacks.
  * @returns The full {@link CompileSummary} for this run.
  */
-export async function runCompile(config: Config, hooks?: CompileHooks): Promise<CompileSummary> {
+export async function runCompile(
+    config: Config,
+    hooks?: CompileHooks,
+): Promise<CompileSummary> {
     const excludes = await resolveExcludes(config);
 
     // Root Milestone Hook
@@ -178,7 +204,7 @@ export async function runCompile(config: Config, hooks?: CompileHooks): Promise<
             excludes,
             outputDir: config.outputDir,
             manifest,
-            claimedPaths
+            claimedPaths,
         });
 
         jobOutcomes.push(outcome);
@@ -215,13 +241,15 @@ export async function runCompile(config: Config, hooks?: CompileHooks): Promise<
  * @param config - The active application config.
  * @returns The initialized accumulators, ready to pass to {@link compileSingleJob}.
  */
-export async function initializeCompile(config: Config): Promise<InitializedCompileJob> {
+export async function initializeCompile(
+    config: Config,
+): Promise<InitializedCompileJob> {
     await prepareOutputDirectory(config.outputDir);
     return {
         excludes: await resolveExcludes(config),
         manifest: { files: {}, emptyDirectories: [] },
         claimedPaths: new Set<string>(),
-    }
+    };
 }
 
 /**
@@ -233,13 +261,21 @@ export async function initializeCompile(config: Config): Promise<InitializedComp
  * @param ctx - Shared config and per-run accumulators.
  * @returns The job's compile outcome.
  */
-export async function compileSingleJob(job: Job, ctx: { config: Config, excludes: string[], manifest: Manifest, claimedPaths: Set<string> }): Promise<CompileJobResult> {
+export async function compileSingleJob(
+    job: Job,
+    ctx: {
+        config: Config;
+        excludes: string[];
+        manifest: Manifest;
+        claimedPaths: Set<string>;
+    },
+): Promise<CompileJobResult> {
     return await compileJob({
         job,
         excludes: ctx.excludes,
         outputDir: ctx.config.outputDir,
         manifest: ctx.manifest,
-        claimedPaths: ctx.claimedPaths
+        claimedPaths: ctx.claimedPaths,
     });
 }
 
@@ -252,13 +288,19 @@ export async function compileSingleJob(job: Job, ctx: { config: Config, excludes
  * @param ctx - Shared excludes and manifest accumulated during the run.
  * @returns A {@link CompileSummary} with `totalFiles: 0` and `jobOutcomes: []` — the caller computes these.
  */
-export async function finalizeCompile(config: Config, ctx: { excludes: string[], manifest: Manifest }): Promise<CompileSummary> {
-    ctx.manifest.emptyDirectories = await findEmptyDirectories('.', ctx.excludes);
+export async function finalizeCompile(
+    config: Config,
+    ctx: { excludes: string[]; manifest: Manifest },
+): Promise<CompileSummary> {
+    ctx.manifest.emptyDirectories = await findEmptyDirectories(
+        '.',
+        ctx.excludes,
+    );
     await writeManifest(config.outputDir, ctx.manifest);
     return {
         excludes: ctx.excludes,
         emptyDirectories: ctx.manifest.emptyDirectories,
         totalFiles: 0, // Calculated dynamically by the caller
-        jobOutcomes: []
+        jobOutcomes: [],
     };
 }

@@ -8,6 +8,7 @@
  * per-command sessions close themselves inside their views.
  */
 
+import { outro } from '@clack/prompts';
 import type { Command, ExitState } from '@pendex/core';
 
 /** The "Exit Program" command: prints a goodbye message and terminates the process. */
@@ -29,15 +30,16 @@ export class Exit implements Command {
         this.hint = `${this.state.theme('Terminate CLI process').secondary}`;
     }
 
-    /** Prints the goodbye message and terminates the process via `state.exit` (or `process.exit` as a fallback). */
+    /** Closes the shell's clack session with a goodbye message and terminates via `state.exit` (or `process.exit` as a fallback). */
     async execute(): Promise<void> {
-        const newLine = this.state.theme('│').muted;
-        const prepend = this.state.theme('└  ').muted;
         const goodbyeMsg = 'Exiting CLI tool. System process ended.';
-        const goodbye = this.state.theme(goodbyeMsg).primary.muted;
 
-        console.log(`${newLine}`);
-        console.log(`${prepend}${goodbye}`);
+        // Was hand-drawn with console.log('│'), console.log('└  ' + msg) —
+        // reinventing clack's own box-drawing instead of using it. outro()
+        // is the correct call here anyway: this closes the SHELL's clack
+        // session (the menu Application opened), same as every other
+        // view's outro() call.
+        outro(`${this.state.theme(goodbyeMsg).primary.muted}`);
 
         // Was `this.state.exit() ?? process.exit(0)` — that CALLS exit()
         // first (with no args, not 0) and, being void-returning, always

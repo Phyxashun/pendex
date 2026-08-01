@@ -1,4 +1,3 @@
-
 import { afterAll, beforeAll, describe, expect, test } from 'bun:test';
 import { Colors } from '../src/Colors';
 
@@ -6,7 +5,9 @@ describe('Colors (picocolors drop-in + truecolor)', () => {
     // Force styling on so assertions are deterministic regardless of TTY.
     const wasEnabled = Colors.isEnabled;
     beforeAll(() => Colors.enable());
-    afterAll(() => { if (!wasEnabled) Colors.disable(); });
+    afterAll(() => {
+        if (!wasEnabled) Colors.disable();
+    });
 
     test('named styles wrap text in ANSI codes', () => {
         expect(Colors.red('x')).toBe('\x1b[31mx\x1b[39m');
@@ -25,7 +26,9 @@ describe('Colors (picocolors drop-in + truecolor)', () => {
 
     test('hex produces 24-bit truecolor sequences', () => {
         expect(Colors.hex('#ff0000')('x')).toBe('\x1b[38;2;255;0;0mx\x1b[39m');
-        expect(Colors.bgHex('#F6F1E8')('x')).toBe('\x1b[48;2;246;241;232mx\x1b[49m');
+        expect(Colors.bgHex('#F6F1E8')('x')).toBe(
+            '\x1b[48;2;246;241;232mx\x1b[49m',
+        );
     });
 
     test('3-digit hex expands, leading # optional', () => {

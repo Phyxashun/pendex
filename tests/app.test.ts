@@ -1,5 +1,12 @@
-
-import { beforeEach, describe, expect, mock, spyOn, test, type Mock } from 'bun:test';
+import {
+    beforeEach,
+    describe,
+    expect,
+    mock,
+    spyOn,
+    test,
+    type Mock,
+} from 'bun:test';
 
 // 1. Mock the module BEFORE all imports. This is the correct Bun pattern.
 mock.module('@clack/prompts', () => ({
@@ -22,7 +29,7 @@ const confirmMock = confirm as Mock<typeof confirm>;
 
 describe('Application Orchestrator (App.ts)', () => {
     let app: Application;
-    const exitProcessMock = mock((_code?: number) => { });
+    const exitProcessMock = mock((_code?: number) => {});
 
     beforeEach(async () => {
         selectMock.mockClear();
@@ -43,7 +50,10 @@ describe('Application Orchestrator (App.ts)', () => {
         selectMock.mockResolvedValueOnce(compileCmdKey);
         confirmMock.mockResolvedValueOnce(true);
 
-        const compileSpy = spyOn(app.commands.find(c => c instanceof Compile)!, 'execute').mockResolvedValue(undefined);
+        const compileSpy = spyOn(
+            app.commands.find(c => c instanceof Compile)!,
+            'execute',
+        ).mockResolvedValue(undefined);
 
         const shouldContinue = await app.runSingleIteration();
 
@@ -56,7 +66,10 @@ describe('Application Orchestrator (App.ts)', () => {
         selectMock.mockResolvedValueOnce(compileCmdKey);
         confirmMock.mockResolvedValueOnce(false);
 
-        const compileSpy = spyOn(app.commands.find(c => c instanceof Compile)!, 'execute').mockResolvedValue(undefined);
+        const compileSpy = spyOn(
+            app.commands.find(c => c instanceof Compile)!,
+            'execute',
+        ).mockResolvedValue(undefined);
 
         const shouldContinue = await app.runSingleIteration();
 
@@ -86,7 +99,9 @@ describe('Application Orchestrator (App.ts)', () => {
         // cancel nor "exit" nor any registered command key.
         selectMock.mockResolvedValueOnce('not-a-real-command');
 
-        const executeSpies = app.commands.map(cmd => spyOn(cmd, 'execute').mockResolvedValue(undefined));
+        const executeSpies = app.commands.map(cmd =>
+            spyOn(cmd, 'execute').mockResolvedValue(undefined),
+        );
 
         const shouldContinue = await app.runSingleIteration();
 
@@ -103,7 +118,10 @@ describe('Application Orchestrator (App.ts)', () => {
             .mockResolvedValueOnce(true)
             .mockResolvedValueOnce(false);
 
-        const exitSpy = spyOn(app.commands.find(c => c instanceof Exit)!, 'execute').mockResolvedValue(undefined);
+        const exitSpy = spyOn(
+            app.commands.find(c => c instanceof Exit)!,
+            'execute',
+        ).mockResolvedValue(undefined);
 
         await app.run(exitProcessMock);
 

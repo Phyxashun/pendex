@@ -54,7 +54,10 @@ export interface ArchivedFile {
  * @param tag - Either {@link START_TAG} or {@link END_TAG}.
  * @returns The banner text, exactly {@link BANNER_LINE_COUNT} lines joined with `\n`.
  */
-function buildBanner(filePath: string, tag: typeof START_TAG | typeof END_TAG): string {
+function buildBanner(
+    filePath: string,
+    tag: typeof START_TAG | typeof END_TAG,
+): string {
     const spacer = CUBE.repeat(WIDTH);
     const extension = extName(filePath).toUpperCase().replace('.', '') || 'TXT';
 
@@ -150,7 +153,10 @@ export function parseArchive(rawText: string): ArchivedFile[] {
                 let j = i + BANNER_LINE_COUNT;
                 let endIndex = -1;
                 while (j <= lines.length - BANNER_LINE_COUNT) {
-                    if (isFrame(lines, j, END_TAG) && extractPath(lines[j + PATH_LINE_INDEX]) === path) {
+                    if (
+                        isFrame(lines, j, END_TAG) &&
+                        extractPath(lines[j + PATH_LINE_INDEX]) === path
+                    ) {
                         endIndex = j;
                         break;
                     }
@@ -160,7 +166,9 @@ export function parseArchive(rawText: string): ArchivedFile[] {
                 if (endIndex !== -1) {
                     results.push({
                         originalPath: path,
-                        content: lines.slice(i + BANNER_LINE_COUNT, endIndex).join('\n'),
+                        content: lines
+                            .slice(i + BANNER_LINE_COUNT, endIndex)
+                            .join('\n'),
                     });
                     i = endIndex + BANNER_LINE_COUNT;
                     continue;

@@ -31,8 +31,14 @@ export interface ResolvedDeps {
 
 /** The eight recognized job categories, used to filter a theme's `[brand]` table. */
 const CATEGORIES: readonly Category[] = [
-    'source', 'web', 'style', 'terminal',
-    'configuration', 'documentation', 'testing', 'misc',
+    'source',
+    'web',
+    'style',
+    'terminal',
+    'configuration',
+    'documentation',
+    'testing',
+    'misc',
 ];
 
 /**
@@ -49,7 +55,9 @@ const CATEGORIES: readonly Category[] = [
  * @param brand - The raw `[brand]` table from a parsed theme, if any.
  * @returns Per-category brand colors, or `undefined` if none apply.
  */
-function extractCategoryColors(brand: Record<string, string> | undefined): Partial<Record<Category, string>> | undefined {
+function extractCategoryColors(
+    brand: Record<string, string> | undefined,
+): Partial<Record<Category, string>> | undefined {
     if (!brand) return undefined;
 
     const colors: Partial<Record<Category, string>> = {};

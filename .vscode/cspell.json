@@ -25,9 +25,7 @@
   // ],
   "version": "0.2",
   "language": "en",
-  "words": [
-    "Deconsolidating"
-  ],
+  "words": ["Deconsolidating"],
   "flagWords": [
     //
   ],
@@ -45,9 +43,7 @@
   "maxNumberOfProblems": 10000,
   "minWordLength": 4,
   "allowCompoundWords": false,
-  "dictionaries": [
-    "cspell-dictionary"
-  ],
+  "dictionaries": ["cspell-dictionary"],
   "dictionaryDefinitions": [
     {
       "name": "cspell-dictionary",

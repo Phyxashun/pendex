@@ -7,18 +7,24 @@ import type { ReactNode } from 'react';
  * signature visual element this docs site borrows directly from the
  * tool it documents, rather than inventing new chrome.
  */
-export function BannerFrame({ tag, children }: { tag: string; children: ReactNode }) {
+export function BannerFrame({
+    tag,
+    children,
+}: {
+    tag: string;
+    children: ReactNode;
+}) {
     const cubes = '■'.repeat(10);
 
     return (
-        <div className="font-display text-xs sm:text-sm">
-            <div className="text-primary/70 select-none whitespace-nowrap overflow-hidden">
+        <div className='font-display text-xs sm:text-sm'>
+            <div className='text-primary/70 select-none whitespace-nowrap overflow-hidden'>
                 {cubes}
                 {tag}
                 {cubes}
             </div>
-            <div className="py-3">{children}</div>
-            <div className="text-primary/70 select-none whitespace-nowrap overflow-hidden">
+            <div className='py-3'>{children}</div>
+            <div className='text-primary/70 select-none whitespace-nowrap overflow-hidden'>
                 {cubes}
                 {tag}
                 {cubes}

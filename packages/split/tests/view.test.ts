@@ -10,7 +10,11 @@ import { cleanupSandbox, createSandbox } from './setup';
 const SANDBOX = './test-sandbox-splitview';
 
 const baseConfig = (): Config => ({
-    theme: 'pendex', outputDir: 'OUT', rebuiltDir: 'REBUILT', exclude: [], jobs: [],
+    theme: 'pendex',
+    outputDir: 'OUT',
+    rebuiltDir: 'REBUILT',
+    exclude: [],
+    jobs: [],
 });
 
 describe('SplitView', () => {
@@ -28,17 +32,26 @@ describe('SplitView', () => {
 
     test('catches errors instead of throwing (invalid empty-dir name in manifest)', async () => {
         mkdirSync('OUT', { recursive: true });
-        writeFileSync('OUT/manifest.json', JSON.stringify({
-            files: {},
-            emptyDirectories: ['bad\u0000dir'],
-        }));
+        writeFileSync(
+            'OUT/manifest.json',
+            JSON.stringify({
+                files: {},
+                emptyDirectories: ['bad\u0000dir'],
+            }),
+        );
 
-        const view = new SplitView({ theme: FallbackTheme, config: baseConfig() });
+        const view = new SplitView({
+            theme: FallbackTheme,
+            config: baseConfig(),
+        });
         await expect(view.render()).resolves.toBeUndefined();
     });
 
     test('reports missing manifest without throwing', async () => {
-        const view = new SplitView({ theme: FallbackTheme, config: baseConfig() });
+        const view = new SplitView({
+            theme: FallbackTheme,
+            config: baseConfig(),
+        });
         await expect(view.render()).resolves.toBeUndefined();
     });
 });

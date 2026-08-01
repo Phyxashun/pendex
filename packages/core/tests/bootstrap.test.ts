@@ -41,11 +41,16 @@ describe('bootstrap.resolveRunnerDeps', () => {
     });
 
     test('resolves a named theme when runtime config selects it', async () => {
-        writeFileSync(Constants.RUNTIME_CONFIG_PATH, JSON.stringify({ theme: 'dracula' }));
+        writeFileSync(
+            Constants.RUNTIME_CONFIG_PATH,
+            JSON.stringify({ theme: 'dracula' }),
+        );
         const deps = await resolveRunnerDeps();
         expect(deps.config.theme).toBe('dracula');
         // Dracula purple #BD93F9:
-        expect(deps.theme.primary('x').toString()).toContain('38;2;189;147;249');
+        expect(deps.theme.primary('x').toString()).toContain(
+            '38;2;189;147;249',
+        );
     });
 
     test('categoryColors is present for the default (pendex) config — every shipped theme has a [brand] table now', async () => {
@@ -55,13 +60,19 @@ describe('bootstrap.resolveRunnerDeps', () => {
     });
 
     test('categoryColors is undefined only for a theme with no [brand] table at all (an unknown theme name)', async () => {
-        writeFileSync(Constants.RUNTIME_CONFIG_PATH, JSON.stringify({ theme: 'no-such-theme' }));
+        writeFileSync(
+            Constants.RUNTIME_CONFIG_PATH,
+            JSON.stringify({ theme: 'no-such-theme' }),
+        );
         const deps = await resolveRunnerDeps();
         expect(deps.categoryColors).toBeUndefined();
     });
 
-    test('categoryColors carries every Category the theme\'s [brand] table names exactly', async () => {
-        writeFileSync(Constants.RUNTIME_CONFIG_PATH, JSON.stringify({ theme: 'pendex' }));
+    test("categoryColors carries every Category the theme's [brand] table names exactly", async () => {
+        writeFileSync(
+            Constants.RUNTIME_CONFIG_PATH,
+            JSON.stringify({ theme: 'pendex' }),
+        );
         const deps = await resolveRunnerDeps();
 
         expect(deps.categoryColors?.source).toBe('#799470');
@@ -78,9 +89,12 @@ describe('bootstrap.resolveRunnerDeps', () => {
         expect(Object.keys(deps.categoryColors ?? {})).toHaveLength(8);
     });
 
-    test('categoryColors reflects whichever theme is active, not always pendex\'s colors', async () => {
-        writeFileSync(Constants.RUNTIME_CONFIG_PATH, JSON.stringify({ theme: 'dracula' }));
+    test("categoryColors reflects whichever theme is active, not always pendex's colors", async () => {
+        writeFileSync(
+            Constants.RUNTIME_CONFIG_PATH,
+            JSON.stringify({ theme: 'dracula' }),
+        );
         const deps = await resolveRunnerDeps();
-        expect(deps.categoryColors?.source).toBe('#50FA7B');   // Dracula green, not pendex olive
+        expect(deps.categoryColors?.source).toBe('#50FA7B'); // Dracula green, not pendex olive
     });
 });

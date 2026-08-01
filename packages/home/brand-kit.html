@@ -1,314 +1,375 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Pendex Brand Kit</title>
+        <script src="https://jsdelivr.net"></script>
+        <style>
+            @import url('https://googleapis.com');
 
-<head>
-    <meta charset="UTF-8">
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
-    <title>Pendex Brand Kit</title>
-    <script src="https://jsdelivr.net"></script>
-    <style>
-        @import url('https://googleapis.com');
+            body {
+                font-family: 'Inter', sans-serif;
+                background-color: #f6f1e8;
+                color: #2e2a27;
+            }
 
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #F6F1E8;
-            color: #2E2A27;
-        }
+            .mono {
+                font-family: 'Fira Code', monospace;
+            }
 
-        .mono {
-            font-family: 'Fira Code', monospace;
-        }
+            .sor4-card {
+                background-color: #ffffff;
+                border: 4px solid #000000;
+                box-shadow: 6px 6px 0px #000000;
+            }
 
-        .sor4-card {
-            background-color: #FFFFFF;
-            border: 4px solid #000000;
-            box-shadow: 6px 6px 0px #000000;
-        }
+            .sor4-pill {
+                border: 2px solid #000000;
+                box-shadow: 2px 2px 0px #000000;
+            }
 
-        .sor4-pill {
-            border: 2px solid #000000;
-            box-shadow: 2px 2px 0px #000000;
-        }
+            .sor4-pop {
+                filter: drop-shadow(4px 4px 0px #000000);
+            }
+        </style>
+    </head>
 
-        .sor4-pop {
-            filter: drop-shadow(4px 4px 0px #000000);
-        }
-    </style>
-</head>
-
-<body class="p-6 max-w-5xl mx-auto">
-
-    <!-- Header Panel -->
-    <header
-        class="mb-10 border-b-4 border-black pb-6 flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4"
-    >
-        <div>
-            <h1
-                class="text-4xl font-black uppercase text-white px-4 py-2 border-4 border-black bg-[#8B5E3C] shadow-[5px_5px_0px_#000000] inline-block">
-                Pendex</h1>
-            <p class="text-sm font-bold text-[#8B5E3C] mt-2">Programming file consolidation toolkit system palette.</p>
-        </div>
-        <div class="flex gap-1.5 bg-white p-2 border-4 border-black shadow-[3px_3px_0px_#000000] rounded-lg">
-            <div
-                class="w-5 h-5 rounded border-2 border-black bg-[#8B5E3C]"
-                title="Primary"
-            ></div>
-            <div
-                class="w-5 h-5 rounded border-2 border-black bg-[#D6A448]"
-                title="Secondary"
-            ></div>
-            <div
-                class="w-5 h-5 rounded border-2 border-black bg-[#2F855A]"
-                title="Success"
-            ></div>
-            <div
-                class="w-5 h-5 rounded border-2 border-black bg-[#D97706]"
-                title="Warning"
-            ></div>
-            <div
-                class="w-5 h-5 rounded border-2 border-black bg-[#C2410C]"
-                title="Error"
-            ></div>
-            <div
-                class="w-5 h-5 rounded border-2 border-black bg-[#243B53]"
-                title="Info"
-            ></div>
-            <div
-                class="w-5 h-5 rounded border-2 border-black bg-[#728C69]"
-                title="Muted"
-            ></div>
-        </div>
-    </header>
-
-    <!-- Icons Section Grid -->
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10">
-        <!-- 1. FAVICON -->
-        <section class="sor4-card p-5 rounded-xl">
-            <h2 class="text-lg font-black mb-3 flex items-center gap-2 uppercase"><span
-                    class="bg-[#D6A448] w-2.5 h-5 inline-block border-2 border-black shadow-[1.5px_1.5px_0px_#000]"
-                ></span>1. Favicon</h2>
-            <div class="bg-[#F6F1E8] border-4 border-black p-6 rounded-lg flex flex-col items-center justify-center">
-                <svg
-                    width="48"
-                    height="48"
-                    viewBox="0 0 16 16"
-                    xmlns="http://w3.org"
-                    class="sor4-pop"
+    <body class="p-6 max-w-5xl mx-auto">
+        <!-- Header Panel -->
+        <header
+            class="mb-10 border-b-4 border-black pb-6 flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4"
+        >
+            <div>
+                <h1
+                    class="text-4xl font-black uppercase text-white px-4 py-2 border-4 border-black bg-[#8B5E3C] shadow-[5px_5px_0px_#000000] inline-block"
                 >
-                    <rect
-                        x="0.5"
-                        y="0.5"
-                        width="15"
-                        height="15"
-                        rx="3"
-                        fill="#D6A448"
-                        stroke="#000000"
-                        stroke-width="1.5"
-                    />
-                    <path
-                        d="M5 12V4H8.5C9.5 4 10.5 4.5 10.5 5.5C10.5 6.5 9.5 7 8.5 7H5"
-                        stroke="#000000"
-                        stroke-width="1.5"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        fill="none"
-                    />
-                </svg>
-                <span class="mt-4 px-2 py-0.5 bg-black text-white text-[11px] font-bold rounded mono">{ fav.svg }</span>
+                    Pendex
+                </h1>
+                <p class="text-sm font-bold text-[#8B5E3C] mt-2">
+                    Programming file consolidation toolkit system palette.
+                </p>
             </div>
-        </section>
+            <div
+                class="flex gap-1.5 bg-white p-2 border-4 border-black shadow-[3px_3px_0px_#000000] rounded-lg"
+            >
+                <div
+                    class="w-5 h-5 rounded border-2 border-black bg-[#8B5E3C]"
+                    title="Primary"
+                ></div>
+                <div
+                    class="w-5 h-5 rounded border-2 border-black bg-[#D6A448]"
+                    title="Secondary"
+                ></div>
+                <div
+                    class="w-5 h-5 rounded border-2 border-black bg-[#2F855A]"
+                    title="Success"
+                ></div>
+                <div
+                    class="w-5 h-5 rounded border-2 border-black bg-[#D97706]"
+                    title="Warning"
+                ></div>
+                <div
+                    class="w-5 h-5 rounded border-2 border-black bg-[#C2410C]"
+                    title="Error"
+                ></div>
+                <div
+                    class="w-5 h-5 rounded border-2 border-black bg-[#243B53]"
+                    title="Info"
+                ></div>
+                <div
+                    class="w-5 h-5 rounded border-2 border-black bg-[#728C69]"
+                    title="Muted"
+                ></div>
+            </div>
+        </header>
 
-        <!-- 2. APP ICON -->
-        <section class="sor4-card p-5 rounded-xl">
-            <h2 class="text-lg font-black mb-3 flex items-center gap-2 uppercase"><span
-                    class="bg-[#8B5E3C] w-2.5 h-5 inline-block border-2 border-black shadow-[1.5px_1.5px_0px_#000]"
-                ></span>2. App Icon</h2>
-            <div class="bg-[#F6F1E8] border-4 border-black p-4 rounded-lg flex flex-col items-center justify-center">
-                <svg
-                    width="96"
-                    height="96"
-                    viewBox="0 0 100 100"
-                    xmlns="http://w3.org"
-                    class="sor4-pop"
+        <!-- Icons Section Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10">
+            <!-- 1. FAVICON -->
+            <section class="sor4-card p-5 rounded-xl">
+                <h2
+                    class="text-lg font-black mb-3 flex items-center gap-2 uppercase"
                 >
-                    <rect
-                        x="4"
-                        y="4"
-                        width="92"
-                        height="92"
-                        rx="20"
-                        fill="#D6A448"
-                        stroke="#000000"
-                        stroke-width="8"
-                    />
-                    <g
-                        stroke="#000000"
-                        stroke-width="12"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
+                    <span
+                        class="bg-[#D6A448] w-2.5 h-5 inline-block border-2 border-black shadow-[1.5px_1.5px_0px_#000]"
+                    ></span
+                    >1. Favicon
+                </h2>
+                <div
+                    class="bg-[#F6F1E8] border-4 border-black p-6 rounded-lg flex flex-col items-center justify-center"
+                >
+                    <svg
+                        width="48"
+                        height="48"
+                        viewBox="0 0 16 16"
+                        xmlns="http://w3.org"
+                        class="sor4-pop"
                     >
+                        <rect
+                            x="0.5"
+                            y="0.5"
+                            width="15"
+                            height="15"
+                            rx="3"
+                            fill="#D6A448"
+                            stroke="#000000"
+                            stroke-width="1.5"
+                        />
                         <path
-                            d="M25 70V30H40C45.5 30 50 34.5 50 40C50 45.5 45.5 50 40 50H25 M55 70L75 30M75 70L55 30" />
-                    </g>
-                    <g
-                        stroke="#8B5E3C"
-                        stroke-width="5"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
+                            d="M5 12V4H8.5C9.5 4 10.5 4.5 10.5 5.5C10.5 6.5 9.5 7 8.5 7H5"
+                            stroke="#000000"
+                            stroke-width="1.5"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            fill="none"
+                        />
+                    </svg>
+                    <span
+                        class="mt-4 px-2 py-0.5 bg-black text-white text-[11px] font-bold rounded mono"
+                        >{ fav.svg }</span
                     >
-                        <path
-                            d="M25 70V30H40C45.5 30 50 34.5 50 40C50 45.5 45.5 50 40 50H25 M55 70L75 30M75 70L55 30" />
-                    </g>
-                </svg>
-            </div>
-        </section>
-    </div>
+                </div>
+            </section>
 
-    <!-- 3. TERMINAL ASCII -->
-    <section class="sor4-card p-5 rounded-xl mb-10">
-        <h2 class="text-lg font-black mb-3 flex items-center gap-2 uppercase"><span
-                class="bg-[#243B53] w-2.5 h-5 inline-block border-2 border-black shadow-[1.5px_1.5px_0px_#000]"
-            ></span>3. Terminal Interface CLI</h2>
-        <div class="bg-[#243B53] text-[#F6F1E8] p-5 border-4 border-black rounded-lg overflow-x-auto">
-            <pre class="font-bold mono text-xs leading-tight text-[#D6A448]">
+            <!-- 2. APP ICON -->
+            <section class="sor4-card p-5 rounded-xl">
+                <h2
+                    class="text-lg font-black mb-3 flex items-center gap-2 uppercase"
+                >
+                    <span
+                        class="bg-[#8B5E3C] w-2.5 h-5 inline-block border-2 border-black shadow-[1.5px_1.5px_0px_#000]"
+                    ></span
+                    >2. App Icon
+                </h2>
+                <div
+                    class="bg-[#F6F1E8] border-4 border-black p-4 rounded-lg flex flex-col items-center justify-center"
+                >
+                    <svg
+                        width="96"
+                        height="96"
+                        viewBox="0 0 100 100"
+                        xmlns="http://w3.org"
+                        class="sor4-pop"
+                    >
+                        <rect
+                            x="4"
+                            y="4"
+                            width="92"
+                            height="92"
+                            rx="20"
+                            fill="#D6A448"
+                            stroke="#000000"
+                            stroke-width="8"
+                        />
+                        <g
+                            stroke="#000000"
+                            stroke-width="12"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                        >
+                            <path
+                                d="M25 70V30H40C45.5 30 50 34.5 50 40C50 45.5 45.5 50 40 50H25 M55 70L75 30M75 70L55 30"
+                            />
+                        </g>
+                        <g
+                            stroke="#8B5E3C"
+                            stroke-width="5"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                        >
+                            <path
+                                d="M25 70V30H40C45.5 30 50 34.5 50 40C50 45.5 45.5 50 40 50H25 M55 70L75 30M75 70L55 30"
+                            />
+                        </g>
+                    </svg>
+                </div>
+            </section>
+        </div>
+
+        <!-- 3. TERMINAL ASCII -->
+        <section class="sor4-card p-5 rounded-xl mb-10">
+            <h2
+                class="text-lg font-black mb-3 flex items-center gap-2 uppercase"
+            >
+                <span
+                    class="bg-[#243B53] w-2.5 h-5 inline-block border-2 border-black shadow-[1.5px_1.5px_0px_#000]"
+                ></span
+                >3. Terminal Interface CLI
+            </h2>
+            <div
+                class="bg-[#243B53] text-[#F6F1E8] p-5 border-4 border-black rounded-lg overflow-x-auto"
+            >
+                <pre
+                    class="font-bold mono text-xs leading-tight text-[#D6A448]"
+                >
     ____                  __
    / __ \ ____ _ ____ ___/ / ___   _  __
   / /_/ // __ `// __  / __  / / _ \ | |/_/
  / ____// /_/ // / / // /_/ / /  __/_>  <
 /_/     \__,_//_/ /_/ \__,_/  \___//_/\_\</pre>
-            <div class="mt-4 pt-4 border-t-2 border-black/20 grid grid-cols-1 sm:grid-cols-2 gap-2 text-[11px] mono">
-                <div class="flex items-center gap-2"><span
-                        class="px-1.5 bg-[#2F855A] text-white rounded font-bold">OK</span><span>Shell Environment
-                        Operational</span></div>
-                <div class="flex items-center gap-2"><span
-                        class="px-1.5 bg-[#8B5E3C] text-white rounded font-bold">CORE</span><span>Combinatorial Matrix
-                        Loaded P(x)</span></div>
-                <div class="flex items-center gap-2"><span
-                        class="px-1.5 bg-[#D97706] text-white rounded font-bold">WARN</span><span>Deep tree optimization
-                        enabled</span></div>
-                <div class="flex items-center gap-2"><span
-                        class="px-1.5 bg-[#728C69] text-white rounded font-bold">MUTE</span><span>Asset output mapping
-                        completed</span></div>
-            </div>
-        </div>
-    </section>
-
-    <!-- 4. GITHUB BANNER -->
-    <section class="sor4-card p-5 rounded-xl">
-        <h2 class="text-lg font-black mb-3 flex items-center gap-2 uppercase"><span
-                class="bg-[#728C69] w-2.5 h-5 inline-block border-2 border-black shadow-[1.5px_1.5px_0px_#000]"
-            ></span>4. GitHub Social Banner</h2>
-        <div
-            class="w-full bg-white border-4 border-black rounded-xl overflow-hidden relative shadow-[6px_6px_0px_#000000]"
-            style="aspect-ratio: 2.8 / 1;"
-        >
-
-            <!-- Grid Watermark Overlay -->
-            <div class="absolute inset-0 opacity-[0.07] pointer-events-none">
-                <svg
-                    width="100%"
-                    height="100%"
+                <div
+                    class="mt-4 pt-4 border-t-2 border-black/20 grid grid-cols-1 sm:grid-cols-2 gap-2 text-[11px] mono"
                 >
-                    <defs>
-                        <pattern
-                            id="g"
-                            width="16"
-                            height="16"
-                            patternUnits="userSpaceOnUse"
-                        >
-                            <path
-                                d="M16 0L0 0 0 16"
-                                fill="none"
-                                stroke="#000"
-                                stroke-width="1"
-                            />
-                        </pattern>
-                    </defs>
-                    <rect
-                        width="100%"
-                        height="100%"
-                        fill="url(#g)"
-                    />
-                </svg>
-            </div>
-
-            <!-- Absolute Banner Internal Element Placement Grid -->
-            <div class="absolute inset-0 flex items-center justify-between px-6 md:px-10">
-                <!-- Main Branding Copy Block Left Frame -->
-                <div class="z-10">
-                    <h3
-                        class="text-3xl md:text-5xl font-black text-white bg-[#8B5E3C] px-3 py-1 border-4 border-black shadow-[4px_4px_0px_#000000] inline-block mb-2.5 uppercase tracking-tight sor4-pop">
-                        Pendex</h3>
-                    <p
-                        class="text-[#2E2A27] font-black text-[10px] md:text-xs uppercase bg-[#D6A448] px-2 py-0.5 border-2 border-black max-w-max shadow-[2px_2px_0px_#000000]">
-                        The Power Set for Code Projects</p>
-                    <div class="gap-1.5 mt-3.5 hidden sm:flex">
+                    <div class="flex items-center gap-2">
                         <span
-                            class="px-2 py-0.5 bg-[#2F855A] text-white text-[10px] font-bold rounded-md sor4-pill mono"
-                        >src</span>
+                            class="px-1.5 bg-[#2F855A] text-white rounded font-bold"
+                            >OK</span
+                        ><span>Shell Environment Operational</span>
+                    </div>
+                    <div class="flex items-center gap-2">
                         <span
-                            class="px-2 py-0.5 bg-[#728C69] text-white text-[10px] font-bold rounded-md sor4-pill mono"
-                        >sage</span>
+                            class="px-1.5 bg-[#8B5E3C] text-white rounded font-bold"
+                            >CORE</span
+                        ><span>Combinatorial Matrix Loaded P(x)</span>
+                    </div>
+                    <div class="flex items-center gap-2">
                         <span
-                            class="px-2 py-0.5 bg-[#C2410C] text-white text-[10px] font-bold rounded-md sor4-pill mono"
-                        >err</span>
+                            class="px-1.5 bg-[#D97706] text-white rounded font-bold"
+                            >WARN</span
+                        ><span>Deep tree optimization enabled</span>
+                    </div>
+                    <div class="flex items-center gap-2">
                         <span
-                            class="px-2 py-0.5 bg-[#243B53] text-white text-[10px] font-bold rounded-md sor4-pill mono"
-                        >navy</span>
+                            class="px-1.5 bg-[#728C69] text-white rounded font-bold"
+                            >MUTE</span
+                        ><span>Asset output mapping completed</span>
                     </div>
                 </div>
+            </div>
+        </section>
 
-                <!-- Graphic Structural Art Focus Frame Right Frame -->
-                <div class="hidden md:block pr-2 z-10 select-none">
-                    <div class="relative">
-                        <div class="text-[90px] font-black text-black/4 mono italic transform rotate-2">P(x)</div>
-                        <div class="absolute inset-0 flex items-center justify-center">
-                            <svg
-                                width="80"
-                                height="80"
-                                viewBox="0 0 24 24"
-                                fill="none"
+        <!-- 4. GITHUB BANNER -->
+        <section class="sor4-card p-5 rounded-xl">
+            <h2
+                class="text-lg font-black mb-3 flex items-center gap-2 uppercase"
+            >
+                <span
+                    class="bg-[#728C69] w-2.5 h-5 inline-block border-2 border-black shadow-[1.5px_1.5px_0px_#000]"
+                ></span
+                >4. GitHub Social Banner
+            </h2>
+            <div
+                class="w-full bg-white border-4 border-black rounded-xl overflow-hidden relative shadow-[6px_6px_0px_#000000]"
+                style="aspect-ratio: 2.8 / 1"
+            >
+                <!-- Grid Watermark Overlay -->
+                <div
+                    class="absolute inset-0 opacity-[0.07] pointer-events-none"
+                >
+                    <svg width="100%" height="100%">
+                        <defs>
+                            <pattern
+                                id="g"
+                                width="16"
+                                height="16"
+                                patternUnits="userSpaceOnUse"
                             >
-                                <rect
-                                    x="1.5"
-                                    y="1.5"
-                                    width="21"
-                                    height="21"
-                                    rx="4"
-                                    fill="#D6A448"
-                                    stroke="#000000"
-                                    stroke-width="2.5"
+                                <path
+                                    d="M16 0L0 0 0 16"
+                                    fill="none"
+                                    stroke="#000"
+                                    stroke-width="1"
                                 />
-                                <g
-                                    stroke="#000000"
-                                    stroke-width="2"
-                                    stroke-linecap="round"
-                                    stroke-linejoin="round"
+                            </pattern>
+                        </defs>
+                        <rect width="100%" height="100%" fill="url(#g)" />
+                    </svg>
+                </div>
+
+                <!-- Absolute Banner Internal Element Placement Grid -->
+                <div
+                    class="absolute inset-0 flex items-center justify-between px-6 md:px-10"
+                >
+                    <!-- Main Branding Copy Block Left Frame -->
+                    <div class="z-10">
+                        <h3
+                            class="text-3xl md:text-5xl font-black text-white bg-[#8B5E3C] px-3 py-1 border-4 border-black shadow-[4px_4px_0px_#000000] inline-block mb-2.5 uppercase tracking-tight sor4-pop"
+                        >
+                            Pendex
+                        </h3>
+                        <p
+                            class="text-[#2E2A27] font-black text-[10px] md:text-xs uppercase bg-[#D6A448] px-2 py-0.5 border-2 border-black max-w-max shadow-[2px_2px_0px_#000000]"
+                        >
+                            The Power Set for Code Projects
+                        </p>
+                        <div class="gap-1.5 mt-3.5 hidden sm:flex">
+                            <span
+                                class="px-2 py-0.5 bg-[#2F855A] text-white text-[10px] font-bold rounded-md sor4-pill mono"
+                                >src</span
+                            >
+                            <span
+                                class="px-2 py-0.5 bg-[#728C69] text-white text-[10px] font-bold rounded-md sor4-pill mono"
+                                >sage</span
+                            >
+                            <span
+                                class="px-2 py-0.5 bg-[#C2410C] text-white text-[10px] font-bold rounded-md sor4-pill mono"
+                                >err</span
+                            >
+                            <span
+                                class="px-2 py-0.5 bg-[#243B53] text-white text-[10px] font-bold rounded-md sor4-pill mono"
+                                >navy</span
+                            >
+                        </div>
+                    </div>
+
+                    <!-- Graphic Structural Art Focus Frame Right Frame -->
+                    <div class="hidden md:block pr-2 z-10 select-none">
+                        <div class="relative">
+                            <div
+                                class="text-[90px] font-black text-black/4 mono italic transform rotate-2"
+                            >
+                                P(x)
+                            </div>
+                            <div
+                                class="absolute inset-0 flex items-center justify-center"
+                            >
+                                <svg
+                                    width="80"
+                                    height="80"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
                                 >
-                                    <path
-                                        d="M7 16V8h4a2.5 2.5 0 0 1 0 5H7"
-                                        fill="none"
+                                    <rect
+                                        x="1.5"
+                                        y="1.5"
+                                        width="21"
+                                        height="21"
+                                        rx="4"
+                                        fill="#D6A448"
+                                        stroke="#000000"
+                                        stroke-width="2.5"
                                     />
-                                    <path d="M13 16l4-6M17 16l-4-6" />
-                                </g>
-                            </svg>
+                                    <g
+                                        stroke="#000000"
+                                        stroke-width="2"
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                    >
+                                        <path
+                                            d="M7 16V8h4a2.5 2.5 0 0 1 0 5H7"
+                                            fill="none"
+                                        />
+                                        <path d="M13 16l4-6M17 16l-4-6" />
+                                    </g>
+                                </svg>
+                            </div>
                         </div>
                     </div>
                 </div>
+
+                <!-- Absolute Footer Utility String Strip Line -->
+                <div
+                    class="absolute bottom-2.5 left-6 md:left-10 text-[8px] font-bold text-[#8B5E3C] mono uppercase tracking-[0.2em] bg-white/70 px-2 py-0.5 border border-black/10 rounded"
+                >
+                    Consolidation Engineering // Core Verified // 2026
+                </div>
             </div>
-
-            <!-- Absolute Footer Utility String Strip Line -->
-            <div
-                class="absolute bottom-2.5 left-6 md:left-10 text-[8px] font-bold text-[#8B5E3C] mono uppercase tracking-[0.2em] bg-white/70 px-2 py-0.5 border border-black/10 rounded">
-                Consolidation Engineering // Core Verified // 2026</div>
-        </div>
-        <p class="mt-3 text-[11px] font-bold text-slate-400 uppercase tracking-wider text-center">Social Preview Aspect
-            Ratio (2.8:1)</p>
-    </section>
-
-</body>
-
+            <p
+                class="mt-3 text-[11px] font-bold text-slate-400 uppercase tracking-wider text-center"
+            >
+                Social Preview Aspect Ratio (2.8:1)
+            </p>
+        </section>
+    </body>
 </html>

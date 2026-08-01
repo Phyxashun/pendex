@@ -21,13 +21,18 @@ describe('@pendex/split — SplitService (standalone)', () => {
         process.chdir(SANDBOX);
         mkdirSync('OUT', { recursive: true });
 
-        const archive = joinArchiveEntries([buildArchiveEntry('src/a.ts', 'export const a = 1;\n')]);
+        const archive = joinArchiveEntries([
+            buildArchiveEntry('src/a.ts', 'export const a = 1;\n'),
+        ]);
         writeFileSync(join('OUT', 'code.txt'), archive);
-        writeFileSync(join('OUT', 'manifest.json'), JSON.stringify({
-            files: { 'code.txt': ['src/a.ts'] },
-            categories: { 'code.txt': 'source' },
-            emptyDirectories: [],
-        }));
+        writeFileSync(
+            join('OUT', 'manifest.json'),
+            JSON.stringify({
+                files: { 'code.txt': ['src/a.ts'] },
+                categories: { 'code.txt': 'source' },
+                emptyDirectories: [],
+            }),
+        );
     });
 
     afterEach(() => {

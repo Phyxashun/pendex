@@ -16,7 +16,11 @@
 import { intro, log, note, outro, tasks } from '@clack/prompts';
 import type { State } from '@pendex/core';
 import { View } from '@pendex/core';
-import { compileSingleJob, finalizeCompile, initializeCompile } from './CompileService';
+import {
+    compileSingleJob,
+    finalizeCompile,
+    initializeCompile,
+} from './CompileService';
 
 /** Renders the interactive compile session: intro, per-job progress, summary, and outro. */
 export class CompileView extends View {
@@ -58,30 +62,34 @@ export class CompileView extends View {
             console.log();
             intro(`${theme(this.STRINGS.title).title}`);
 
-            note(
-                ctx.excludes.join(', '),
-                this.STRINGS.excludedTitle,
-                {
-                    format: (text: string) => `${theme.muted(text)}`
-                }
-            );
+            note(ctx.excludes.join(', '), this.STRINGS.excludedTitle, {
+                format: (text: string) => `${theme.muted(text)}`,
+            });
 
             // Build tasks that execute live service methods inside Clack's runner
-            const jobTasks = config.jobs.map((job) => {
+            const jobTasks = config.jobs.map(job => {
                 const rawDesc = job.description || job.filename;
                 const titleStyle = this.categoryStyle(job.category, theme.bold);
-                const resultStyle = this.categoryStyle(job.category, theme.primary);
+                const resultStyle = this.categoryStyle(
+                    job.category,
+                    theme.primary,
+                );
 
                 return {
                     title: `${this.STRINGS.presentAction} ${titleStyle(rawDesc)}`,
                     task: async (): Promise<string> => {
-                        const outcome = await compileSingleJob(job, { config, ...ctx });
+                        const outcome = await compileSingleJob(job, {
+                            config,
+                            ...ctx,
+                        });
 
                         totalFiles += outcome.fileCount;
 
                         const rawDesc1 = `${rawDesc.charAt(0).toUpperCase()}`;
                         const rawDesc2 = `${rawDesc.slice(1).toLowerCase()}`;
-                        const formattedDesc = resultStyle(`${rawDesc1}${rawDesc2} ${this.STRINGS.pastAction}`);
+                        const formattedDesc = resultStyle(
+                            `${rawDesc1}${rawDesc2} ${this.STRINGS.pastAction}`,
+                        );
                         // theme.warning(...) must be coerced to a plain string
                         // with its own template literal BEFORE being handed to
                         // theme.bold(...) as an argument — passing its raw
@@ -97,7 +105,7 @@ export class CompileView extends View {
                         const styledCount = `${theme.bold(warningCount)}`;
 
                         return `${styledCount} ${formattedDesc}`;
-                    }
+                    },
                 };
             });
 
@@ -110,7 +118,6 @@ export class CompileView extends View {
             // Render final summary block
             this.renderSummary(totalFiles);
             outro(`${theme.success(this.STRINGS.outroSuccess)}`);
-
         } catch (err) {
             log.error(`${theme.error(this.STRINGS.error)}`);
             if (err instanceof Error) log.error(`${theme.error(err.message)}`);
@@ -129,22 +136,18 @@ export class CompileView extends View {
         const results = {
             outputDir: theme.warning(`"/${this.state.config.outputDir}"`),
             fileCount: theme.bold.primary(String(fileCount)),
-            jobCount: theme.bold.primary(String(this.state.config.jobs.length))
-        }
+            jobCount: theme.bold.primary(String(this.state.config.jobs.length)),
+        };
 
         const complete = `${theme.success(`${this.STRINGS.complete}: ${results.outputDir}`)}`;
         const total = `${theme.success(`${this.STRINGS.total} ${results.fileCount}`)}`;
         const success = `${theme.success(`${this.STRINGS.success}: ${results.jobCount}`)}`;
 
-        const message = `${complete}\n${total}\n${success}`
+        const message = `${complete}\n${total}\n${success}`;
         const title = ` ${this.STRINGS.result} `;
 
-        note(
-            message,
-            title,
-            {
-                format: (text: string) => `${theme.success(text)}`
-            }
-        );
+        note(message, title, {
+            format: (text: string) => `${theme.success(text)}`,
+        });
     }
 }

@@ -25,7 +25,13 @@ describe('ThemeManager (TOML theme loading)', () => {
     });
 
     test('loads each shipped theme file', async () => {
-        for (const name of ['pendex', 'dracula', 'tokyonight', 'onedark', 'monokaipro']) {
+        for (const name of [
+            'pendex',
+            'dracula',
+            'tokyonight',
+            'onedark',
+            'monokaipro',
+        ]) {
             ThemeManager.resetInstance();
             const manager = await ThemeManager.getInstance(name);
             expect(manager.name()).toBe(name);
@@ -33,7 +39,7 @@ describe('ThemeManager (TOML theme loading)', () => {
         }
     });
 
-    test('extended() exposes pendex.toml\'s full schema, including tables buildTheme() never reads', async () => {
+    test("extended() exposes pendex.toml's full schema, including tables buildTheme() never reads", async () => {
         const manager = await ThemeManager.getInstance('pendex');
         const extended = manager.extended();
 
@@ -65,7 +71,16 @@ describe('ThemeManager (TOML theme loading)', () => {
         // All 8 Category names resolve, exactly — this is what would have
         // silently broken had `configuration`/`documentation` stayed
         // abbreviated as `config`/`docs`:
-        for (const category of ['source', 'web', 'style', 'terminal', 'configuration', 'documentation', 'testing', 'misc']) {
+        for (const category of [
+            'source',
+            'web',
+            'style',
+            'terminal',
+            'configuration',
+            'documentation',
+            'testing',
+            'misc',
+        ]) {
             expect(extended.brand?.[category]).toBeDefined();
         }
     });
@@ -78,7 +93,16 @@ describe('ThemeManager (TOML theme loading)', () => {
             const manager = await ThemeManager.getInstance(name);
             const brand = manager.extended().brand;
 
-            for (const category of ['source', 'web', 'style', 'terminal', 'configuration', 'documentation', 'testing', 'misc']) {
+            for (const category of [
+                'source',
+                'web',
+                'style',
+                'terminal',
+                'configuration',
+                'documentation',
+                'testing',
+                'misc',
+            ]) {
                 expect(brand?.[category]).toBeDefined();
             }
         }
@@ -90,9 +114,16 @@ describe('ThemeManager (TOML theme loading)', () => {
 
         expect(extended.name).toBe('no-such-theme-either');
         expect(extended.colors).toEqual({
-            primary: '#D6A448', secondary: '#6F92B0', success: '#799470',
-            warning: '#D99C5A', error: '#C57967', info: '#6AAFB5',
-            muted: '#7B746B', foreground: '#E9E0D2', background: '#1A1A1A', titleBg: '#262626',
+            primary: '#D6A448',
+            secondary: '#6F92B0',
+            success: '#799470',
+            warning: '#D99C5A',
+            error: '#C57967',
+            info: '#6AAFB5',
+            muted: '#7B746B',
+            foreground: '#E9E0D2',
+            background: '#1A1A1A',
+            titleBg: '#262626',
         });
         expect(extended.brand).toBeUndefined();
         expect(extended.ansi).toBeUndefined();
@@ -101,14 +132,16 @@ describe('ThemeManager (TOML theme loading)', () => {
     test('dracula theme uses the dracula purple for primary', async () => {
         const manager = await ThemeManager.getInstance('dracula');
         // #BD93F9 = rgb(189, 147, 249)
-        expect(manager.get().primary('p').toString()).toContain('38;2;189;147;249');
+        expect(manager.get().primary('p').toString()).toContain(
+            '38;2;189;147;249',
+        );
     });
 
     test('an unknown theme name degrades to the brand palette, never throws', async () => {
         const manager = await ThemeManager.getInstance('no-such-theme');
         const styled = manager.get().primary('safe').toString();
         expect(styled).toContain('safe');
-        expect(styled).toContain('38;2;214;164;72');   // brass fallback
+        expect(styled).toContain('38;2;214;164;72'); // brass fallback
     });
 
     test('getInstance returns the same instance regardless of later names', async () => {
