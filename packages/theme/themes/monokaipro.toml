@@ -9,25 +9,25 @@
 # the intentionally de-emphasized comment/muted color).
 # ============================================================================
 
-name        = "Monokai Pro"
-author      = "Monokai.pro & contributors"
-version     = "1.1.0"
+name = "Monokai Pro"
+author = "Monokai.pro & contributors"
+version = "1.1.0"
 description = "Monokai Pro (Classic filter), mirrored to Pendex's theme layout."
 
 ###############################################################################
 # ThemeColors interface
 ###############################################################################
 
-primary     = "#FFD866"
-secondary   = "#AB9DF2"
-success     = "#A9DC76"
-warning     = "#FC9867"
-error       = "#FF6188"
-info        = "#78DCE8"
-muted       = "#727072"
-foreground  = "#FCFCFA"
-background  = "#1A1A1A"
-titleBg     = "#262626"
+primary = "#FFD866"
+secondary = "#AB9DF2"
+success = "#A9DC76"
+warning = "#FC9867"
+error = "#FF6188"
+info = "#78DCE8"
+muted = "#727072"
+foreground = "#FCFCFA"
+background = "#1A1A1A"
+titleBg = "#262626"
 
 ###############################################################################
 # Extended Brand Palette
@@ -35,16 +35,16 @@ titleBg     = "#262626"
 
 [palette]
 
-background      = "#2D2A2E"
-surface         = "#403E41"
-foreground      = "#FCFCFA"
-comment         = "#727072"
-yellow          = "#FFD866"
-purple          = "#AB9DF2"
-green           = "#A9DC76"
-orange          = "#FC9867"
-pink            = "#FF6188"
-cyan            = "#78DCE8"
+background = "#2D2A2E"
+surface = "#403E41"
+foreground = "#FCFCFA"
+comment = "#727072"
+yellow = "#FFD866"
+purple = "#AB9DF2"
+green = "#A9DC76"
+orange = "#FC9867"
+pink = "#FF6188"
+cyan = "#78DCE8"
 
 ###############################################################################
 # Website
@@ -55,19 +55,19 @@ cyan            = "#78DCE8"
 
 [website]
 
-heroBackground  = "#F7F2E8"
-cardBackground  = "#ECE3D4"
-border          = "#000000"
-heading         = "#2E2A27"
-body            = "#443E39"
-link            = "#3F5D78"
-linkHover       = "#6AAFB5"
-buttonPrimary   = "#D6A448"
-buttonHover     = "#E8C56A"
-buttonText      = "#1A1A1A"
-shadow          = "#00000055"
-grid            = "#DDD2C2"
-math            = "#8B5E3C"
+heroBackground = "#F7F2E8"
+cardBackground = "#ECE3D4"
+border = "#000000"
+heading = "#2E2A27"
+body = "#443E39"
+link = "#3F5D78"
+linkHover = "#6AAFB5"
+buttonPrimary = "#D6A448"
+buttonHover = "#E8C56A"
+buttonText = "#1A1A1A"
+shadow = "#00000055"
+grid = "#DDD2C2"
+math = "#8B5E3C"
 
 ###############################################################################
 # Terminal
@@ -75,10 +75,10 @@ math            = "#8B5E3C"
 
 [terminal]
 
-cursor          = "#FFD866"
-cursorText      = "#1A1A1A"
-selection       = "#5B595C"
-findHighlight   = "#FC9867"
+cursor = "#FFD866"
+cursorText = "#1A1A1A"
+selection = "#5B595C"
+findHighlight = "#FC9867"
 inactiveSelection = "#2C2C2C"
 
 ###############################################################################
@@ -87,22 +87,22 @@ inactiveSelection = "#2C2C2C"
 
 [ansi]
 
-black           = "#403E41"
-red             = "#FF6188"
-green           = "#A9DC76"
-yellow          = "#FFD866"
-blue            = "#FC9867"
-magenta         = "#AB9DF2"
-cyan            = "#78DCE8"
-white           = "#FCFCFA"
-brightBlack     = "#727072"
-brightRed       = "#FF6188"
-brightGreen     = "#A9DC76"
-brightYellow    = "#FFD866"
-brightBlue      = "#FC9867"
-brightMagenta   = "#AB9DF2"
-brightCyan      = "#78DCE8"
-brightWhite     = "#FCFCFA"
+black = "#403E41"
+red = "#FF6188"
+green = "#A9DC76"
+yellow = "#FFD866"
+blue = "#FC9867"
+magenta = "#AB9DF2"
+cyan = "#78DCE8"
+white = "#FCFCFA"
+brightBlack = "#727072"
+brightRed = "#FF6188"
+brightGreen = "#A9DC76"
+brightYellow = "#FFD866"
+brightBlue = "#FC9867"
+brightMagenta = "#AB9DF2"
+brightCyan = "#78DCE8"
+brightWhite = "#FCFCFA"
 
 ###############################################################################
 # Syntax Highlighting
@@ -110,20 +110,20 @@ brightWhite     = "#FCFCFA"
 
 [syntax]
 
-keyword         = "#FF6188"
-type            = "#78DCE8"
-class           = "#78DCE8"
-interface       = "#78DCE8"
-function        = "#A9DC76"
-string          = "#FFD866"
-number          = "#AB9DF2"
-constant        = "#AB9DF2"
-property        = "#FCFCFA"
-operator        = "#FF6188"
-comment         = "#727072"
-regex           = "#FC9867"
-attribute       = "#A9DC76"
-namespace       = "#78DCE8"
+keyword = "#FF6188"
+type = "#78DCE8"
+class = "#78DCE8"
+interface = "#78DCE8"
+function = "#A9DC76"
+string = "#FFD866"
+number = "#AB9DF2"
+constant = "#AB9DF2"
+property = "#FCFCFA"
+operator = "#FF6188"
+comment = "#727072"
+regex = "#FC9867"
+attribute = "#A9DC76"
+namespace = "#78DCE8"
 
 ###############################################################################
 # Git
@@ -131,11 +131,11 @@ namespace       = "#78DCE8"
 
 [git]
 
-added           = "#A9DC76"
-modified        = "#FFD866"
-deleted         = "#FF6188"
-renamed         = "#78DCE8"
-ignored         = "#727072"
+added = "#A9DC76"
+modified = "#FFD866"
+deleted = "#FF6188"
+renamed = "#78DCE8"
+ignored = "#727072"
 
 ###############################################################################
 # Diagnostics
@@ -143,10 +143,10 @@ ignored         = "#727072"
 
 [diagnostics]
 
-hint            = "#78DCE8"
-info            = "#AB9DF2"
-warning         = "#FC9867"
-error           = "#FF6188"
+hint = "#78DCE8"
+info = "#AB9DF2"
+warning = "#FC9867"
+error = "#FF6188"
 
 ###############################################################################
 # Diff
@@ -170,22 +170,22 @@ modifiedBackground = "#332E1E"
 
 [brand]
 
-bookCover       = "#24303A"
-bookSpine       = "#2F3B45"
-paper           = "#F7F2E8"
-banner          = "#F3E9D6"
-outline         = "#000000"
-math            = "#8B5E3C"
-folder          = "#A9DC76"
-manifest        = "#78DCE8"
-compile         = "#FFD866"
-split           = "#A9DC76"
-scanner         = "#AB9DF2"
-source          = "#A9DC76"
-web             = "#78DCE8"
-style           = "#FC9867"
-terminal        = "#403E41"
-configuration   = "#FC9867"
-documentation   = "#78DCE8"
-testing         = "#AB9DF2"
-misc            = "#727072"
+bookCover = "#24303A"
+bookSpine = "#2F3B45"
+paper = "#F7F2E8"
+banner = "#F3E9D6"
+outline = "#000000"
+math = "#8B5E3C"
+folder = "#A9DC76"
+manifest = "#78DCE8"
+compile = "#FFD866"
+split = "#A9DC76"
+scanner = "#AB9DF2"
+source = "#A9DC76"
+web = "#78DCE8"
+style = "#FC9867"
+terminal = "#403E41"
+configuration = "#FC9867"
+documentation = "#78DCE8"
+testing = "#AB9DF2"
+misc = "#727072"

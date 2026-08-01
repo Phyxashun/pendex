@@ -107,9 +107,12 @@ theme (`src/index.css`):
 - **`/`** — marketing home page. `index.html` → `src/main.tsx` → `src/App.tsx`.
 - **`/docs/`** — user guide + generated API reference. `docs/index.html`
   → `docs/main.tsx` → `src/docs/DocsApp.tsx`. The API reference itself
-  (`/docs/api/`) is TypeDoc output written to `public/docs/api/` (only
-  `.gitkeep` is committed there — the rest is build output) and copied
-  into `dist/docs/api/` automatically because it lives under `publicDir`.
+  (`/docs/api/`) is TypeDoc output written to `public/docs/api/`. It's
+  committed to the repo (not gitignored, not touched by `bun run clean`)
+  so the site has a working `/docs/api` even without a fresh TypeDoc run;
+  it's copied into `dist/docs/api/` automatically because it lives under
+  `publicDir`. Regenerate it with `bun run --cwd packages/home docs:api`
+  after changing any library package's JSDoc comments.
 
 This used to be two separate workspace packages (`@pendex/home` and
 `@pendex/api-docs`) with two Vite configs, deployed together via a

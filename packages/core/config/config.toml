@@ -4,7 +4,7 @@
 theme = "pendex"
 
 # DEFAULT OUTPUT DIRECTORIES
-outputDir  = "ALL"
+outputDir = "ALL"
 rebuiltDir = "ALL_REBUILT"
 
 # DEFAULT GLOBAL EXCLUDES
@@ -379,8 +379,8 @@ include = [
 exclude = []
 
 [[jobs]]
-filename    = "8_MISC_FILES.txt"
-category    = "misc"
+filename = "8_MISC_FILES.txt"
+category = "misc"
 description = "All remaining project files"
 # Empty include = "remainder job": FileScanner.resolveJobFiles() treats an
 # empty include list as "everything not already claimed by an earlier
