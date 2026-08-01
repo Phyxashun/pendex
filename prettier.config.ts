@@ -3,42 +3,40 @@
 import { type Config } from 'prettier';
 
 const config: Config = {
-  // Required to prevent Prettier from crashing/ignoring this file format in v3+
-  plugins: ['prettier-plugin-toml'],
+    plugins: ['prettier-plugin-tailwindcss'],
 
-  arrowParens: 'avoid',
-  bracketSameLine: false,
-  objectWrap: 'collapse',
-  bracketSpacing: true,
-  semi: true,
-  experimentalOperatorPosition: 'end',
-  experimentalTernaries: false,
-  singleQuote: true,
-  jsxSingleQuote: true,
-  quoteProps: 'as-needed',
-  trailingComma: 'all',
-  singleAttributePerLine: false,
-  htmlWhitespaceSensitivity: 'css',
-  vueIndentScriptAndStyle: false,
-  proseWrap: 'preserve',
-  endOfLine: 'lf',
-  insertPragma: false,
-  printWidth: 80,
-  requirePragma: false,
-  tabWidth: 2,
-  useTabs: false,
-  embeddedLanguageFormatting: 'auto',
+    arrowParens: 'avoid',
+    bracketSameLine: false,
+    objectWrap: 'collapse',
+    bracketSpacing: true,
+    semi: true,
+    experimentalOperatorPosition: 'end',
+    experimentalTernaries: false,
+    singleQuote: true,
+    jsxSingleQuote: true,
+    quoteProps: 'as-needed',
+    trailingComma: 'all',
+    singleAttributePerLine: false,
+    htmlWhitespaceSensitivity: 'css',
+    vueIndentScriptAndStyle: false,
+    proseWrap: 'preserve',
+    endOfLine: 'lf',
+    insertPragma: false,
+    printWidth: 80,
+    requirePragma: false,
+    tabWidth: 4,
+    useTabs: false,
+    embeddedLanguageFormatting: 'auto',
 
-  // Strict override block targeting the configuration file
-  overrides: [
-    {
-      files: ['*.toml', '**/config.toml', '**/presets.toml'],
-      options: {
-        parser: 'toml',
-        trailingComma: 'none',
-      },
-    },
-  ],
+    overrides: [
+        {
+            files: ['*.json', '*.jsonc', '*.md', '*.toml'],
+            options: {
+                // Matches indent_size in .editorconfig
+                tabWidth: 2,
+            },
+        },
+    ],
 };
 
 export default config;

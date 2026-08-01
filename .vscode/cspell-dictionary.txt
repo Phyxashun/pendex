@@ -2,6 +2,7 @@
 acss
 adoc
 Allman
+APGL
 appconfig
 AUTOINCREMENT
 bandaid
@@ -38,6 +39,7 @@ FILECONFIG
 FILESCONFIG
 fontkit
 gulpfile
+hcenter
 headlessly
 horiz
 Howitworks
@@ -55,6 +57,7 @@ lockfiles
 max_line_length
 mhtml
 NAMESLIST
+njsproj
 nodir
 ntvs
 pcss
@@ -73,12 +76,15 @@ smol
 styl
 tailwind
 tailwindcss
+taskkill
 TEARLINE
 Terminess
 toml
+topbar
 trim_trailing_whitespace
 Truecolor
 tsgo
+typedoc
 𝕌NICODE
 vbhtml
 venv

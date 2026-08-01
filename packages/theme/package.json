@@ -1,12 +1,24 @@
 {
-    "name": "@pendex/theme",
-    "version": "0.1.0",
-    "private": true,
-    "type": "module",
-    "main": "./src/index.ts",
-    "types": "./src/index.ts",
-    "exports": { ".": "./src/index.ts" },
-    "scripts": { "typecheck": "tsc --noEmit", "test": "bun test" },
-    "dependencies": { "@pendex/color": "workspace:*" },
-    "devDependencies": { "@types/bun": "latest", "typescript": "^5" }
+  "name": "@pendex/theme",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "bun test"
+  },
+  "dependencies": {
+    "@pendex/color": "workspace:*"
+  },
+  "peerDependencies": {
+    "typescript": "^7.0.2"
+  },
+  "devDependencies": {
+    "@types/bun": "^1.3.14"
+  }
 }
