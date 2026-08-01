@@ -60,6 +60,8 @@ NAMESLIST
 njsproj
 nodir
 ntvs
+oxfmt
+oxlint
 pcss
 pendex
 𝒫endex
