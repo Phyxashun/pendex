@@ -14,6 +14,7 @@ jobs:
     build-and-deploy:
         runs-on: ubuntu-latest
         permissions:
+            contents: write
             pages: write
             id-token: write
         steps:
@@ -32,6 +33,25 @@ jobs:
             # tsc -b, then vite build — see packages/home/package.json.
             - name: Build site
               run: bun run build
+
+            # packages/home/public/docs/api is committed (not gitignored —
+            # see AGENTS.md), so the generated API reference is browsable
+            # from the repo itself and a fresh clone's dev server has it
+            # without an extra manual step. TypeDoc's output is
+            # byte-for-byte deterministic given identical source, so this
+            # only ever commits when a library package's actual JSDoc
+            # comments changed — never noise. `[skip ci]` stops this
+            # commit from re-triggering the workflow (GitHub's built-in
+            # behavior for push events), so there's no infinite loop.
+            - name: Sync generated API docs
+              run: |
+                  git config user.name "github-actions[bot]"
+                  git config user.email "github-actions[bot]@users.noreply.github.com"
+                  git add packages/home/public/docs/api
+                  if ! git diff --staged --quiet; then
+                    git commit -m "chore: sync generated API docs [skip ci]"
+                    git push origin HEAD:main
+                  fi
 
             - name: Upload artifact
               uses: actions/upload-pages-artifact@v3

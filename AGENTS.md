@@ -111,8 +111,16 @@ theme (`src/index.css`):
   committed to the repo (not gitignored, not touched by `bun run clean`)
   so the site has a working `/docs/api` even without a fresh TypeDoc run;
   it's copied into `dist/docs/api/` automatically because it lives under
-  `publicDir`. Regenerate it with `bun run --cwd packages/home docs:api`
-  after changing any library package's JSDoc comments.
+  `publicDir`. **You don't need to regenerate and commit this by hand**
+  — `.github/workflows/deploy.yml`'s "Sync generated API docs" step
+  does it on every push to `main`: it rebuilds the site (which
+  regenerates `public/docs/api/` as a side effect), and if that output
+  actually differs from what's committed, commits and pushes it back
+  with `[skip ci]` (so it doesn't re-trigger itself). TypeDoc's output
+  is byte-for-byte deterministic given identical source, so this commit
+  only ever happens when a library package's real JSDoc content
+  changed — never as noise. If you want a fresh copy locally before
+  committing something else, `bun run --cwd packages/home docs:api`.
 
 This used to be two separate workspace packages (`@pendex/home` and
 `@pendex/api-docs`) with two Vite configs, deployed together via a
