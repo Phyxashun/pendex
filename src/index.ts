@@ -23,19 +23,11 @@
  */
 
 import App from './components/App';
+import Message from './utils/Message';
+import './utils/string-extensions';
+import './utils/string-extensions-test';
 
-/**
- * Logs a fatal, uncaught error to the console in a consistent format.
- *
- * @param msg - The error (or arbitrary thrown value) to report.
- */
-export const Message = (msg: unknown): void => {
-    if (msg instanceof Error) {
-        console.error(`Fatal crash: ${msg.message}`);
-    } else {
-        console.error(`Fatal crash: ${msg}`);
-    }
-};
+
 
 /**
  * MAIN ENTRY POINT

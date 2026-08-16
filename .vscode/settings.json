@@ -36,7 +36,9 @@
   "editor.showDeprecated": true,
   "editor.autoIndent": "full",
   "editor.wordWrapColumn": 100,
-  "editor.rulers": [100],
+  "editor.rulers": [
+    100
+  ],
   "editor.semanticHighlighting.enabled": true,
   "editor.semanticTokenColorCustomizations": {
     "enabled": true
@@ -53,7 +55,7 @@
   "editor.codeActions.triggerOnFocusChange": true,
   "editor.codeActionsOnSave": {
     "source.fixAll": "explicit",
-    "source.fixAll.oxc": "explicit",
+    "source.fixAll.eslint": "explicit",
     "source.organizeImports": "explicit",
     "source.addMissingImports": "explicit"
   },
@@ -64,7 +66,7 @@
   "editor.insertSpaces": true,
   "editor.tabSize": 4,
   "editor.detectIndentation": false,
-  "editor.defaultFormatter": "oxc.oxc-vscode",
+  "editor.defaultFormatter": "dbaeumer.vscode-eslint",
   "editor.formatOnType": false,
   "editor.formatOnPaste": true,
   "editor.formatOnSave": true,
@@ -86,7 +88,9 @@
   "terminal.integrated.profiles.linux": {
     "fish-host": {
       "path": "host-spawn",
-      "args": ["fish"],
+      "args": [
+        "fish"
+      ],
       "icon": "terminal-linux"
     }
   },
@@ -100,16 +104,19 @@
   // ==========================================================================
   //      ⚙️ HTML/CSS SETTINGS
   // ==========================================================================
-  "css.styleSheets": ["node_modules/bulma/css/bulma.min.css", "src/**/*.css"],
+  "css.styleSheets": [
+    "node_modules/bulma/css/bulma.min.css",
+    "src/**/*.css"
+  ],
   "css.lint.unknownAtRules": "ignore",
   "scss.lint.unknownAtRules": "ignore",
   "less.lint.unknownAtRules": "ignore",
   "[css]": {
-    "editor.defaultFormatter": "oxc.oxc-vscode"
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
   "[html]": {
     "editor.formatOnSave": false,
-    "editor.defaultFormatter": "oxc.oxc-vscode"
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
   "html.format.wrapAttributes": "force-expand-multiline",
   // ==========================================================================
@@ -121,10 +128,10 @@
   "editor.experimental.preferTreeSitter.typescript": true,
   // Language Formatters
   "[javascript]": {
-    "editor.defaultFormatter": "oxc.oxc-vscode"
+    "editor.defaultFormatter": "dbaeumer.vscode-eslint"
   },
   "[javascriptreact]": {
-    "editor.defaultFormatter": "oxc.oxc-vscode"
+    "editor.defaultFormatter": "dbaeumer.vscode-eslint"
   },
   "[typescript]": {
     "editor.defaultFormatter": "vscode.typescript-language-features"
@@ -187,7 +194,9 @@
   "markdownlint.config": {
     "default": true,
     "MD033": {
-      "allowed_elements": ["span"]
+      "allowed_elements": [
+        "span"
+      ]
     },
     "MD041": false,
     "MD026": false
@@ -197,7 +206,7 @@
   // ==========================================================================
   "json.schemaDownload.enable": false,
   "[json]": {
-    "editor.defaultFormatter": "oxc.oxc-vscode"
+    "editor.defaultFormatter": "dbaeumer.vscode-eslint"
   },
   "[jsonc]": {
     "editor.defaultFormatter": "vscode.json-language-features"
@@ -221,7 +230,7 @@
   //      ⚙️ POWERSHELL SETTINGS
   // ==========================================================================
   "[powershell]": {
-    "editor.defaultFormatter": "ms-vscode.powershell"
+    "editor.defaultFormatter": "dbaeumer.vscode-eslint"
   },
   //***************************************************************************
   //*
@@ -239,16 +248,32 @@
   "evenBetterToml.formatter.alignComments": true,
   "evenBetterToml.formatter.allowedBlankLines": 2,
   "[editorconfig]": {
-    "editor.defaultFormatter": "EditorConfig.EditorConfig"
+    "editor.defaultFormatter": "dbaeumer.vscode-eslint"
   },
   // ==========================================================================
-  //      ⚙️ OXC (OXLINT/OXFMT) SETTINGS
+  //      ⚙️ PRETTIER/ESLINT SETTINGS
   // ==========================================================================
-  "oxc.lint.run": "onType",
-  "oxc.enable": true,
-  "oxc.experimental.oxfmtSupport": true,
-  "oxc.fmt.experimental": true,
-  "oxc.lint.experimental.tsgolint.enable": true,
+  "prettier.useEditorConfig": true,
+  "eslint.useFlatConfig": true,
+  "eslint.format.enable": true,
+  "eslint.enable": true,
+  "eslint.validate": [
+    "javascript",
+    "javascriptreact",
+    "typescript",
+    "typescriptreact",
+    "types"
+  ],
+  "eslint.codeAction.showDocumentation": {
+    "enable": true
+  },
+  "eslint.codeAction.disableRuleComment": {
+    "enable": true,
+    "location": "sameLine"
+  },
+  "eslint.options": {
+    "overrideConfigFile": "eslint.config.ts"
+  },
   // ==========================================================================
   //      ⚙️ REGION FOLDING SETTINGS
   // ==========================================================================
@@ -492,7 +517,14 @@
   "colorize.decoration_type": "background",
   "colorize.enable_search_variables": true,
   "colorize.hide_current_line_decorations": true,
-  "colorize.colorized_colors": ["HEXA", "ARGB", "RGB", "HSL", "OKLAB", "OKLCH"],
+  "colorize.colorized_colors": [
+    "HEXA",
+    "ARGB",
+    "RGB",
+    "HSL",
+    "OKLAB",
+    "OKLCH"
+  ],
   "colorize.languages": [
     "css",
     "scss",
@@ -521,29 +553,34 @@
     "**/*.css",
     "**/*.toml",
     "**/*.json",
-    "**/*.jsonc"
+    "**/*.jsonc",
   ],
-  "colorize.exclude": ["**/node_modules/**", "**/ALL/**"],
-  "colorize.colorized_variables": ["LESS"],
+  "colorize.exclude": [
+    "**/node_modules/**",
+    "**/ALL/**"
+  ],
+  "colorize.colorized_variables": [
+    "LESS"
+  ],
   // ==========================================================================
   //      🎨 HIGHLIGHT SETTINGS
   // ==========================================================================
   //
   // Dracula Classic:
-  // Token            Hex             Usage
+  // Token        Hex        Usage
   // --------------------------------------------------------------------------
-  // Background           #282A36         Main background
-  // Current Line       #6272A4           Semantic current line highlight token
-  // Selection            #44475A         Text selection
-  // Foreground           #F8F8F2         Default text
-  // Comment        #6272A4       Comments, disabled code
-  // Red                #FF5555           Errors, warnings, deletion
-  // Orange           #FFB86C     Numbers, constants, booleans
-  // Yellow           #F1FA8C     Strings, text content
-  // Green            #50FA7B     Functions, methods, inherited classes
-  // Cyan               #8BE9FD           Classes, types, support, regex
-  // Purple           #BD93F9     Instance reserved words, constants
-  // Pink               #FF79C6           Keywords, storage types
+  // Background    #282A36    Main background
+  // Current Line  #6272A4    Semantic current line highlight token
+  // Selection    #44475A    Text selection
+  // Foreground    #F8F8F2    Default text
+  // Comment      #6272A4    Comments, disabled code
+  // Red          #FF5555    Errors, warnings, deletion
+  // Orange        #FFB86C    Numbers, constants, booleans
+  // Yellow        #F1FA8C    Strings, text content
+  // Green        #50FA7B    Functions, methods, inherited classes
+  // Cyan          #8BE9FD    Classes, types, support, regex
+  // Purple        #BD93F9    Instance reserved words, constants
+  // Pink          #FF79C6    Keywords, storage types
   //
   //
   "highlight.decorations": {},
@@ -560,145 +597,137 @@
     //file-path: src/styles.css
     //\  # FILE-PATH: TESTING
     //
-    "/(^|[ \\t]?(\/\/)\\s?(~?)\\s?(file-path)\\s{0}(:)\\s{1}(.*)[ \\t]?)$/gim": {
-      //"filterLanguageRegex": "(javascript|typescript|js|ts|jsx|tsx|json|jsonc|toml|yaml|yml|fish|ps1])",
-      "filterFilepaths": true,
-      "decorations": [
-        {
-          // Group 1
-          "overviewRulerColor": "#FFB86C",
-          "backgroundColor": "#44475A",
-          "borderRadius": "4px",
-          "border": "1px dotted #FFB86C",
-          "rangeBehavior": 1
-        },
-        {
-          // Group 2
-          "color": "#FFB86C"
-        },
-        {
-          // Group 3
-          "color": "#FFB86C"
-        },
-        {
-          // Group 4
-          "color": "#FF79C6"
-        },
-        {
-          // Group 5
-          "color": "#FFB86C"
-        },
-        {
-          // Group 6
-          "color": "#BD93F9",
-          "textDecoration": "none; padding: 0 8px 0 0;",
-          "after": {
-            "contentText": ""
-          }
-        }
-      ]
+        "/(^|[ \\t]?(\/\/)\\s?(~?)\\s?(file-path)\\s{0}(:)\\s{1}(.*)[
+\\t
+  ]?)$/gim": {
+  //"filterLanguageRegex":
+  "(javascript|typescript|js|ts|jsx|tsx|json|jsonc|toml|yaml|yml|fish|ps1])",
+  "filterFilepaths": true,
+  "decorations": [
+    { // Group 1
+      "overviewRulerColor": "#FFB86C",
+      "backgroundColor": "#44475A",
+      "borderRadius": "4px",
+      "border": "1px dotted #FFB86C",
+      "rangeBehavior": 1
     },
-    "/(^|[ \\t]?(#)\\s?(~?)\\s?(file-path)\\s{0}(:)\\s{1}(.*)[ \\t]?)$/gim": {
-      "filterLanguageRegex": "(javascript|typescript|js|ts|jsx|tsx|json|jsonc|toml|yaml|yml|fish|ps1])",
-      "filterFilepaths": true,
-      "decorations": [
-        {
-          // Group 1
-          "overviewRulerColor": "#FFB86C",
-          "backgroundColor": "#44475A",
-          "borderRadius": "4px",
-          "border": "1px dotted #FFB86C",
-          "rangeBehavior": 1
-        },
-        {
-          // Group 2
-          "color": "#FFB86C"
-        },
-        {
-          // Group 3
-          "color": "#FFB86C"
-        },
-        {
-          // Group 4
-          "color": "#FF79C6"
-        },
-        {
-          // Group 5
-          "color": "#FFB86C"
-        },
-        {
-          // Group 6
-          "color": "#BD93F9",
-          "textDecoration": "none; padding: 0 8px 0 0;",
-          "after": {
-            "contentText": ""
-          }
-        }
-      ]
+    { // Group 2
+      "color": "#FFB86C"
     },
-    //$ Highlight web URLs in comments with a specific format, e.g.:
-    // https://www.example.com
-    // http://localhost
-    // https://localhost:8080/dashboard#metrics
-    // http://127.0.0.1:3000
-    // https://cspell.org
-    // ftp://files.local/shared/data.csv
-    //
-    "/(\\s?([a-zA-Z0-9+.-]+:\\/\\/[a-zA-Z0-9@:%._\\+~#=\\-]{1,256}(?::\\d+)?(?:[-a-zA-Z0-9()@:%_\\+.~#?&\\/=]*))\\h?)/gim": {
-      "filterLanguageRegex": "(javascript|typescript|js|ts|jsx|tsx|json|jsonc|toml|yaml|yml])",
-      "decorations": [
-        {
-          "backgroundColor": "#44475A",
-          "borderRadius": "4px",
-          "border": "0.5px dashed #FFB86C",
-          "padding": "0 0 0 8px",
-          "before": {
-            "contentText": ""
-          }
-        },
-        {
-          "color": "#FFB86C",
-          "backgroundColor": "transparent",
-          "fontWeight": "normal",
-          "textDecoration": "none; padding: 0 8px 0 0;",
-          "after": {
-            "contentText": ""
-          }
-        }
-      ]
+    { // Group 3
+      "color": "#FFB86C"
+    },
+    { // Group 4
+      "color": "#FF79C6"
+    },
+    { // Group 5
+      "color": "#FFB86C"
+    },
+    { // Group 6
+      "color": "#BD93F9",
+      "textDecoration": "none; padding: 0 8px 0 0;",
+      "after": {
+        "contentText": ""
+      }
     }
-  },
-  "splitHTMLAttributes.tabSize": 2,
-  "splitHTMLAttributes.useSpacesForTabs": true,
-  "splitHTMLAttributes.closingBracketOnNewLine": true,
-  "splitHTMLAttributes.sortOrder": [
-    "^xmlns",
-    "^role",
-    "^viewBox",
-    "^key",
-    "^:",
-    "^id$",
-    "^class$",
-    "^x1?$",
-    "^y1?$",
-    "^x2$",
-    "^y2$",
-    "^cx$",
-    "^cy$",
-    "^r$",
-    "^width$",
-    "^height$",
-    "^fill",
-    "^stroke",
-    "^style",
-    "^d$",
-    "^points$",
-    "^.*=\""
-  ],
-  // ==========================================================================
-  //      ⚙️ TAILWINDCSS SETTINGS
-  // ==========================================================================
-  "[tailwindcss]": {
-    "editor.defaultFormatter": "oxc.oxc-vscode"
-  }
+  ]
+},
+        "/(^|[ \\t]?(#)\\s?(~?)\\s?(file-path)\\s{0}(:)\\s{1}(.*)[
+\\t
+]?)$/gim": {"filterLanguageRegex": "(javascript|typescript|js|ts|jsx|tsx|json|jsonc|toml|yaml|yml|fish|ps1
+])","filterFilepaths": true,
+"decorations": [
+{ // Group 1
+"overviewRulerColor": "#FFB86C",
+"backgroundColor": "#44475A",
+"borderRadius": "4px",
+"border": "1px dotted #FFB86C",
+"rangeBehavior": 1
+},
+{ // Group 2
+"color": "#FFB86C"
+},
+{ // Group 3
+"color": "#FFB86C"
+},
+{ // Group 4
+"color": "#FF79C6"
+},
+{ // Group 5
+"color": "#FFB86C"
+},
+{ // Group 6
+"color": "#BD93F9",
+"textDecoration": "none; padding: 0 8px 0 0;",
+"after": {
+  "contentText": ""
+}
+}
+]
+},
+//$ Highlight web URLs in comments with a specific format, e.g.:
+// https://www.example.com
+// http://localhost
+// https://localhost:8080/dashboard#metrics
+// http://127.0.0.1:3000
+// https://cspell.org
+// ftp://files.local/shared/data.csv
+//
+"/(\\s?([a-zA-Z0-9+.-]+:\\/\\/[a-zA-Z0-9@:%._\\+~#=\\-]{1,256}(?::\\d+)?(?:[-a-zA-Z0-9()@:%_\\+.~#?&\\/=]*))\\h?)/gim": {
+"filterLanguageRegex": "(javascript|typescript|js|ts|jsx|tsx|json|jsonc|toml|yaml|yml])",
+"decorations": [
+{
+"backgroundColor": "#44475A",
+"borderRadius": "4px",
+"border": "0.5px dashed #FFB86C",
+"padding": "0 0 0 8px",
+"before": {
+  "contentText": ""
+}
+},
+{
+"color": "#FFB86C",
+"backgroundColor": "transparent",
+"fontWeight": "normal",
+"textDecoration": "none; padding: 0 8px 0 0;",
+"after": {
+  "contentText": ""
+}
+}
+]
+}
+},
+"splitHTMLAttributes.tabSize": 2,
+"splitHTMLAttributes.useSpacesForTabs": true,
+"splitHTMLAttributes.closingBracketOnNewLine": true,
+"splitHTMLAttributes.sortOrder": [
+"^xmlns",
+"^role",
+"^viewBox",
+"^key",
+"^:",
+"^id$",
+"^class$",
+"^x1?$",
+"^y1?$",
+"^x2$",
+"^y2$",
+"^cx$",
+"^cy$",
+"^r$",
+"^width$",
+"^height$",
+"^fill",
+"^stroke",
+"^style",
+"^d$",
+"^points$",
+"^.*=\""
+],
+// ==========================================================================
+//      ⚙️ TAILWINDCSS SETTINGS
+// ==========================================================================
+"[tailwindcss]": {
+"editor.defaultFormatter": "esbenp.prettier-vscode"
+}
 }

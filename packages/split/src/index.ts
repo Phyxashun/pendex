@@ -1,3 +1,5 @@
+// FILE-PATH: packages/split/src/index.ts
+
 /**
  * @module @pendex/split
  *
@@ -7,9 +9,10 @@
  * interactive and standalone/test call paths.
  */
 
-// FILE-PATH: packages/split/src/index.ts
-export { Split } from './Split';
-export { SplitView } from './SplitView';
+export {
+    Split
+} from './Split';
+
 export {
     initializeSplit,
     prepareRebuildDirectory,
@@ -20,5 +23,9 @@ export {
     splitSingleFile,
     type SplitFileOutcome,
     type SplitHooks,
-    type SplitSummary,
+    type SplitSummary
 } from './SplitService';
+
+export {
+    SplitView
+} from './SplitView';

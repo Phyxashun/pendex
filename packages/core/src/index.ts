@@ -1,3 +1,5 @@
+// FILE-PATH: packages/core/src/index.ts
+
 /**
  * @module @pendex/core
  *
@@ -8,21 +10,43 @@
  * Pendex entry point (CLI shell, compile, split).
  */
 
-// FILE-PATH: packages/core/src/index.ts
 export * from './types';
-export { baseName, Constants, dirName, extName, joinPath } from './Constants';
+
+export {
+    Constants,
+    baseName,
+    dirName,
+    extName,
+    joinPath,
+    normalizePath,
+    toPosixPath
+} from './Constants';
+
 export {
     archivePathFor,
     buildArchiveEntry,
     joinArchiveEntries,
     parseArchive,
-    type ArchivedFile,
+    type ArchivedFile
 } from './ArchiveFormat';
+
 export {
     findEmptyDirectories,
     loadIgnorePatterns,
-    resolveJobFiles,
+    resolveJobFiles
 } from './FileScanner';
-export { identity, View } from './View';
-export { assignKey, ConfigManager } from './Config';
-export { resolveRunnerDeps, type ResolvedDeps } from './bootstrap';
+
+export {
+    View,
+    identity
+} from './View';
+
+export {
+    ConfigManager,
+    assignKey
+} from './Config';
+
+export {
+    resolveRunnerDeps,
+    type ResolvedDeps
+} from './bootstrap';

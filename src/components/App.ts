@@ -12,12 +12,13 @@
  * grows real branching logic), split it the same way Compile/Split were.
  */
 
-import * as CLACK from '@clack/prompts';
+import { confirm, intro, isCancel, select } from '@clack/prompts';
 import { Compile } from '@pendex/compile';
-import { Split } from '@pendex/split';
 import type { Command, MainMenuOptions, State } from '@pendex/core';
 import { resolveRunnerDeps } from '@pendex/core';
-import { Exit } from '../commands/Exit';
+import { Exit } from '@pendex/exit';
+import { Split } from '@pendex/split';
+
 
 /**
  * Process-wide singleton that owns the interactive CLI shell: the
@@ -28,39 +29,44 @@ import { Exit } from '../commands/Exit';
 export class Application {
     private static instance: Application | null = null;
 
-    /** User-facing copy for the main menu shell. */
-    private readonly STRINGS = {
-        exit: 'exit',
-        title: ' PENDEX — PROJECT FILE CONSOLIDATOR ',
+    private readonly STRINGS: Record<string, string> = {
+        title: '  PENDEX — PROJECT FILE CONSOLIDATOR ',
         mainMenu: 'Main Menu:',
         returnToMenu: 'Press Enter to return to main panel...',
+        exit: 'exit',
     } as const;
 
     private _state!: State;
     private _commands: Command[] = [];
     private mainMenuOptions: MainMenuOptions[] = [];
 
-    private constructor() {}
+    private constructor() { }
 
-    /** Lazily creates (once per process) and returns the shared instance. */
+    /**
+     * Lazily creates and returns the shared instance.
+     */
     public static getInstance(): Application {
-        if (!this.instance) {
-            this.instance = new Application();
-        }
+        if (!this.instance) { this.instance = new Application(); }
         return this.instance;
     }
 
-    /** Resets the singleton. Primarily useful for test isolation. */
+    /**
+     * Resets the singleton. Primarily useful for test isolation.
+     */
     public static resetInstance(): void {
         this.instance = null;
     }
 
-    /** The application's current state (theme, config, category colors). */
+    /**
+     * The application's current state (theme, config, category colors).
+     */
     public get state(): State {
         return this._state;
     }
 
-    /** The available commands (Compile, Split, Exit) for this run. */
+    /**
+     * The available commands (Compile, Split, Exit) for this run.
+     */
     public get commands(): Command[] {
         return this._commands;
     }
@@ -70,20 +76,22 @@ export class Application {
      * Must be called (directly or via {@link run}) before
      * {@link runSingleIteration}.
      *
-     * @param exitFn - Function used by the Exit command to terminate the process.
+     * @param exitFn - Function used by the Exit command to terminate
+the process.
      */
     public async init(exitFn: (code?: number) => void): Promise<void> {
-        const deps = await resolveRunnerDeps();
-        this._state = deps;
+        this._state = await resolveRunnerDeps();;
+
         this._commands = [
-            new Compile(deps),
-            new Split(deps),
-            new Exit({ ...deps, exit: exitFn }),
+            new Compile(this.state),
+            new Split(this.state),
+            new Exit({ ...this.state, exit: exitFn })
         ];
-        this.mainMenuOptions = this._commands.map(cmd => ({
+
+        this.mainMenuOptions = this.commands.map(cmd => ({
             value: cmd.key,
             label: cmd.label,
-            hint: cmd.hint,
+            hint: cmd.hint
         }));
     }
 
@@ -93,53 +101,55 @@ export class Application {
      * This method is public specifically for robust testability.
      */
     public async runSingleIteration(): Promise<boolean> {
-        console.clear();
-        CLACK.intro(this.state.theme.title(this.STRINGS.title));
+        //console.clear();
+        console.log();
+        intro(this.state.theme.title(this.STRINGS.title));
 
-        const choice = await CLACK.select({
-            message: this.state.theme(this.STRINGS.mainMenu).info,
+        const choice = await select({
+            message: this.state.theme.info(this.STRINGS.mainMenu),
             options: this.mainMenuOptions,
         });
 
-        if (CLACK.isCancel(choice) || choice === this.STRINGS.exit) {
-            return false; // Signal to terminate the loop
+        if (isCancel(choice) || choice === this.STRINGS.exit) {
+            return false;
         }
 
         const command = this.commands.find(cmd => cmd.key === choice);
         if (command) {
-            console.clear();
+            //console.clear();
+            console.log();
             await command.execute();
 
-            const wantsToReturn = await CLACK.confirm({
-                message: this.STRINGS.returnToMenu,
-            });
-            if (CLACK.isCancel(wantsToReturn) || !wantsToReturn) {
-                return false; // Signal to terminate
+            const wantsToReturn = await confirm({ message:
+this.STRINGS.returnToMenu });
+            if (isCancel(wantsToReturn) || !wantsToReturn) {
+                return false;
             }
         }
-        return true; // Signal to continue
+        return true;
     }
 
     /**
      * The main entry point for running the application.
      *
-     * @param exitFn - Optional exit function (defaults to `process.exit`); used by the Exit command.
+     * @param exitFn - Optional exit function (defaults to `process.exit`)
      */
-    public async run(exitFn?: (code?: number) => void): Promise<void> {
+    public async run(exitFn?: (code?: number | string | null) =>
+never): Promise<void> {
         await this.init(exitFn ?? process.exit);
 
         while (await this.runSingleIteration()) {
-            // This loop will continue as long as runSingleIteration() returns true.
+            /*
+             * This loop will continue as long as
+             * runSingleIteration() returns true.
+             */
         }
 
         // After the loop terminates, call the final exit command.
-        const exitCmd = this.commands.find(cmd => cmd instanceof Exit);
-        if (exitCmd) {
-            await exitCmd.execute();
-        }
+        const exitCmd: Exit = this.commands.find(cmd => cmd instanceof Exit);
+        if (exitCmd) await exitCmd.execute();
     }
 }
 
 /** Shared {@link Application} instance used as the CLI's composition root. */
-const App = Application.getInstance();
-export default App;
+export default Application.getInstance();

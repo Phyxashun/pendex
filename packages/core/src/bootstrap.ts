@@ -15,22 +15,15 @@
  * colors views can use directly.
  */
 
-import type { Category, Config, Theme } from './types';
-import { ConfigManager } from './Config';
 import { ThemeManager } from '@pendex/theme';
+import { ConfigManager } from './Config';
+import type { Category, Config, Theme } from './types';
 
-/** The result of {@link resolveRunnerDeps}: everything a composition root needs to construct views and commands. */
-export interface ResolvedDeps {
-    /** The active application config. */
-    config: Config;
-    /** The active chainable theme. */
-    theme: Theme;
-    /** Per-category brand colors extracted from the theme's `[brand]` table, if any. */
-    categoryColors?: Partial<Record<Category, string>>;
-}
-
-/** The eight recognized job categories, used to filter a theme's `[brand]` table. */
-const CATEGORIES: readonly Category[] = [
+/**
+ * The eight recognized job categories, used to filter a theme's
+`[brand]` table.
+ */
+const CATEGORIES = [
     'source',
     'web',
     'style',
@@ -39,7 +32,44 @@ const CATEGORIES: readonly Category[] = [
     'documentation',
     'testing',
     'misc',
-];
+] as const satisfies readonly Category[];
+
+/**
+ * A free-form map of theme color definitions.
+ *
+ * This represents a raw, unvalidated string dictionary from a parsed
+theme file,
+ * where keys represent UI components or categories (e.g.,
+'bookCover', 'manifest',
+ * 'source', 'terminal') and values are their corresponding HEX color strings.
+ */
+export type BrandColors = Record<string, string>;
+
+/**
+ * Filtered theme color definitions mapped strictly to recognized Job
+Categories.
+ *
+ * An object where keys are a subset of the eight literal {@link
+Category} values
+ * and values are the HEX color strings extracted from the theme's raw
+brand table.
+ * If a category is missing from this object, it means the theme did not provide
+ * a specific color override for it.
+ */
+export type CategoryColors = Partial<Record<Category, string>>;
+
+/**
+ * The result of {@link resolveRunnerDeps}: everything a composition root
+ * needs to construct views and commands.
+ */
+export interface ResolvedDeps {
+    // The active application config
+    config: Config;
+    // The active chainable theme
+    theme: Theme;
+    // Per-category colors extracted from the theme's `[brand]` table, if any
+    categoryColors?: CategoryColors;
+}
 
 /**
  * Picks out the Category-named entries from a theme's [brand] table.
@@ -55,32 +85,40 @@ const CATEGORIES: readonly Category[] = [
  * @param brand - The raw `[brand]` table from a parsed theme, if any.
  * @returns Per-category brand colors, or `undefined` if none apply.
  */
-function extractCategoryColors(
-    brand: Record<string, string> | undefined,
-): Partial<Record<Category, string>> | undefined {
+const extractCategoryColors = (brand: BrandColors | undefined):
+CategoryColors | undefined => {
     if (!brand) return undefined;
 
-    const colors: Partial<Record<Category, string>> = {};
+    const colors: CategoryColors = {};
+    let hasKeys = false;
+
     for (const category of CATEGORIES) {
         const hex = brand[category];
-        if (hex) colors[category] = hex;
+        if (hex !== undefined) {
+            colors[category] = hex;
+            hasKeys = true;
+        }
     }
 
-    return Object.keys(colors).length > 0 ? colors : undefined;
-}
+    return hasKeys ? colors : undefined;
+};
 
 /**
- * Resolves the current Config, its named Theme, and any per-Category brand colors, in one call.
+ * Resolves the current Config, its named Theme, and any per-Category
+ * brand colors, in one call.
  *
  * @returns A {@link ResolvedDeps} triple ready to hand to a view or command.
  */
-export async function resolveRunnerDeps(): Promise<ResolvedDeps> {
-    const config = (await ConfigManager.getInstance()).get();
-    const themeManager = await ThemeManager.getInstance(config.theme);
+export const resolveRunnerDeps = async (): Promise<ResolvedDeps> => {
+    const configManager: ConfigManager = await ConfigManager.getInstance();
+    const config: Config = configManager.get();
 
-    return {
-        config,
-        theme: themeManager.get(),
-        categoryColors: extractCategoryColors(themeManager.extended().brand),
-    };
-}
+    const themeManager: ThemeManager = await
+ThemeManager.getInstance(config.theme);
+    const theme: Theme = themeManager.get();
+
+    const brandColors: BrandColors = themeManager.extended().brand;
+    const categoryColors: CategoryColors = extractCategoryColors(brandColors);
+
+    return { config, theme, categoryColors };
+};

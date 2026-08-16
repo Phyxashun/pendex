@@ -1,15 +1,16 @@
-/** One entry in the "Packages" section: name, one-line role, and its generated API docs path. */
+/**
+ * One entry in the "Packages" section: name, one-line role, and its generated API docs path.
+ */
 export interface PackageInfo {
     name: string;
     tagline: string;
-    /** Path under /api (typedoc's output) to this package's module page. */
+    // Path under /api (typedoc's output) to this package's module page.
     apiPath: string;
 }
 
 /**
- * The five `@pendex/*` workspace packages, in dependency order
- * (color → theme → core → compile/split) — the same order the
- * monorepo README describes the build graph in.
+ * The six `@pendex/*` workspace packages, in dependency order
+ * (color → theme → core → compile/split → exit).
  */
 export const PACKAGES: PackageInfo[] = [
     {
@@ -39,4 +40,10 @@ export const PACKAGES: PackageInfo[] = [
         tagline: 'Rebuilds the original file tree from compiled archives.',
         apiPath: 'modules/split_src.html',
     },
+    {
+        name: '@pendex/exit',
+        tagline: 'Provides a simple way to exit the process with a specific code.',
+        apiPath: 'modules/exit_src.html',
+    }
+
 ];

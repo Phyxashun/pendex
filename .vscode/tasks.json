@@ -15,7 +15,10 @@
     },
     {
       "label": "Start All Pendex Servers",
-      "dependsOn": ["Run Home Server", "Run API Docs Server"],
+      "dependsOn": [
+        "Run Home Server",
+        "Run API Docs Server"
+      ],
       "group": {
         "kind": "build",
         "isDefault": true

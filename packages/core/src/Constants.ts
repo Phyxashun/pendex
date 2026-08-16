@@ -1,3 +1,6 @@
+import path from 'node:path';
+import '../../../src/utils/string-extensions';
+
 /**
  * @module Constants
  *
@@ -8,6 +11,52 @@
  * requires touching this file, and vice versa.
  */
 
+export const SEPARATOR = '/';
+export const PATH_SEPARATOR_REGEX = /\\/g;
+export const CONSECUTIVE_SLASH_REGEX = /(?<!^)(?<!\b[a-zA-Z]{2,}:)\/{2,}/g;
+
+/**
+ * Converts a path to POSIX-style forward slashes.
+ *
+ * @param filePath - Path to convert.
+ * @returns `filePath` with all backslashes replaced by forward slashes.
+ */
+export const toPosixPath = (filePath: string): string => {
+    return filePath.replace(PATH_SEPARATOR_REGEX, SEPARATOR);
+};
+
+/**
+ * Normalizes all slashes to a standard web-safe format.
+ * Exported so other modules can validate untrusted raw config string inputs.
+ *
+ * @param filePath - Path to convert.
+ * @returns `filePath` with all double forward slashes replaced by
+single forward slashes.
+ */
+export const normalizePath = (filePath: string): string => {
+    return filePath.toPosixPath().replace(CONSECUTIVE_SLASH_REGEX, SEPARATOR);
+};
+
+/**
+ * Joins path segments with a single '/', collapsing accidental doubles.
+ * Adjusted signature to safely accept and drop falsy conditional values.
+ *
+ * @param segments - Path segments to join; falsy segments are dropped.
+ * @returns The joined path.
+ */
+export const joinPath = (...segments: (string | undefined | null |
+false | number)[]): string => {
+    const allSegments = segments.filter(Boolean) as (string | number)[];
+
+    // Convert each segment to a posix path
+    const posixPath = allSegments
+        .map(segment => String(segment).toPosixPath())
+        .join(SEPARATOR);
+
+    // Normalize entire combined string
+    return posixPath.normalizePath();
+};
+
 /**
  * Basename of a path, tolerant of both `/` and `\` separators.
  *
@@ -15,8 +64,7 @@
  * @returns The final path segment (filename).
  */
 export const baseName = (filePath: string): string => {
-    const normalized = filePath.replace(/\\/g, '/');
-    return normalized.slice(normalized.lastIndexOf('/') + 1);
+    return path.basename(filePath.toPosixPath());
 };
 
 /**
@@ -26,9 +74,7 @@ export const baseName = (filePath: string): string => {
  * @returns The extension including its leading dot, or `''` if there is none.
  */
 export const extName = (filePath: string): string => {
-    const base = baseName(filePath);
-    const dotIndex = base.lastIndexOf('.');
-    return dotIndex > 0 ? base.slice(dotIndex) : '';
+    return path.extname(filePath.toPosixPath());
 };
 
 /**
@@ -38,22 +84,8 @@ export const extName = (filePath: string): string => {
  * @returns The directory portion of `filePath`, or `'.'` if there is none.
  */
 export const dirName = (filePath: string): string => {
-    const normalized = filePath.replace(/\\/g, '/');
-    const slashIndex = normalized.lastIndexOf('/');
-    return slashIndex === -1 ? '.' : normalized.slice(0, slashIndex);
+    return path.dirname(filePath.toPosixPath());
 };
-
-/**
- * Joins path segments with a single '/', collapsing accidental doubles.
- *
- * @param segments - Path segments to join; falsy segments are dropped.
- * @returns The joined path.
- */
-export const joinPath = (...segments: string[]): string =>
-    segments
-        .filter(Boolean)
-        .join('/')
-        .replace(/\/{2,}/g, '/');
 
 /**
  * Backing class for the {@link Constants} singleton. `BASE_DIR` and
@@ -62,38 +94,53 @@ export const joinPath = (...segments: string[]): string =>
  * sandboxes that `chdir` after the module first loads.
  */
 class ConstantsManager {
-    // Getters, not frozen fields: BASE_DIR (and anything derived from it)
-    // must reflect the CURRENT process.cwd() at the moment it's read, not
-    // whatever cwd happened to be true the first time this singleton was
-    // constructed. A `readonly BASE_DIR = process.cwd()` field freezes at
-    // module-first-import time — any later process.chdir() (every test
-    // sandbox does this) would be invisible to it, silently pointing
-    // .gitignore/runtime.config.json lookups at the wrong directory.
-    /** The current process's working directory, read live on every access. */
-    public get BASE_DIR(): string {
-        return process.cwd();
-    }
-    /** Default directory name for compiled output. */
-    public readonly OUTPUT_DIR = 'ALL';
-    /** Default directory name for split (rebuilt) output. */
-    public readonly REBUILT_DIR = 'ALL_REBUILT';
-    /** Absolute path to `.gitignore` under {@link BASE_DIR}. */
-    public get GITIGNORE_PATH(): string {
-        return joinPath(this.BASE_DIR, '.gitignore');
-    }
-    /** Absolute path to `runtime.config.json` under {@link BASE_DIR}. */
-    public get RUNTIME_CONFIG_PATH(): string {
-        return joinPath(this.BASE_DIR, 'runtime.config.json');
-    }
-    /** Text encoding used when reading/writing files. */
-    public readonly ENCODING = 'utf-8';
-
     private readonly BLOCK = '█';
+
     private readonly WIDTH = 40;
 
-    /** A fixed-width horizontal rule string, used for CLI section dividers. */
+    /**
+     * The current process's working directory, read live on every access.
+     */
+    public get BASE_DIR(): string {
+        return process.cwd().toPosixPath();
+    }
+
+    /**
+     * Absolute path to `.gitignore` under {@link BASE_DIR}.
+     */
+    public get GITIGNORE_PATH(): string {
+        return this.BASE_DIR.joinPath('.gitignore');
+    }
+
+    /**
+     * Absolute path to `runtime.config.json` under {@link BASE_DIR}.
+     */
+    public get RUNTIME_CONFIG_PATH(): string {
+        return this.BASE_DIR.joinPath('runtime.config.json');
+    }
+
+    /**
+     * Default directory name for compiled output.
+     */
+    public readonly OUTPUT_DIR = 'ALL';
+
+    /**
+     * Default directory name for split (rebuilt) output.
+     */
+    public readonly REBUILT_DIR = 'ALL_REBUILT';
+
+    /**
+     * Text encoding used when reading/writing files.
+     */
+    public readonly ENCODING = 'utf-8';
+
+    /**
+     * A fixed-width horizontal rule string, used for CLI section dividers.
+     */
     public readonly DIVIDER = this.BLOCK.repeat(this.WIDTH);
 }
 
-/** Shared singleton exposing app-wide constants and live path getters. */
+/**
+ * Shared singleton exposing app-wide constants and live path getters.
+ */
 export const Constants = new ConstantsManager();

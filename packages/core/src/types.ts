@@ -14,16 +14,17 @@
  */
 
 import type { Theme, ThemeName } from '@pendex/theme';
-
 export type { Theme, ThemeName };
 
-/** A single selectable entry in the interactive main menu. */
+/**
+ * A single selectable entry in the interactive main menu.
+ */
 export interface MainMenuOptions {
-    /** Value returned when this option is selected. */
+    // Value returned when this option is selected.
     value: string;
-    /** Display label shown in the menu. */
+    // Display label shown in the menu.
     label: string;
-    /** Optional secondary hint text. */
+    // Optional secondary hint text.
     hint?: string;
 }
 
@@ -32,13 +33,13 @@ export interface MainMenuOptions {
  * There is no abstract base class — composition, not inheritance.
  */
 export interface Command {
-    /** Unique identifier for the command, used for menu selection/dispatch. */
+    // Unique identifier for the command, used for menu selection/dispatch.
     readonly key: string;
-    /** Display label shown in the menu. */
+    // Display label shown in the menu.
     readonly label: string;
-    /** Secondary hint text shown alongside the label. */
+    // Secondary hint text shown alongside the label.
     readonly hint: string;
-    /** Runs the command. */
+    // Runs the command.
     execute(): Promise<void>;
 }
 
@@ -57,18 +58,21 @@ export interface Command {
  * never a requirement a theme must satisfy.
  */
 export interface State {
-    /** The process's active chainable theme. */
+    // The process's active chainable theme.
     theme: Theme;
-    /** The loaded application configuration. */
+    // The loaded application configuration.
     config: Config;
-    /** Optional per-category brand colors, derived from the active theme's `[brand]` table. */
+    // Optional per-category brand colors, derived from the active
+theme's `[brand]` table.
     categoryColors?: Partial<Record<Category, string>>;
 }
 
-/** Defines the dependencies required by the Exit command. */
+/**
+ * Defines the dependencies required by the Exit command.
+ */
 export interface ExitState extends State {
-    /** Terminates the process with an optional exit code. */
-    exit: (code?: number) => void;
+    // Terminates the process with an optional exit code.
+    exit: (code?: number | string | null) => never;
 }
 
 /**
@@ -81,17 +85,22 @@ export interface ExitState extends State {
  * degrades to no coloring when it's absent.
  */
 export interface Manifest {
-    /** Maps each compiled output filename to the list of source files consolidated into it. */
+    // Maps each compiled output filename to the list of source files
+consolidated into it.
     files: Record<string, string[]>;
-    /** Maps each compiled output filename to the {@link Category} it was compiled under. Optional for backward compatibility with older manifests. */
+    // Maps each compiled output filename to the {@link Category} it
+was compiled under. Optional for backward compatibility with older
+manifests.
     categories?: Record<string, Category>;
-    /** Directories that were empty at compile time and so contain no consolidated files. */
+    // Directories that were empty at compile time and so contain no
+consolidated files.
     emptyDirectories: string[];
 }
 
-/** The set of job categories Pendex recognizes for grouping and coloring output. */
-export type Category =
-    | 'source'
+/**
+ * The set of job categories Pendex recognizes for grouping and coloring output.
+ */
+export type Category = 'source'
     | 'web'
     | 'style'
     | 'terminal'
@@ -100,30 +109,45 @@ export type Category =
     | 'testing'
     | 'misc';
 
-/** A single compile job: a named output file built from a set of include/exclude glob patterns. */
+/**
+ * A single compile job: a named output file built from a set of include/exclude
+ * glob patterns.
+ */
 export interface Job {
-    /** Output filename this job produces. */
+    // Output filename this job produces.
     readonly filename: string;
-    /** Category this job's output is grouped under. */
+    // Category this job's output is grouped under.
     readonly category: Category;
-    /** Human-readable description of what this job consolidates. */
+    // Human-readable description of what this job consolidates.
     readonly description: string;
-    /** Glob patterns for files to include. */
+    // Glob patterns for files to include.
     readonly include: readonly string[];
-    /** Glob patterns for files to exclude, applied after `include`. */
+    // Glob patterns for files to exclude, applied after `include`.
     readonly exclude: readonly string[];
 }
 
-/** The full application configuration, typically loaded from a config file. */
+export interface ThemeConfig {
+    // Name of a theme file in the themes dir (without .toml), e.g.
+"pendex", "dracula".
+    name: ThemeName;
+    // Path to the themes dir.
+    path: string;
+}
+
+/**
+ * The full application configuration, typically loaded from a config file.
+ */
 export interface Config {
-    /** Name of a theme file in @pendex/theme's themes/ dir (without .toml), e.g. "pendex", "dracula". */
-    theme: ThemeName;
-    /** Directory compiled output files are written to. */
+    // Theme configuration information.
+    theme: ThemeConfig;
+    // Directory compiled output files are written to.
     outputDir: string;
-    /** Directory split (rebuilt-from-consolidated) output is written to. */
+    // Directory split (rebuilt-from-consolidated) output is written to.
     rebuiltDir: string;
-    /** Glob patterns excluded from all jobs globally. */
+    // Glob patterns excluded from all jobs globally.
     exclude: string[];
-    /** The compile jobs to run. */
+    // The compile jobs to run.
     jobs: Job[];
 }
+
+export type StyleFunction = (text: string) => string;

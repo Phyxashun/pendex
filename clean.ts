@@ -1,41 +1,84 @@
+import { $, Glob } from "bun";
+
 /**
- * @module clean
- * @file FILE-PATH: clean.ts
+ * Logs a fatal, uncaught error to the console in a consistent format.
  *
- * Single responsibility: remove generated/build output across the
- * whole workspace — `bun run clean`. Bun-native (`fs.rm`), no external
- * dependency needed. Safe to re-run; missing paths are silently
- * skipped via `force: true`.
+ * @param msg - The error (or arbitrary thrown value) to report.
  */
+export const Message = (msg: unknown): void => {
+    if (msg instanceof Error) {
+        console.error(`Fatal crash: ${msg.message}`);
+    } else {
+        console.error(`Fatal crash: ${msg}`);
+    }
+};
 
-const TARGETS = [
-    // Root CLI build output
-    'dist',
-    // Pendex's own compile/split output, when run against this repo itself
-    'ALL',
-    'ALL_REBUILT',
-    // Per-package build/coverage output
-    'packages/home/dist',
-    'packages/color/dist',
-    'packages/theme/dist',
-    'packages/core/dist',
-    'packages/compile/dist',
-    'packages/split/dist',
-    'coverage',
-    // TypeScript project-reference build info
-    'packages/home/node_modules/.tmp',
-];
+/**
+ * Gracefully empties directory contents when the directory itself is
+locked by Windows.
+ * Uses Bun-native shell execution which automatically handles OS differences.
+ */
+const emptyDirectoryContents = async (dirPath: string): Promise<void> => {
+    try {
+        // Bun Shell supports globbing and natively executes cleanups
+cross-platform
+        await $`rm -rf ${dirPath}/*`;
+    } catch (err) {
+        console.error(`Could not empty locked directory ${dirPath}:`, err);
+    }
+};
 
-for (const target of TARGETS) {
-    await Bun.$`rm -rf ${target}`.quiet().catch(() => {});
+const main = async () => {
+    const nodeGlob = new Glob("**/node_modules");
+    const bunGlob = new Glob("**/*.{lock,lockb}");
+
+    // Using Bun's global "import.meta.dir" to ensure absolute execution paths
+    const projectRoot = import.meta.dir || ".";
+
+    console.log("Scanning for node_modules...");
+    for await (const rawPath of nodeGlob.scan({ cwd: projectRoot,
+onlyFiles: false })) {
+        console.log("Removing Directory: ", rawPath);
+
+        try {
+            // This moves the directory safely to your OS Recycle Bin/Trash
+            await trash(rawPath);
+        } catch (err: any) {
+            // Handle locked directory fallback safely
+            if (err.message?.includes("EACCES") ||
+err.message?.includes("permission denied")) {
+                console.warn(`⚠️  Directory is locked by system.
+Attempting to empty contents of: ${rawPath}`);
+                await emptyDirectoryContents(rawPath);
+            } else {
+                console.error(`Failed to remove ${rawPath}:`, err);
+            }
+        }
+    }
+
+    console.log("Scanning for lockfiles...");
+    for await (const rawPath of bunGlob.scan({ cwd: projectRoot })) {
+        console.log("Removing File: ", rawPath);
+        try {
+            await $`rm -f ${rawPath}`;
+        } catch (err) {
+            console.error(`Failed to remove ${rawPath}:`, err);
+        }
+    }
+
+    console.log("✨ Clean completed successfully!");
+};
+
+/**
+ * MAIN ENTRY POINT
+ */
+// c8 ignore start
+if (import.meta.main) {
+    try {
+        await main();
+    } catch (err) {
+        Message(err);
+        process.exit(1);
+    }
 }
-
-// NOTE: packages/home/public/docs/api (TypeDoc's generated API reference)
-// is deliberately NOT cleaned here. It's committed to the repo rather
-// than treated as ephemeral build output, so `bun run clean` must not
-// touch it — a prior version of this script deleted it, which showed up
-// as unintended file deletions in the next commit. Regenerate it
-// explicitly with `bun run --cwd packages/home docs:api` if you want a
-// fresh copy before committing.
-
-console.log(`Cleaned ${TARGETS.length} build output paths.`);
+// c8 ignore stop

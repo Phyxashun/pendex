@@ -21,29 +21,33 @@
  * round-trip byte-for-byte.
  */
 
-import { baseName, extName, joinPath } from './Constants';
+import { baseName, extName, joinPath, normalizePath } from './Constants';
 
 const WIDTH = 40;
 const CUBE = '■';
 const COMMENT = '//';
 
-/** Number of lines buildBanner() emits. The parser recognizes frames by this shape. */
+// Number of lines buildBanner() emits. The parser recognizes frames
+by this shape.
 const BANNER_LINE_COUNT = 6;
-/** Zero-based index of the `// PATH     :` line inside a banner. */
+// Zero-based index of the `// PATH     :` line inside a banner.
 const PATH_LINE_INDEX = 3;
 
-/** Literal prefix of a banner's path line, used both to build and to recognize it. */
+// Literal prefix of a banner's path line, used both to build and to
+recognize it.
 const PATH_LINE_PREFIX = '// PATH     :';
-/** Tag marking the start of an archived-file frame. */
+// Tag marking the start of an archived-file frame.
 const START_TAG = '-< START >-';
-/** Tag marking the end of an archived-file frame. */
+// Tag marking the end of an archived-file frame.
 const END_TAG = '-<  END  >-';
 
-/** One file recovered from an archive: its original path and verbatim content. */
+/**
+ * One file recovered from an archive: its original path and verbatim content.
+ */
 export interface ArchivedFile {
-    /** The file's original path as recorded in its banner. */
+    // The file's original path as recorded in its banner.
     readonly originalPath: string;
-    /** The file's content, preserved byte-for-byte. */
+    // The file's content, preserved byte-for-byte.
     readonly content: string;
 }
 
@@ -52,12 +56,11 @@ export interface ArchivedFile {
  *
  * @param filePath - Original path of the file being framed.
  * @param tag - Either {@link START_TAG} or {@link END_TAG}.
- * @returns The banner text, exactly {@link BANNER_LINE_COUNT} lines joined with `\n`.
+ * @returns The banner text, exactly {@link BANNER_LINE_COUNT} lines
+joined with `\n`.
  */
-function buildBanner(
-    filePath: string,
-    tag: typeof START_TAG | typeof END_TAG,
-): string {
+function buildBanner(filePath: string, tag: typeof START_TAG | typeof
+END_TAG): string {
     const spacer = CUBE.repeat(WIDTH);
     const extension = extName(filePath).toUpperCase().replace('.', '') || 'TXT';
 
@@ -110,10 +113,12 @@ function extractPath(line: string | undefined): string | null {
  *
  * @param filePath - Original path of the file being archived.
  * @param content - The file's raw content, embedded verbatim.
- * @returns The complete archive entry text (start banner + content + end banner).
+ * @returns The complete archive entry text (start banner + content +
+end banner).
  */
 export function buildArchiveEntry(filePath: string, content: string): string {
-    return `${buildBanner(filePath, START_TAG)}\n${content}\n${buildBanner(filePath, END_TAG)}`;
+    return `${buildBanner(filePath,
+START_TAG)}\n${content}\n${buildBanner(filePath, END_TAG)}`;
 }
 
 /**
@@ -153,10 +158,8 @@ export function parseArchive(rawText: string): ArchivedFile[] {
                 let j = i + BANNER_LINE_COUNT;
                 let endIndex = -1;
                 while (j <= lines.length - BANNER_LINE_COUNT) {
-                    if (
-                        isFrame(lines, j, END_TAG) &&
-                        extractPath(lines[j + PATH_LINE_INDEX]) === path
-                    ) {
+                    if (isFrame(lines, j, END_TAG) &&
+extractPath(lines[j + PATH_LINE_INDEX]) === path) {
                         endIndex = j;
                         break;
                     }
@@ -166,9 +169,8 @@ export function parseArchive(rawText: string): ArchivedFile[] {
                 if (endIndex !== -1) {
                     results.push({
                         originalPath: path,
-                        content: lines
-                            .slice(i + BANNER_LINE_COUNT, endIndex)
-                            .join('\n'),
+                        content: lines.slice(i + BANNER_LINE_COUNT,
+endIndex).join('\n'),
                     });
                     i = endIndex + BANNER_LINE_COUNT;
                     continue;
@@ -189,5 +191,6 @@ export function parseArchive(rawText: string): ArchivedFile[] {
  * @returns The joined path to the job's archive file.
  */
 export function archivePathFor(outputDir: string, filename: string): string {
-    return joinPath(outputDir, filename);
+    const normalizedPath = normalizePath(outputDir);
+    return joinPath(normalizedPath, filename);
 }

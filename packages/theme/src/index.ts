@@ -1,3 +1,5 @@
+// FILE-PATH: packages/theme/src/index.ts
+
 /**
  * @module @pendex/theme
  *
@@ -7,8 +9,19 @@
  * {@link FallbackTheme} for contexts that can't await a file read.
  */
 
-// FILE-PATH: packages/theme/src/index.ts
-export { ThemeManager } from './ThemeManager';
+import {
+    BRAND_PALETTE,
+    buildTheme
+} from './ThemePalette';
+
+import {
+    useTheme
+} from './useTheme';
+
+export {
+    ThemeManager
+} from './ThemeManager';
+
 export {
     BRAND_PALETTE,
     buildTheme,
@@ -17,11 +30,14 @@ export {
     type DefaultThemeKeys,
     type PendexTheme,
     type ThemeColors,
-    type ThemeName,
+    type ThemeName
 } from './ThemePalette';
-export { useTheme, type ChainableTheme, type Theme } from './useTheme';
 
-import { BRAND_PALETTE, buildTheme } from './ThemePalette';
-import { useTheme } from './useTheme';
-/** Synchronous brand-palette theme — a known-good Theme with no file I/O. */
+export {
+    useTheme,
+    type ChainableTheme,
+    type Theme
+} from './useTheme';
+
+/** Synchronous brand-palette theme */
 export const FallbackTheme = useTheme(buildTheme(BRAND_PALETTE));

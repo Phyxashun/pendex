@@ -1,3 +1,5 @@
+// FILE-PATH: packages/color/src/index.ts
+
 /**
  * @module @pendex/color
  *
@@ -6,5 +8,7 @@
  * {@link Styler} function type it is built from.
  */
 
-// FILE-PATH: packages/color/src/index.ts
-export { Colors, type Styler } from './Colors';
+export {
+    Colors,
+    type Styler
+} from './Colors';

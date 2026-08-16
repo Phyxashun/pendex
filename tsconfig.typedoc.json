@@ -5,6 +5,7 @@
     "packages/theme/src",
     "packages/core/src",
     "packages/compile/src",
-    "packages/split/src"
+    "packages/split/src",
+    "packages/exit/src"
   ]
 }

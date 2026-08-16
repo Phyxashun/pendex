@@ -8,7 +8,7 @@
  */
 
 import { Colors } from '@pendex/color';
-import type { Category, State } from './types';
+import type { Category, State, StyleFunction } from './types';
 
 /**
  * Parametric Polymorphism with Generics
@@ -28,7 +28,9 @@ export class View {
     protected readonly state: State;
 
     /**
-     * @param state - The shared application state (theme, config, and optional category colors) this view renders against.
+     * @param state - The shared application state,
+     * theme, config, and optional category colors,
+     * this view renders against.
      */
     constructor(state: State) {
         // No `theme` fallback here: State.theme is a required Theme, not
@@ -45,7 +47,10 @@ export class View {
         this.state = state;
     }
 
-    /** Renders this view's output. Base implementation is a no-op; subclasses override. */
+    /**
+     * Renders this view's output. Base implementation is a no-op;
+subclasses override.
+     */
     public async render(): Promise<void> {
         return;
     }
@@ -60,15 +65,15 @@ export class View {
      * which theme is active.
      *
      * @param category - The category to look up a brand color for.
-     * @param fallback - Style function to use when no brand color is defined for `category`.
-     * @returns A style function: either the resolved brand-color styler, or `fallback`.
+     * @param fallback - Style function to use when no brand color is
+defined for `category`.
+     * @returns A style function: either the resolved brand-color
+styler, or `fallback`.
      */
-    protected categoryStyle(
-        category: Category,
-        fallback: (text: string) => string,
-    ): (text: string) => string {
-        const hex = this.state.categoryColors?.[category];
+    protected categoryStyle(category: Category, fallback:
+StyleFunction): StyleFunction {
+        const hex: string | undefined = this.state.categoryColors?.[category];
         if (!hex) return fallback;
-        return (text: string) => Colors.bold(Colors.hex(hex)(text));
+        return (text: string): string => Colors.bold(Colors.hex(hex)(text));
     }
 }

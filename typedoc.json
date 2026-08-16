@@ -20,5 +20,7 @@
   "navigationLinks": {
     "Guide": "../"
   },
-  "sort": ["source-order"]
+  "sort": [
+    "source-order"
+  ]
 }

@@ -8,20 +8,65 @@
  * the {@link ConfigManager} singleton.
  */
 
+import { Constants, normalizePath } from './Constants';
 import type { Config, Job } from './types';
-import { Constants } from './Constants';
 
-/** Absolute path to the shipped default config TOML (`packages/core/config/`). */
-const BASE_CONFIG_PATH = `${import.meta.dir}/../config/config.toml`; // packages/core/config/
+/**
+ * BUN PROPERTIES
+ */
+const BASE = {
+    // The name of the current file, e.g. index.ts
+    CURRENT_FILE: import.meta.file,
 
-/** The Config keys that a runtime.config.json override may selectively supply. */
-const CONFIG_KEYS = [
-    'theme',
-    'outputDir',
-    'rebuiltDir',
-    'exclude',
-    'jobs',
-] as const;
+    // A string url to the current file, e.g.
+file:///path/to/project/index.ts. Equivalent to import.meta.url in
+browsers.
+    CURRENT_URL: new URL(import.meta.url),
+
+    ABSOLUTE_PATH: normalizePath(Bun.fileURLToPath(new URL(import.meta.url))),
+    // Absolute path to the current file, e.g.
+/path/to/project/index.ts. Equivalent to __filename in CommonJS
+modules (and Node.js). An alias to import.meta.filename for Node.js
+compatibility.
+    CURRENT_PATH: normalizePath(import.meta.path),
+
+    // Absolute path to the directory containing the current file,
+e.g. /path/to/project. Equivalent to __dirname in CommonJS modules
+(and Node.js). An alias to import.meta.dirname for Node.js
+compatibility.
+    CURRENT_DIR: normalizePath(import.meta.dir),
+
+    // Indicates whether the current file is the entrypoint to the
+current bun process: true if it’s executed directly by bun run, false
+if it’s imported.
+    //ENTRY_POINT: import.meta.main,
+
+    // Resolve a module specifier (e.g. "zod" or "./file.tsx") to a
+url. Equivalent to import.meta.resolve in browsers. Example:
+import.meta.resolve("zod") returns
+"file:///path/to/project/node_modules/zod/index.ts"
+    //CURRENT_MODULE_URL: import.meta.resolve('./Config.ts'),
+
+    // An alias to process.env.
+    //ENV: import.meta.env,
+    CONFIG_PATH: `${normalizePath(import.meta.dir)}/../config/config.toml`,
+    CONFIG_KEYS: ['theme', 'outputDir', 'rebuiltDir', 'exclude', 'jobs'],
+    THEMES_PATH: `${normalizePath(import.meta.dir)}/../../../theme`,
+
+} as const;
+
+// DEBUG START
+//console.warn('BUN PROPERTIES:\n', JSON.stringify(BASE, null, 2));
+// DEBUG END
+
+// Absolute path to the shipped default config TOML (`packages/core/config/`).
+const BASE_CONFIG_PATH = BASE.CONFIG_PATH;
+
+//Directory containing `<name>.toml` theme files (`packages/theme/themes/`).
+const BASE_THEMES_PATH = BASE.THEMES_PATH;
+
+// The Config keys that a runtime.config.json override may selectively supply.
+const CONFIG_KEYS = BASE.CONFIG_KEYS;
 
 /**
  * Copies `source[key]` onto `target[key]` only if it's defined —
@@ -32,11 +77,8 @@ const CONFIG_KEYS = [
  * @param source - Partial object that may or may not define `key`.
  * @param key - The key to conditionally copy.
  */
-export function assignKey<T, K extends keyof T>(
-    target: T,
-    source: Partial<T>,
-    key: K,
-) {
+export function assignKey<T, K extends keyof T>(target: T, source:
+Partial<T>, key: K) {
     const value = source[key];
     if (value !== undefined) {
         target[key] = value;
@@ -68,20 +110,21 @@ export class ConfigManager {
     /**
      * Reads and parses the shipped config.toml into a base Config.
      *
-     * @returns The base {@link Config}, with job-level excludes preserved and the runtime-config path always excluded.
+     * @returns The base {@link Config}, with job-level excludes
+preserved and the runtime-config path always excluded.
      */
     private static async readTomlDefaults(): Promise<Config> {
         const tomlText = await Bun.file(BASE_CONFIG_PATH).text();
         const parsed = Bun.TOML.parse(tomlText) as unknown as Config;
 
         // Preserve job-specific excludes without flattening them globally
-        const jobs = parsed.jobs.map(job => ({
+        const jobs = parsed.jobs.map((job) => ({
             ...job,
             exclude: job.exclude ?? [],
         })) as Job[];
 
         return {
-            theme: parsed.theme || 'pendex',
+            theme: { name: parsed.theme || 'pendex', path: BASE_THEMES_PATH },
             outputDir: parsed.outputDir,
             rebuiltDir: parsed.rebuiltDir,
             exclude: [...parsed.exclude, Constants.RUNTIME_CONFIG_PATH],
@@ -90,10 +133,13 @@ export class ConfigManager {
     }
 
     /**
-     * Merges a runtime.config.json override (if present) on top of a base Config.
+     * Merges a runtime.config.json override (if present) on top of a
+base Config.
      *
      * @param base - The base config to merge overrides onto.
-     * @returns `base` with any valid on-disk overrides applied; `base` unchanged if the file is missing or invalid.
+     * @returns `base` with any valid on-disk overrides applied;
+`base` unchanged
+     * if the file is missing or invalid.
      */
     private static async withDiskOverrides(base: Config): Promise<Config> {
         const overrideFile = Bun.file(Constants.RUNTIME_CONFIG_PATH);
@@ -102,7 +148,7 @@ export class ConfigManager {
         try {
             const merged: Config = { ...base };
             const parsed = (await overrideFile.json()) as Config;
-            CONFIG_KEYS.forEach(key => assignKey(merged, parsed, key));
+            CONFIG_KEYS.forEach((key) => assignKey(merged, parsed, key));
             return merged;
         } catch {
             return base;
@@ -123,7 +169,9 @@ export class ConfigManager {
         return this.instance;
     }
 
-    /** Resets the singleton. Primarily useful for test isolation. */
+    /**
+     * Resets the singleton. Primarily useful for test isolation.
+     */
     public static resetInstance(): void {
         this.instance = null;
     }
@@ -138,7 +186,8 @@ export class ConfigManager {
     }
 
     /**
-     * Re-reads config.toml + runtime.config.json and replaces the cached config.
+     * Re-reads config.toml + runtime.config.json and replaces the
+cached config.
      *
      * @returns The freshly-loaded {@link Config}.
      */
@@ -149,7 +198,8 @@ export class ConfigManager {
     }
 
     /**
-     * Discards runtime overrides in memory (does not touch disk until save() is called).
+     * Discards runtime overrides in memory (does not touch disk until
+save() is called).
      *
      * @returns The reset, defaults-only {@link Config}.
      */
@@ -158,11 +208,11 @@ export class ConfigManager {
         return this.config;
     }
 
-    /** Persists the current in-memory config to runtime.config.json. */
+    /**
+     * Persists the current in-memory config to runtime.config.json.
+     */
     public async save(): Promise<void> {
-        await Bun.write(
-            Constants.RUNTIME_CONFIG_PATH,
-            JSON.stringify(this.config, null, 2),
-        );
+        await Bun.write(Constants.RUNTIME_CONFIG_PATH,
+JSON.stringify(this.config, null, 2));
     }
 }

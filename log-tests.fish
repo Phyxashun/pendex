@@ -51,7 +51,8 @@ function Initialize-Environment --argument-names LogDir
 end
 
 function Manage-Log --argument-names LogDir MaxLogs Appendage
-    set -l existingLogs (find "$LogDir" -maxdepth 1 -type f -name "*$Appendage" | sort)
+    set -l existingLogs (find "$LogDir" -maxdepth 1 -type f -name
+"*$Appendage" | sort)
 
     set -l currentCount (count $existingLogs)
 
@@ -65,7 +66,8 @@ function Manage-Log --argument-names LogDir MaxLogs Appendage
     return 1
 end
 
-function Invoke-Bun-Test --description 'Run every test suite (root + every workspace package) via bun run test'
+function Invoke-Bun-Test --description 'Run every test suite (root +
+every workspace package) via bun run test'
     # Forward any extra args ($argv, e.g. --coverage) straight through.
     # Deliberately does NOT scope this to a single tests/ directory —
     # `bun run test` (package.json) is the one place that knows how to
@@ -139,7 +141,8 @@ end
 
 function Get-BarCharacter --argument-names Key
     # Banner bar kept separate so the substitution stays readable
-    set -l bar_keys asterisk line double_line equals half_block heavy_block medium_block
+    set -l bar_keys asterisk line double_line equals half_block
+heavy_block medium_block
     set -l bar_chars '*' '─' '═' '=' '■' '█' '▒'
 
     # Find the index
@@ -234,13 +237,16 @@ function Write-Box --argument-names Text MaxWidth BorderColor BoxColor
     end
     set -l innerBoxWidth (math $MaxWidth - 2)
     set -l textWithEmoji "📜 $Text"
-    set -l totalPadding (math $innerBoxWidth - (string length --visible -- "$textWithEmoji"))
-    set -l centeredText (printf '%*s%s%*s' (math "floor($totalPadding / 2)") "" "$textWithEmoji" (math "ceil($totalPadding / 2)") "")
+    set -l totalPadding (math $innerBoxWidth - (string length
+--visible -- "$textWithEmoji"))
+    set -l centeredText (printf '%*s%s%*s' (math "floor($totalPadding
+/ 2)") "" "$textWithEmoji" (math "ceil($totalPadding / 2)") "")
 
     set_color (Get-ConsoleColor $BorderColor)
     printf '%s ' $Line_Vertical
     set_color (Get-ConsoleColor $BoxColor)
-    printf '%s%s%s\n' $Line_TopLeft (string repeat -n (math $MaxWidth - 2) -- $Line_Horizontal) $Line_TopRight
+    printf '%s%s%s\n' $Line_TopLeft (string repeat -n (math $MaxWidth
+- 2) -- $Line_Horizontal) $Line_TopRight
     set_color (Get-ConsoleColor $BorderColor)
     printf '%s ' $Line_Vertical
     set_color (Get-ConsoleColor $BoxColor)
@@ -252,7 +258,8 @@ function Write-Box --argument-names Text MaxWidth BorderColor BoxColor
     set_color (Get-ConsoleColor $BorderColor)
     printf '%s ' $Line_Vertical
     set_color (Get-ConsoleColor $BoxColor)
-    printf '%s%s%s\n' $Line_BotLeft (string repeat -n (math $MaxWidth - 2) -- $Line_Horizontal) $Line_BotRight
+    printf '%s%s%s\n' $Line_BotLeft (string repeat -n (math $MaxWidth
+- 2) -- $Line_Horizontal) $Line_BotRight
     set_color (Get-ConsoleColor $BorderColor)
     printf '%s\n' $Line_Vertical
     set_color normal
@@ -283,7 +290,8 @@ function Start-Spinner --argument-names Message Prefix
         set -l reset \e"[0m"
         set -l i 0
         while true
-            set -l spinnerChar $SpinnerChars[(math "$i % "(count $SpinnerChars)" + 1")]
+            set -l spinnerChar $SpinnerChars[(math "$i % "(count
+$SpinnerChars)" + 1")]
             printf "\r%s %s%s%s %s" $Prefix $blue $spinnerChar $reset $Message
             sleep 0.1
             set i (math $i + 1)
@@ -306,7 +314,8 @@ function Write-Header --description ""
     # Render initial View layouts
     Write-Intro "EXECUTING TESTS" $config_BorderColor
     Write-Step "Running tests and logging output to:" Cyan $config_BorderColor
-    Write-Box $config_LogFile $config_MaxWidth $config_BorderColor $config_BoxColor
+    Write-Box $config_LogFile $config_MaxWidth $config_BorderColor
+$config_BoxColor
 end
 
 function Write-Summary --argument-names ExitCode
@@ -322,14 +331,17 @@ function Write-Summary --argument-names ExitCode
         Start-Spinner "Analyzing old logs..." "$prefix"
         sleep $config_Sleep
         Stop-Spinner
-        Write-Step "$greenCheck Log file directory cleaned up." Gray $config_BorderColor
+        Write-Step "$greenCheck Log file directory cleaned up." Gray
+$config_BorderColor
 
     end
 
     if test $ExitCode -eq 0
-        Write-Outro "✨ Tests completed successfully. All tests passed." true $config_BorderColor
+        Write-Outro "✨ Tests completed successfully. All tests
+passed." true $config_BorderColor
     else
-        Write-Outro "⚠️  Some tests failed. See log for details." false $config_BorderColor
+        Write-Outro "⚠️  Some tests failed. See log for details."
+false $config_BorderColor
     end
     echo
 end
@@ -351,7 +363,8 @@ function Invoke-Tests
     Start-Spinner 'Executing bun tests...' "$prefix"
 
     # Controller
-    Get-Test-Results $config_TestsPath $config_LogFilePath $config_LogMaxWidth $config_BarKey
+    Get-Test-Results $config_TestsPath $config_LogFilePath
+$config_LogMaxWidth $config_BarKey
     set -l exitCode $status
 
     # View

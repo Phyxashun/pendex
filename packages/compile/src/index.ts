@@ -1,15 +1,17 @@
+// FILE-PATH: packages/compile/src/index.ts
+
 /**
  * @module @pendex/compile
  *
- * Public entry point for the `@pendex/compile` package: the `Compile`
- * command, its `CompileView` renderer, and the headless
- * `CompileService` functions (`runCompile`, `compileJob`, etc.) that
- * back both the interactive and standalone/test call paths.
+ * Public entry point for the `@pendex/compile` package:
+ *
+ *      `Compile` command
+ *      `CompileView` renderer
+ *      `CompileService` functions (`runCompile`, `compileJob`, etc.)
  */
 
-// FILE-PATH: packages/compile/src/index.ts
 export { Compile } from './Compile';
-export { CompileView } from './CompileView';
+
 export {
     compileJob,
     compileSingleJob,
@@ -23,5 +25,7 @@ export {
     type CompileJob,
     type CompileJobResult,
     type CompileSummary,
-    type InitializedCompileJob,
+    type InitializedCompileJob
 } from './CompileService';
+
+export { CompileView } from './CompileView';

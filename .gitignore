@@ -24,7 +24,7 @@ report.[0-9]_.[0-9]_.[0-9]_.[0-9]_.json
 .env.local
 
 # caches
-.oxlintcache
+.eslintcache
 .cache
 *.tsbuildinfo
 
@@ -37,4 +37,3 @@ report.[0-9]_.[0-9]_.[0-9]_.[0-9]_.json
 # Monorepo Specific
 ALL
 ALL_REBUILT
-test-sandbox-*/

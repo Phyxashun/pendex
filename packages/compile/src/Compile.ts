@@ -1,3 +1,5 @@
+// FILE-PATH: packages/compile/src/Compile.ts
+
 /**
  * @module Compile
  *
@@ -10,27 +12,29 @@
  */
 
 import type { Command, State } from '@pendex/core';
+import { Exit } from '@pendex/exit';
 import { CompileView } from './CompileView';
 
-/** The "Compile Codebase" command: consolidates project files per the active config's jobs. */
+/**
+ * The "Compile Codebase" command:
+ * consolidates project files per the active config's jobs.
+ */
 export class Compile implements Command {
     readonly key = 'compile';
-    readonly label = 'Compile Codebase';
+    readonly label = 'Compile project';
     readonly hint = 'Consolidates project files';
 
     private readonly state: State;
-
     private readonly view: CompileView;
 
-    /**
-     * @param state - Shared application state (theme, config, category colors) this command runs against.
-     */
     constructor(state: State) {
         this.state = state;
         this.view = new CompileView(this.state);
     }
 
-    /** Runs the compile command by delegating to its {@link CompileView}. */
+    /**
+     * Runs the compile command by delegating to its {@link CompileView}.
+     */
     async execute(): Promise<void> {
         await this.view.render();
     }
@@ -38,11 +42,20 @@ export class Compile implements Command {
 
 /**
  * STANDALONE EXECUTION ENTRY POINT
- * `bun run src/commands/Compile.ts` — only pulls a Config, no App/State required.
+ * `bun run src/commands/Compile.ts` — only pulls a Config, no
+App/State required.
  */
 // c8 ignore start
 if (import.meta.main) {
+    console.log();
+
     const { resolveRunnerDeps } = await import('@pendex/core');
-    await new Compile(await resolveRunnerDeps()).execute();
+    const state: State = await resolveRunnerDeps();
+
+    const compile = await new Compile(state);
+    await compile.execute();
+
+    const exit: Exit = await new Exit({ ...state, exit: process.exit });
+    await exit.execute();
 }
 // c8 ignore stop

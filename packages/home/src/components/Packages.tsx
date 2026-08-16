@@ -20,6 +20,10 @@ const packages = [
         desc: 'Reads archives + manifest and reconstructs the original tree.',
     },
     {
+        name: '@pendex/exit',
+        desc: 'Exit handler for the CLI.',
+    },
+    {
         name: 'pendex',
         desc: 'The root CLI — ties every package together into one binary, px.',
     },

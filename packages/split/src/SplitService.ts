@@ -1,3 +1,5 @@
+// FILE-PATH: packages/split/src/SplitService.ts
+
 /**
  * @module SplitService
  *
@@ -7,89 +9,103 @@
  * parsing, never imports `@clack/prompts`.
  */
 
-import { dirName, joinPath } from '@pendex/core';
-import type { Manifest } from '@pendex/core';
-import { archivePathFor, parseArchive } from '@pendex/core';
+import { mkdir, rm } from "node:fs/promises";
 
-/** Outcome of splitting a single job's archive back into real files. */
+import {
+    dirName,
+    joinPath,
+    normalizePath,
+    parseArchive,
+    type Manifest
+} from '@pendex/core';
+
+/**
+ * Outcome of splitting a single job's archive back into real files.
+ */
 export interface SplitFileOutcome {
-    /** The job's archive filename. */
+    // The job's archive filename.
     readonly filename: string;
-    /** Whether the archive file existed on disk. */
+    // Whether the archive file existed on disk.
     readonly archiveFound: boolean;
-    /** Number of files successfully recreated from this archive. */
+    // Number of files successfully recreated from this archive.
     readonly filesRecreated: number;
 }
 
-/** Full summary returned after a split run completes. */
+/**
+ * Full summary returned after a split run completes.
+ */
 export interface SplitSummary {
-    /** Whether `manifest.json` was found in the output directory. */
+    // Whether `manifest.json` was found in the output directory.
     readonly manifestFound: boolean;
-    /** Per-file outcomes, in manifest order. */
+    // Per-file outcomes, in manifest order.
     readonly fileOutcomes: SplitFileOutcome[];
-    /** Total files recreated across every archive. */
+    // Total files recreated across every archive.
     readonly totalFilesRecreated: number;
 }
 
-/** Optional progress callbacks a caller (e.g. the interactive CLI view) can hook into a split run. */
+/**
+ * Optional progress callbacks a caller (e.g. the interactive CLI
+view) can hook into a split run.
+ */
 export interface SplitHooks {
-    /** Called once, after the manifest is read, before any files are split. */
+    // Called once, after the manifest is read, before any files are split.
     onSplitStart?: (manifest: Manifest) => void | Promise<void>;
-    /** Called before a job's archive starts splitting. */
+    // Called before a job's archive starts splitting.
     onFileStart?: (filename: string) => void | Promise<void>;
-    /** Called after a job's archive finishes splitting. */
-    onFileSuccess?: (
-        filename: string,
-        outcome: SplitFileOutcome,
-    ) => void | Promise<void>;
+    // Called after a job's archive finishes splitting.
+    onFileSuccess?: (filename: string, outcome: SplitFileOutcome) =>
+void | Promise<void>;
 }
 
 /**
- * Reads and parses manifest.json from an output directory, or null if it doesn't exist.
+ * Reads and parses manifest.json from an output directory, or null if
+it doesn't exist.
  *
  * @param outputDir - Directory to read `manifest.json` from.
  * @returns The parsed {@link Manifest}, or `null` if the file doesn't exist.
  */
-export async function readManifest(
-    outputDir: string,
-): Promise<Manifest | null> {
-    const manifestFile = Bun.file(joinPath(outputDir, 'manifest.json'));
-    if (!(await manifestFile.exists())) return null;
+export async function readManifest(outputDir: string):
+Promise<Manifest | null> {
+    const normalizedPath = normalizePath(outputDir);
+    const manifestFile = Bun.file(joinPath(normalizedPath, 'manifest.json'));
+
+    if (!(await manifestFile.exists())) {
+        return null;
+    }
+
     return manifestFile.json() as Promise<Manifest>;
 }
 
 /**
- * Wipes the rebuild directory.
+ * Wipes the rebuild directory natively.
  *
  * @param dir - Directory to remove.
  */
 export async function prepareRebuildDirectory(dir: string): Promise<void> {
-    await Bun.$`rm -rf ${dir}`;
+    const normalizedPath = normalizePath(dir);
+
+    await rm(normalizedPath, { recursive: true, force: true });
 }
 
 /**
- * Recreates every empty directory recorded in the manifest.
+ * Recreates every empty directory recorded in the manifest safely.
  *
  * @param rebuiltDir - Base rebuild directory.
- * @param emptyDirectories - Directory paths (relative to the original project root) to recreate.
+ * @param emptyDirectories - Directory paths to recreate.
  */
 export async function restoreEmptyDirectories(
     rebuiltDir: string,
-    emptyDirectories: string[],
+    emptyDirectories: string[]
 ): Promise<void> {
-    await Promise.all(
-        emptyDirectories.map(
-            dir => Bun.$`mkdir -p ${joinPath(rebuiltDir, dir)}`,
-        ),
-    );
+    const normalizedPath = normalizePath(rebuiltDir);
+
+    for (const dir of emptyDirectories) {
+        await mkdir(joinPath(normalizedPath, dir), { recursive: true });
+    }
 }
 
 /**
  * Splits one job's archive back into real files under `rebuiltDir`.
- * A missing source .txt is not an error — it just means nothing to
- * recreate for that job. Corrupt or unterminated entries inside the
- * archive are simply absent from parseArchive()'s results, so they're
- * skipped without failing the rest of the job.
  *
  * @param outputDir - Directory containing the compiled archive files.
  * @param rebuiltDir - Directory to recreate original files into.
@@ -99,11 +115,19 @@ export async function restoreEmptyDirectories(
 export async function splitArchiveFile(
     outputDir: string,
     rebuiltDir: string,
-    filename: string,
+    filename: string
 ): Promise<SplitFileOutcome> {
-    const archiveFile = Bun.file(archivePathFor(outputDir, filename));
+    const normalizedOutputPath = normalizePath(outputDir);
+    const normalizedRebuiltPath = normalizePath(rebuiltDir);
+
+    const resolvedPath = joinPath(normalizedOutputPath, filename);
+    const archiveFile = Bun.file(resolvedPath);
     if (!(await archiveFile.exists())) {
-        return { filename, archiveFound: false, filesRecreated: 0 };
+        return {
+            filename,
+            archiveFound: false,
+            filesRecreated: 0
+        };
     }
 
     const rawText = await archiveFile.text();
@@ -111,20 +135,29 @@ export async function splitArchiveFile(
 
     let filesRecreated = 0;
     for (const archived of archivedFiles) {
-        const writePath = joinPath(rebuiltDir, archived.originalPath);
-        await Bun.$`mkdir -p ${dirName(writePath)}`;
+        const normalizedArchivedPath = normalizePath(archived.originalPath);
+        const writePath = joinPath(normalizedRebuiltPath,
+normalizedArchivedPath);
+
+        await mkdir(dirName(writePath), { recursive: true });
         await Bun.write(writePath, archived.content);
+
         filesRecreated++;
     }
 
-    return { filename, archiveFound: true, filesRecreated };
+    return {
+        filename,
+        archiveFound: true,
+        filesRecreated
+    };
 }
 
 /**
  * Splits every job archive listed in `manifest.files`, in order, and
  * returns a full summary. Headless counterpart to views/SplitView.ts.
  *
- * @param outputDir - Directory containing the compiled archive files and manifest.
+ * @param outputDir - Directory containing the compiled archive files
+and manifest.
  * @param rebuiltDir - Directory to recreate original files into.
  * @param hooks - Optional progress callbacks.
  * @returns The full {@link SplitSummary} for this run.
@@ -132,14 +165,17 @@ export async function splitArchiveFile(
 export async function runSplit(
     outputDir: string,
     rebuiltDir: string,
-    hooks?: SplitHooks,
+    hooks?: SplitHooks
 ): Promise<SplitSummary> {
-    const manifest = await readManifest(outputDir);
+    const normalizedOutputPath = normalizePath(outputDir);
+    const normalizedRebuiltPath = normalizePath(rebuiltDir);
+
+    const manifest = await readManifest(normalizedOutputPath);
     if (!manifest) {
         return {
             manifestFound: false,
             fileOutcomes: [],
-            totalFilesRecreated: 0,
+            totalFilesRecreated: 0
         };
     }
 
@@ -147,8 +183,9 @@ export async function runSplit(
         await hooks.onSplitStart(manifest);
     }
 
-    await prepareRebuildDirectory(rebuiltDir);
-    await restoreEmptyDirectories(rebuiltDir, manifest.emptyDirectories ?? []);
+    await prepareRebuildDirectory(normalizedRebuiltPath);
+    await restoreEmptyDirectories(normalizedRebuiltPath,
+manifest.emptyDirectories ?? []);
 
     const fileOutcomes: SplitFileOutcome[] = [];
 
@@ -157,7 +194,11 @@ export async function runSplit(
             await hooks.onFileStart(filename);
         }
 
-        const outcome = await splitArchiveFile(outputDir, rebuiltDir, filename);
+        const outcome = await splitArchiveFile(
+            normalizedOutputPath,
+            normalizedRebuiltPath,
+            filename
+        );
         fileOutcomes.push(outcome);
 
         if (hooks?.onFileSuccess) {
@@ -168,39 +209,39 @@ export async function runSplit(
     return {
         manifestFound: true,
         fileOutcomes,
-        totalFilesRecreated: fileOutcomes.reduce(
-            (sum, o) => sum + o.filesRecreated,
-            0,
-        ),
+        totalFilesRecreated: fileOutcomes.reduce(filesRecreatedReducer, 0),
     };
 }
 
 /**
- * Reads the manifest and prepares the rebuild directory (wipe + restore
- * empty dirs) for a manually-sequenced split — used by callers that
- * want to split jobs one at a time via {@link splitSingleFile} rather
- * than all at once via {@link runSplit}.
+ * Reads the manifest and prepares the rebuild directory (wipe +
+restore empty dirs).
  *
- * @param outputDir - Directory containing the compiled archive files and manifest.
+ * @param outputDir - Directory containing the compiled archive files
+and manifest.
  * @param rebuiltDir - Directory to recreate original files into.
  * @returns The read manifest, or `null` if `manifest.json` wasn't found.
  */
 export async function initializeSplit(
     outputDir: string,
-    rebuiltDir: string,
-): Promise<{ manifest: Manifest } | null> {
-    const manifest = await readManifest(outputDir);
+    rebuiltDir: string
+): Promise<Manifest | null> {
+    const normalizedOutputPath = normalizePath(outputDir);
+    const normalizedRebuiltPath = normalizePath(rebuiltDir);
+
+    const manifest = await readManifest(normalizedOutputPath);
     if (!manifest) return null;
 
-    await prepareRebuildDirectory(rebuiltDir);
-    await restoreEmptyDirectories(rebuiltDir, manifest.emptyDirectories ?? []);
+    await prepareRebuildDirectory(normalizedRebuiltPath);
+    await restoreEmptyDirectories(normalizedRebuiltPath,
+manifest.emptyDirectories ?? []);
 
-    return { manifest };
+    return manifest;
 }
 
 /**
- * Splits a single job's archive. A thin wrapper around
- * {@link splitArchiveFile} for callers sequencing jobs manually.
+ * Splits a single job's archive. A thin wrapper around {@link
+splitArchiveFile}.
  *
  * @param outputDir - Directory containing the compiled archive files.
  * @param rebuiltDir - Directory to recreate original files into.
@@ -210,7 +251,16 @@ export async function initializeSplit(
 export async function splitSingleFile(
     outputDir: string,
     rebuiltDir: string,
-    filename: string,
+    filename: string
 ): Promise<SplitFileOutcome> {
-    return await splitArchiveFile(outputDir, rebuiltDir, filename);
+    const normalizedOutputPath = normalizePath(outputDir);
+    const normalizedRebuiltPath = normalizePath(rebuiltDir);
+
+    return await splitArchiveFile(normalizedOutputPath,
+normalizedRebuiltPath, filename);
 }
+
+const filesRecreatedReducer = (sum: number, outcome:
+SplitFileOutcome): number => {
+    return sum + outcome.filesRecreated;
+};

@@ -1,3 +1,5 @@
+// FILE-PATH: packages/compile/src/CompileView.ts
+
 /**
  * @module CompileView
  *
@@ -13,141 +15,176 @@
  * session, and `Application` clears the console between sessions anyway.
  */
 
+import type { NoteOptions, Task } from '@clack/prompts';
 import { intro, log, note, outro, tasks } from '@clack/prompts';
-import type { State } from '@pendex/core';
+import { Colors } from '@pendex/color';
+import type { Config, Job, State, StyleFunction, Theme } from '@pendex/core';
 import { View } from '@pendex/core';
-import {
-    compileSingleJob,
-    finalizeCompile,
-    initializeCompile,
-} from './CompileService';
+import type { CompileJobContext, CompileJobResult } from './CompileService';
+import { compileSingleJob, finalizeCompile, initializeCompile } from './CompileService';
 
-/** Renders the interactive compile session: intro, per-job progress, summary, and outro. */
+export const STRINGS = {
+    title: "  RUNNING PENDEX COMPILATION ",
+    excludedTitle: "Excluded Patterns",
+    presentAction: "Compiling",
+    pastAction: "compiled",
+
+    resultTitle: "Compilation Results",
+    resultDir: "Files created in",
+    resultTotal: "Total files compiled",
+    resultJobs: "Total jobs compiled",
+
+    error: "Failed to compile project files.",
+    outroSuccess: "Compilation complete",
+    outroFailure: "Compilation failed — see errors above",
+} as const;
+
+export type StringsType = typeof STRINGS;
+
+export interface ResultSummary {
+    outputDir: string;
+    fileCount: string;
+    jobCount: string;
+}
+
+/**
+ * Renders the interactive compile session: intro, per-job progress,
+summary, and outro.
+ */
 export class CompileView extends View {
-    /** User-facing copy for this view's clack session. */
-    private readonly STRINGS = {
-        title: 'RUNNING PENDEX COMPILATION',
-        excludedTitle: 'Excluded Patterns',
-        presentAction: 'Compiling',
-        pastAction: 'compiled',
-        success: 'Total project files successfully compiled!',
-        complete: 'Entire project compiled inside',
-        total: 'Total files compiled',
-        error: 'Failed to compile project files.',
-        result: 'Compilation Results',
-        outroSuccess: 'Compilation complete.',
-        outroFailure: 'Compilation failed — see errors above.',
-    } as const;
 
-    /**
-     * @param state - Shared application state (theme, config, category colors) to render against.
-     */
+    // User-facing strings for this view.
+    private readonly STRINGS: StringsType = STRINGS as const;
+    private totalFiles: number = 0;
+
     constructor(state: State) {
-        // Forward `state` whole — rebuilding a {theme, config} literal
-        // here (the previous version) silently dropped categoryColors,
-        // since it was never one of the two fields being copied. See
-        // View.ts's constructor comment for the full story.
         super(state);
     }
 
-    /** Runs and renders the full compile session, from intro to outro. */
-    public override async render(): Promise<void> {
-        const { theme, config } = this.state;
-        let totalFiles = 0;
+    /**
+     * Runs and renders the full compile session, from intro to outro.
+     */
+    public override render = async (): Promise<void> => {
+        const theme: Theme = this.state.theme;
+        const config: Config = this.state.config;
 
         try {
             // Initialize compilation assets
-            const ctx = await initializeCompile(config);
+            const ctx: CompileJobContext = await initializeCompile(config);
 
-            console.log();
-            intro(`${theme(this.STRINGS.title).title}`);
+            intro(`${theme.title(this.STRINGS.title)}`);
 
-            note(ctx.excludes.join(', '), this.STRINGS.excludedTitle, {
-                format: (text: string) => `${theme.muted(text)}`,
-            });
+            this.renderExcludes(ctx.excludes.join(', '));
 
-            // Build tasks that execute live service methods inside Clack's runner
-            const jobTasks = config.jobs.map(job => {
-                const rawDesc = job.description || job.filename;
-                const titleStyle = this.categoryStyle(job.category, theme.bold);
-                const resultStyle = this.categoryStyle(
-                    job.category,
-                    theme.primary,
-                );
+            // Build tasks that execute live service methods inside
+Clack's runner
+            const jobTasks: Task[] = await this.buildJobTasks(ctx);
 
-                return {
-                    title: `${this.STRINGS.presentAction} ${titleStyle(rawDesc)}`,
-                    task: async (): Promise<string> => {
-                        const outcome = await compileSingleJob(job, {
-                            config,
-                            ...ctx,
-                        });
-
-                        totalFiles += outcome.fileCount;
-
-                        const rawDesc1 = `${rawDesc.charAt(0).toUpperCase()}`;
-                        const rawDesc2 = `${rawDesc.slice(1).toLowerCase()}`;
-                        const formattedDesc = resultStyle(
-                            `${rawDesc1}${rawDesc2} ${this.STRINGS.pastAction}`,
-                        );
-                        // theme.warning(...) must be coerced to a plain string
-                        // with its own template literal BEFORE being handed to
-                        // theme.bold(...) as an argument — passing its raw
-                        // return value directly (the old
-                        // `theme.bold(theme.warning(x))`) fed the chaining
-                        // engine's not-yet-primitive result back into itself,
-                        // which is what triggered "Symbol.toPrimitive
-                        // returned an object". Every other themed value in
-                        // this codebase already follows the coerce-
-                        // immediately convention; this was the one place
-                        // that didn't.
-                        const warningCount = `${theme.warning(`${outcome.fileCount}`)}`;
-                        const styledCount = `${theme.bold(warningCount)}`;
-
-                        return `${styledCount} ${formattedDesc}`;
-                    },
-                };
-            });
-
-            // Clack runs these one-by-one, showing live spinner progress
+            // Clack runs tasks one-by-one, showing live spinner progress
             await tasks(jobTasks);
 
             // Write manifest and clean up folders
             await finalizeCompile(config, ctx);
 
             // Render final summary block
-            this.renderSummary(totalFiles);
-            outro(`${theme.success(this.STRINGS.outroSuccess)}`);
-        } catch (err) {
+            this.renderSummary(this.totalFiles);
+
+            const success: string =
+`${this.STRINGS.outroSuccess.toUpperCase()}`;
+            log.success(Colors.bgGreen(Colors.black(success)));
+
+        } catch (err: unknown) {
             log.error(`${theme.error(this.STRINGS.error)}`);
             if (err instanceof Error) log.error(`${theme.error(err.message)}`);
-            outro(`${theme.error(this.STRINGS.outroFailure)}`);
+            outro(Colors.bgRed(Colors.black(this.STRINGS.outroFailure)));
         }
-    }
+    };
+
+    private buildJobTasks = async (ctx: CompileJobContext):
+Promis<BuildTasks> => {
+        const theme: Theme = this.state.theme;
+        const config: Config = this.state.config;
+
+        return config.jobs.map((job: Job): Task => {
+            const rawDesc: string = job.description || job.filename;
+            const titleStyle: StyleFunction =
+this.categoryStyle(job.category, theme.bold);
+            const resultStyle: StyleFunction =
+this.categoryStyle(job.category, theme.primary);
+
+            return {
+                title: `${this.STRINGS.presentAction} ${titleStyle(rawDesc)}`,
+                task: async (): Promise<string> => {
+                    const outcome: CompileJobResult = await
+compileSingleJob(job, { config, ...ctx });
+
+                    const warningCount: string =
+`${theme.warning(`${outcome.fileCount}`)}`;
+                    const styledCount: string = `${theme.bold(warningCount)}`;
+
+                    const rawDesc1: string =
+`${rawDesc.charAt(0).toUpperCase()}`;
+                    const rawDesc2: string =
+`${rawDesc.slice(1).toLowerCase()}`;
+                    const combinedDesc: string =
+`${rawDesc1}${rawDesc2} ${this.STRINGS.pastAction}`;
+                    const formattedDesc: string =
+`${resultStyle(combinedDesc)}`;
+
+                    this.totalFiles += outcome.fileCount;
+                    return `${styledCount} ${formattedDesc}`;
+                }
+            };
+        });
+    };
+
+    private renderExcludes = (excludes: string): void => {
+        const message: string = excludes;
+        const title: string = this.STRINGS.excludedTitle;
+        const options: NoteOptions = { format: this.mutedFormatter };
+
+        note(message, title, options);
+    };
 
     /**
-     * Renders the post-compile summary note (output dir, file count, job count).
+     * Renders the post-compile summary note (output dir, file count,
+job count).
      *
      * @param fileCount - Total files compiled across all jobs.
      */
-    private renderSummary(fileCount: number): void {
-        const theme = this.state.theme;
+    private renderSummary = (fileCount: number): void => {
+        const theme: Theme = this.state.theme;
+        const config: Config = this.state.config;
 
-        const results = {
-            outputDir: theme.warning(`"/${this.state.config.outputDir}"`),
-            fileCount: theme.bold.primary(String(fileCount)),
-            jobCount: theme.bold.primary(String(this.state.config.jobs.length)),
+        const rawResult: ResultSummary = {
+            outputDir: this.directoryFormatter(config.outputDir),
+            fileCount: this.numberFormatter(fileCount),
+            jobCount: this.numberFormatter(config.jobs.length)
         };
 
-        const complete = `${theme.success(`${this.STRINGS.complete}: ${results.outputDir}`)}`;
-        const total = `${theme.success(`${this.STRINGS.total} ${results.fileCount}`)}`;
-        const success = `${theme.success(`${this.STRINGS.success}: ${results.jobCount}`)}`;
+        const result: ResultSummary = {
+            outputDir: `${this.STRINGS.resultDir}: ${rawResult.outputDir}`,
+            fileCount: `${this.STRINGS.resultTotal}: ${rawResult.fileCount}`,
+            jobCount: `${this.STRINGS.resultJobs}: ${rawResult.jobCount}`,
+        };
 
-        const message = `${complete}\n${total}\n${success}`;
-        const title = ` ${this.STRINGS.result} `;
+        const message: string =
+`${result.outputDir}\n${result.fileCount}\n${result.jobCount}`;
+        const title: string = `${this.STRINGS.resultTitle}`;
+        const options: NoteOptions = { format: this.successFormatter };
 
-        note(message, title, {
-            format: (text: string) => `${theme.success(text)}`,
-        });
-    }
+        note(message, title, options);
+    };
+
+    private mutedFormatter = (text: string): string =>
+`${this.state.theme.muted(text)}`;
+
+    private successFormatter = (text: string): string =>
+`${this.state.theme.success(text)}`;
+
+    private directoryFormatter = (text: string): string =>
+`${this.state.theme.warning(`"/${text}"`)}`;
+
+    private numberFormatter = (number: number): string =>
+`${this.state.theme.bold.primary(String(number))}`;
 }

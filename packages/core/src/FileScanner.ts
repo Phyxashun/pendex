@@ -9,29 +9,23 @@
  * and zero mocks.
  */
 
-import { dirName } from './Constants';
+import { dirName, toPosixPath } from './Constants';
 import type { Job } from './types';
 
-/** Base glob-scan options shared by every scan in this file; `cwd` is set per-call. */
+/**
+ * Base glob-scan options shared by every scan in this file; `cwd` is
+set per-call.
+ */
 const GLOB_OPTIONS: Bun.GlobScanOptions = {
     cwd: '',
     followSymlinks: false,
     dot: true,
-    absolute: false,
+    absolute: false
 };
-const REGEX_ALL_BACKSLASH = /\\/g;
 
 /**
- * Converts a path to POSIX-style forward slashes.
- *
- * @param p - Path to convert.
- * @returns `p` with all backslashes replaced by forward slashes.
- */
-const toPosixPath = (p: string): string => p.replace(REGEX_ALL_BACKSLASH, '/');
-
-/**
- * Reads a .gitignore-style file into a flat list of patterns (comments/
- * blank lines stripped).
+ * Reads a .gitignore-style file and converts to a flat list of patterns
+ * with comments and blank lines stripped.
  *
  * @param filePath - Path to the ignore-pattern file.
  * @returns The non-comment, non-blank lines, or `[]` if the file doesn't exist.
@@ -39,10 +33,14 @@ const toPosixPath = (p: string): string => p.replace(REGEX_ALL_BACKSLASH, '/');
 export async function loadIgnorePatterns(filePath: string): Promise<string[]> {
     const file = Bun.file(filePath);
     if (!(await file.exists())) return [];
+
     const content = await file.text();
+
     return content
         .split(/\r?\n/)
-        .filter(line => line.trim() && !line.startsWith('#'));
+        .map(line => line.trim()) // Trim whitespace from both ends
+        .filter(line => line.trim() && !line.startsWith('#')); //
+Remove empty lines and comments
 }
 
 /**
@@ -61,7 +59,8 @@ export async function loadIgnorePatterns(filePath: string): Promise<string[]> {
  *
  * @param job - The job to resolve files for.
  * @param excludes - Glob patterns to exclude from the result.
- * @param claimedPaths - Paths already claimed by earlier jobs (read-only; not mutated here).
+ * @param claimedPaths - Paths already claimed by earlier jobs
+(read-only; not mutated here).
  * @param cwd - Directory to scan from (default `'.'`).
  * @returns The list of file paths this job matches.
  */
@@ -69,15 +68,20 @@ export async function resolveJobFiles(
     job: Job,
     excludes: string[],
     claimedPaths: ReadonlySet<string>,
-    cwd: string = '.',
+    cwd: string = '.'
 ): Promise<string[]> {
     const excludeGlobs = excludes.map(pattern => new Bun.Glob(pattern));
     const matches = new Set<string>();
     const isRemainderJob = job.include.length === 0;
-    GLOB_OPTIONS.cwd = cwd;
+
+    // Safely combine global options with the local cwd for this specific run
+    const scanOptions: Bun.GlobScanOptions = {
+        ...GLOB_OPTIONS,
+        cwd
+    };
 
     if (isRemainderJob) {
-        for await (const file of new Bun.Glob('**/*').scan(GLOB_OPTIONS)) {
+        for await (const file of new Bun.Glob('**/*').scan(scanOptions)) {
             const posixFile = toPosixPath(file);
 
             if (claimedPaths.has(posixFile)) continue;
@@ -89,17 +93,30 @@ export async function resolveJobFiles(
     }
 
     for (const pattern of job.include) {
-        const files = new Bun.Glob(pattern).scan(GLOB_OPTIONS);
+        const files = new Bun.Glob(pattern).scan(scanOptions);
         for await (const file of files) {
-            if (
-                !excludeGlobs.some(exclude => exclude.match(toPosixPath(file)))
-            ) {
+            const posixFile = toPosixPath(file);
+
+            if (!excludeGlobs.some(exclude =>
+exclude.match(toPosixPath(posixFile)))) {
                 matches.add(file);
             }
         }
     }
     return [...matches];
 }
+
+/**
+ * Match a candidate directory against the exclude globs in BOTH
+ * trailing - slash forms.Some exclude patterns are written with a
+ * trailing slash("node_modules/"), some without("node_modules/**")
+ * — matching only one form silently let excluded directories through
+ * depending on which style the caller used.
+ */
+const isExcludedDir = (excludeGlobs: string[], posixDir: string): boolean => {
+    return excludeGlobs.some(glob => glob.match(posixDir) ||
+glob.match(`${posixDir}/`));
+};
 
 /**
  * Finds directories under `cwd` (excluding `excludes`) that contain no
@@ -109,64 +126,43 @@ export async function resolveJobFiles(
  * @param excludes - Glob patterns for directories to skip.
  * @returns Paths of directories with an entirely empty subtree.
  */
-export async function findEmptyDirectories(
-    cwd: string,
-    excludes: string[],
-): Promise<string[]> {
+export async function findEmptyDirectories(cwd: string, excludes:
+string[]): Promise<string[]> {
     const excludeGlobs = excludes.map(pattern => new Bun.Glob(pattern));
-    GLOB_OPTIONS.cwd = cwd;
 
-    // Match a candidate directory against the exclude globs in BOTH
-    // trailing-slash forms. Some exclude patterns are written with a
-    // trailing slash ("node_modules/"), some without ("node_modules/**")
-    // — matching only one form silently let excluded directories through
-    // depending on which style the caller used.
-    const isExcludedDir = (posixDir: string): boolean =>
-        excludeGlobs.some(
-            glob => glob.match(posixDir) || glob.match(`${posixDir}/`),
-        );
-
-    // Every file AND directory entry under cwd. Bun.Glob('**/') (the
-    // directory-only shorthand) does NOT reliably surface a directory
-    // whose entire subtree contains no files — verified directly: given
-    // src/nested-empty (zero files anywhere beneath it) alongside
-    // src/a.ts, '**/' finds "src" (it contains a file) but never finds
-    // "src/nested-empty". '**/*' with onlyFiles:false does not have that
-    // gap, so it's used for both loops below; the directory list is
-    // derived by set difference (every entry that isn't a known file)
-    // instead of trusting a directory-only pattern or a trailing-slash
-    // convention on the results (glob results carry no trailing slash
-    // for directories either way, in either pattern).
-    const allEntries = new Set<string>();
-    for await (const entry of new Bun.Glob('**/*').scan({
+    const scanOptions: Bun.GlobScanOptions = {
         ...GLOB_OPTIONS,
-        onlyFiles: false,
-    })) {
+        cwd
+    };
+
+    const allEntries = new Set<string>();
+
+    const dirGlobs = new Bun.Glob('**/*').scan({ ...scanOptions,
+onlyFiles: false });
+    for await (const entry of dirGlobs) {
         allEntries.add(toPosixPath(entry));
     }
 
-    // Files, and (from their parent chain) every directory that contains
-    // at least one file at any depth.
     const allFiles = new Set<string>();
     const nonEmptyDirs = new Set<string>();
-    for await (const file of new Bun.Glob('**/*').scan({
-        ...GLOB_OPTIONS,
-        onlyFiles: true,
-    })) {
+
+    const fileGlobs = new Bun.Glob('**/*').scan({ ...scanOptions,
+onlyFiles: true });
+    for await (const file of fileGlobs) {
         const posixFile = toPosixPath(file);
         allFiles.add(posixFile);
 
-        let parent = dirName(file);
+        let parent = dirName(posixFile);
         while (parent && parent !== '.') {
-            nonEmptyDirs.add(toPosixPath(parent));
+            nonEmptyDirs.add(parent);
             parent = dirName(parent);
         }
     }
 
     const allDirs = new Set<string>();
     for (const entry of allEntries) {
-        if (allFiles.has(entry)) continue; // it's a file, not a directory
-        if (entry && !isExcludedDir(entry)) allDirs.add(entry);
+        if (allFiles.has(entry)) continue;
+        if (entry && !isExcludedDir(excludeGlobs, entry)) allDirs.add(entry);
     }
 
     const emptyDirs: string[] = [];

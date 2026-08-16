@@ -10,7 +10,9 @@
  * top of it and `useTheme` composes those — three layers, one job each.
  */
 
-/** A function that wraps text in ANSI styling. */
+/**
+ * A function that wraps text in ANSI styling.
+ */
 export type Styler = (text: string) => string;
 
 const ESC = '\x1b[';
@@ -29,8 +31,10 @@ const detectColorSupport = (): boolean => {
     return process.stdout?.isTTY === true;
 };
 
-/** Module-level flag controlling whether stylers emit ANSI codes. */
-let enabled = detectColorSupport();
+/**
+ * Module-level flag controlling whether stylers emit ANSI codes.
+ */
+let enabled: boolean = detectColorSupport();
 
 /**
  * Builds a styler for an open/close code pair. Like picocolors, any
@@ -47,7 +51,8 @@ const style = (open: string, close: string): Styler => {
 
         // Handle cases where runtime data does not match TypeScript types
         if (typeof text !== 'string') {
-            return `${open}${String(text ?? '').replaceAll(close, open)}${close}`;
+            return `${open}${String(text ?? '').replaceAll(close,
+open)}${close}`;
         }
 
         return `${open}${text.replaceAll(close, open)}${close}`;
@@ -80,10 +85,7 @@ const bg = (code: number): Styler => style(`${ESC}${code}m`, `${ESC}49m`);
 const parseHex = (hex: string): [number, number, number] => {
     let value = hex.startsWith('#') ? hex.slice(1) : hex;
     if (value.length === 3) {
-        value = value
-            .split('')
-            .map(ch => ch + ch)
-            .join('');
+        value = value.split('').map(ch => ch + ch).join('');
     }
     if (!/^[0-9a-fA-F]{6}$/.test(value)) {
         throw new Error(`Colors: invalid hex color "${hex}"`);
@@ -107,35 +109,31 @@ const parseHex = (hex: string): [number, number, number] => {
  * ```
  */
 export class Colors {
-    /** Whether color output is currently enabled. For tests and explicit overrides; detection runs once at module load. */
-    static get isEnabled(): boolean {
-        return enabled;
-    }
-    /** Force-enables ANSI color output, overriding auto-detection. */
-    static enable(): void {
-        enabled = true;
-    }
-    /** Force-disables ANSI color output, overriding auto-detection. */
-    static disable(): void {
-        enabled = false;
-    }
+    // Whether color output is currently enabled.
+    static get isEnabled(): boolean { return enabled; }
 
-    /** @category Modifiers */
+    // Force-enables ANSI color output, overriding auto-detection.
+    static enable(): void { enabled = true; }
+
+    // Force-disables ANSI color output, overriding auto-detection.
+    static disable(): void { enabled = false; }
+
+    // @category Modifiers
     static readonly reset: Styler = style(`${ESC}0m`, `${ESC}0m`);
-    /** @category Modifiers */
+    // @category Modifiers
     static readonly bold: Styler = style(`${ESC}1m`, `${ESC}22m`);
-    /** @category Modifiers */
+    // @category Modifiers
     static readonly dim: Styler = style(`${ESC}2m`, `${ESC}22m`);
-    /** @category Modifiers */
+    // @category Modifiers
     static readonly italic: Styler = style(`${ESC}3m`, `${ESC}23m`);
-    /** @category Modifiers */
+    // @category Modifiers
     static readonly underline: Styler = style(`${ESC}4m`, `${ESC}24m`);
-    /** @category Modifiers */
+    // @category Modifiers
     static readonly inverse: Styler = style(`${ESC}7m`, `${ESC}27m`);
-    /** @category Modifiers */
+    // @category Modifiers
     static readonly strikethrough: Styler = style(`${ESC}9m`, `${ESC}29m`);
 
-    /** @category Standard foreground */
+    // @category Standard foreground
     static readonly black: Styler = fg(30);
     static readonly red: Styler = fg(31);
     static readonly green: Styler = fg(32);
@@ -145,7 +143,7 @@ export class Colors {
     static readonly cyan: Styler = fg(36);
     static readonly white: Styler = fg(37);
 
-    /** @category Bright foreground */
+    // @category Bright foreground
     static readonly gray: Styler = fg(90);
     static readonly blackBright: Styler = fg(90);
     static readonly redBright: Styler = fg(91);
@@ -156,7 +154,7 @@ export class Colors {
     static readonly cyanBright: Styler = fg(96);
     static readonly whiteBright: Styler = fg(97);
 
-    /** @category Standard background */
+    // @category Standard background
     static readonly bgBlack: Styler = bg(40);
     static readonly bgRed: Styler = bg(41);
     static readonly bgGreen: Styler = bg(42);
@@ -166,7 +164,7 @@ export class Colors {
     static readonly bgCyan: Styler = bg(46);
     static readonly bgWhite: Styler = bg(47);
 
-    /** @category Bright background */
+    // @category Bright background
     static readonly bgBlackBright: Styler = bg(100);
     static readonly bgRedBright: Styler = bg(101);
     static readonly bgGreenBright: Styler = bg(102);
@@ -176,13 +174,18 @@ export class Colors {
     static readonly bgCyanBright: Styler = bg(106);
     static readonly bgWhiteBright: Styler = bg(107);
 
-    /** 24-bit truecolor foreground from a hex string — what TOML themes are built on. */
+    /**
+     * 24-bit truecolor foreground from a hex string — what TOML
+themes are built on.
+     */
     static hex(hexColor: string): Styler {
         const [r, g, b] = parseHex(hexColor);
         return style(`${ESC}38;2;${r};${g};${b}m`, `${ESC}39m`);
     }
 
-    /** 24-bit truecolor background from a hex string. */
+    /**
+     * 24-bit truecolor background from a hex string.
+     */
     static bgHex(hexColor: string): Styler {
         const [r, g, b] = parseHex(hexColor);
         return style(`${ESC}48;2;${r};${g};${b}m`, `${ESC}49m`);

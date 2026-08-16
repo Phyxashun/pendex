@@ -14,5 +14,8 @@
       "path": "./tsconfig.node.json"
     }
   ],
-  "include": ["vite.config.ts", "src"]
+  "include": [
+    "vite.config.ts",
+    "src"
+  ]
 }

@@ -23,7 +23,9 @@
 
 import { Colors } from '@pendex/color';
 
-/** A theme is chosen by name — the stem of a file in src/themes/. */
+/**
+ * A theme is chosen by name — the stem of a file in src/themes/.
+ */
 export type ThemeName = string;
 
 /**
@@ -43,6 +45,8 @@ export interface ThemeColors {
     readonly background: string;
     readonly titleBg: string;
 }
+
+type ThemeColorsKeys = readonly keyof ThemeColors;
 
 /**
  * The fully-resolved, ready-to-use theme: every slot is a function that
@@ -88,8 +92,10 @@ export interface DefaultTheme {
     textTransform(text: string): string;
 }
 
-/** The list-of-keys form of {@link DefaultTheme}, used to iterate every slot. */
-export type DefaultThemeKeys = Array<keyof DefaultTheme>;
+/**
+ * The list-of-keys form of {@link DefaultTheme}, used to iterate every slot.
+ */
+export type DefaultThemeKeys = Array<readonly keyof DefaultTheme>;
 
 /**
  * Pendex brand palette (mirrors src/themes/pendex.toml's root colors).
@@ -97,16 +103,16 @@ export type DefaultThemeKeys = Array<keyof DefaultTheme>;
  * #262626, except `muted` (3:1 — intentionally de-emphasized text).
  */
 export const BRAND_PALETTE: ThemeColors = {
-    primary: '#D6A448', // Brass
-    secondary: '#6F92B0', // Blueprint
-    success: '#799470', // Olive
-    warning: '#D99C5A', // Copper
-    error: '#C57967', // Brick
-    info: '#6AAFB5', // Teal
-    muted: '#7B746B', // Ash
-    foreground: '#E9E0D2', // Parchment
-    background: '#1A1A1A', // Charcoal
-    titleBg: '#262626', // Graphite
+    primary: '#D6A448',      // Brass
+    secondary: '#6F92B0',    // Blueprint
+    success: '#799470',      // Olive
+    warning: '#D99C5A',      // Copper
+    error: '#C57967',        // Brick
+    info: '#6AAFB5',         // Teal
+    muted: '#7B746B',        // Ash
+    foreground: '#E9E0D2',   // Parchment
+    background: '#1A1A1A',   // Charcoal
+    titleBg: '#262626',      // Graphite
 };
 
 /**
@@ -115,7 +121,8 @@ export const BRAND_PALETTE: ThemeColors = {
  * styles.
  *
  * @param colors - The ten resolved hex color slots for the theme.
- * @returns A fully-usable {@link DefaultTheme} with every slot styled via `Colors`.
+ * @returns A fully-usable {@link DefaultTheme} with every slot styled
+via `Colors`.
  */
 export function buildTheme(colors: ThemeColors): DefaultTheme {
     return {
@@ -127,22 +134,24 @@ export function buildTheme(colors: ThemeColors): DefaultTheme {
         info: Colors.hex(colors.info),
         muted: Colors.hex(colors.muted),
 
-        title: txt =>
-            Colors.bgHex(colors.titleBg)(
-                Colors.bold(Colors.hex(colors.background)(` ${txt} `)),
-            ),
-        subtitle: txt => Colors.dim(Colors.hex(colors.foreground)(txt)),
+        title: (txt) =>
+Colors.bgHex(colors.primary)(Colors.bold(Colors.hex(colors.titleBg)(`
+${txt} `))),
+        subtitle: (txt) => Colors.dim(Colors.hex(colors.foreground)(txt)),
 
         color: Colors.hex(colors.foreground),
-        backgroundColor: txt => Colors.bgHex(colors.background)(` ${txt} `),
+        backgroundColor: (txt) => Colors.bgHex(colors.background)(` ${txt} `),
         bold: Colors.bold,
         italic: Colors.italic,
         textDecoration: Colors.underline,
-        textTransform: txt => txt.toUpperCase(),
+        textTransform: (txt) => txt.toUpperCase(),
     };
 }
 
-/** Synchronous fallback theme (brand palette) for contexts that can't await ThemeManager. */
+/**
+ * Synchronous fallback theme (brand palette) for contexts that can't
+await ThemeManager.
+ */
 export const FALLBACK_THEME: DefaultTheme = buildTheme(BRAND_PALETTE);
 
 ///////////////////////////////////////////////////////////////////////////
@@ -203,7 +212,11 @@ export interface PendexTheme {
     readonly brand?: Record<string, string>;
 }
 
-/** The ten {@link ThemeColors} keys, used to walk a raw TOML object's root. */
+type PendexThemeKeys = readonly keyof PendexTheme;
+
+/**
+ * The ten {@link ThemeColors} keys, used to walk a raw TOML object's root.
+ */
 const THEME_COLOR_KEYS = [
     'primary',
     'secondary',
@@ -215,9 +228,12 @@ const THEME_COLOR_KEYS = [
     'foreground',
     'background',
     'titleBg',
-] as const satisfies readonly (keyof ThemeColors)[];
+] as const satisfies Array<ThemeColorsKeys>;
 
-/** The optional extended-table keys on {@link PendexTheme}, used to walk a raw TOML object's sections. */
+/**
+ * The optional extended-table keys on {@link PendexTheme},
+ * used to walk a raw TOML object's sections.
+ */
 const EXTENDED_TABLE_KEYS = [
     'palette',
     'website',
@@ -228,7 +244,7 @@ const EXTENDED_TABLE_KEYS = [
     'diagnostics',
     'diff',
     'brand',
-] as const satisfies readonly (keyof PendexTheme)[];
+] as const satisfies Array<PendexThemeKeys>;
 
 /**
  * Reads the ten ThemeColors slots off the ROOT of a raw parsed-TOML
@@ -236,10 +252,11 @@ const EXTENDED_TABLE_KEYS = [
  * only overrides `primary` still produces a fully usable ThemeColors.
  *
  * @param raw - Raw, already-parsed TOML object for a theme file.
- * @returns A complete {@link ThemeColors}, backfilled from {@link BRAND_PALETTE}.
+ * @returns A complete {@link ThemeColors}, backfilled from {@link
+BRAND_PALETTE}.
  */
 function extractColors(raw: Record<string, unknown>): ThemeColors {
-    const colors = { ...BRAND_PALETTE } as Record<keyof ThemeColors, string>;
+    const colors: Record<ThemeColorsKeys, string> = { ...BRAND_PALETTE };
     for (const key of THEME_COLOR_KEYS) {
         const value = raw[key];
         if (typeof value === 'string') colors[key] = value;
@@ -253,12 +270,11 @@ function extractColors(raw: Record<string, unknown>): ThemeColors {
  *
  * @param raw - Raw, already-parsed TOML object for a theme file.
  * @param key - The section name to extract (e.g. `'syntax'`).
- * @returns A flat string map, or `undefined` if the section is missing, not an object, or an array.
+ * @returns A flat string map, or `undefined` if the section is
+missing, not an object, or an array.
  */
-function extractTable(
-    raw: Record<string, unknown>,
-    key: string,
-): Record<string, string> | undefined {
+function extractTable(raw: Record<string, unknown>, key: string):
+Record<string, string> | undefined {
     const value = raw[key];
     // typeof [] === 'object' in JS, so Array.isArray must be checked
     // explicitly — otherwise a TOML array under a table-shaped key (e.g.
@@ -266,12 +282,11 @@ function extractTable(
     // bogus { '0': 'array' } table via Object.entries() below, instead
     // of correctly degrading to undefined like any other malformed table.
     if (!value || typeof value !== 'object' || Array.isArray(value))
-        return undefined;
+return undefined;
 
     const table: Record<string, string> = {};
-    for (const [entryKey, entryValue] of Object.entries(
-        value as Record<string, unknown>,
-    )) {
+    for (const [entryKey, entryValue] of Object.entries(value as
+Record<string, unknown>)) {
         if (typeof entryValue === 'string') table[entryKey] = entryValue;
     }
     return table;
@@ -283,25 +298,23 @@ function extractTable(
  * that's entirely brand-palette colors with no extended tables, the same
  * degrade-never-crash guarantee the rest of the theme system makes.
  *
- * @param raw - The result of parsing a theme TOML file (or anything else — untrusted input is safe to pass here).
- * @param fallbackName - Name to use if `raw` doesn't provide a valid `name` field.
+ * @param raw - The result of parsing a theme TOML file (or anything
+else — untrusted input is safe to pass here).
+ * @param fallbackName - Name to use if `raw` doesn't provide a valid
+`name` field.
  * @returns A validated {@link PendexTheme}.
  */
-export function parsePendexTheme(
-    raw: unknown,
-    fallbackName: string,
-): PendexTheme {
-    const obj = (raw && typeof raw === 'object' ? raw : {}) as Record<
-        string,
-        unknown
-    >;
+export function parsePendexTheme(raw: unknown, fallbackName: string):
+PendexTheme {
+    const obj = (raw && typeof raw === 'object' ? raw : {}) as
+Record<string, unknown>;
 
-    const theme: { -readonly [K in keyof PendexTheme]: PendexTheme[K] } = {
+    const theme: { -readonly [K in PendexThemeKeys]: PendexTheme[K] } = {
         name: typeof obj.name === 'string' ? obj.name : fallbackName,
         author: typeof obj.author === 'string' ? obj.author : undefined,
         version: typeof obj.version === 'string' ? obj.version : undefined,
-        description:
-            typeof obj.description === 'string' ? obj.description : undefined,
+        description: typeof obj.description === 'string' ?
+obj.description : undefined,
         colors: extractColors(obj),
     };
 
