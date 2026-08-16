@@ -122,7 +122,7 @@ export const BRAND_PALETTE: ThemeColors = {
  *
  * @param colors - The ten resolved hex color slots for the theme.
  * @returns A fully-usable {@link DefaultTheme} with every slot styled
-via `Colors`.
+ *  via `Colors`.
  */
 export function buildTheme(colors: ThemeColors): DefaultTheme {
     return {
@@ -134,9 +134,7 @@ export function buildTheme(colors: ThemeColors): DefaultTheme {
         info: Colors.hex(colors.info),
         muted: Colors.hex(colors.muted),
 
-        title: (txt) =>
-Colors.bgHex(colors.primary)(Colors.bold(Colors.hex(colors.titleBg)(`
-${txt} `))),
+        title: (txt) => Colors.bgHex(colors.primary)(Colors.bold(Colors.hex(colors.titleBg)(` ${txt} `))),
         subtitle: (txt) => Colors.dim(Colors.hex(colors.foreground)(txt)),
 
         color: Colors.hex(colors.foreground),
@@ -150,7 +148,7 @@ ${txt} `))),
 
 /**
  * Synchronous fallback theme (brand palette) for contexts that can't
-await ThemeManager.
+ * await ThemeManager.
  */
 export const FALLBACK_THEME: DefaultTheme = buildTheme(BRAND_PALETTE);
 
@@ -252,8 +250,7 @@ const EXTENDED_TABLE_KEYS = [
  * only overrides `primary` still produces a fully usable ThemeColors.
  *
  * @param raw - Raw, already-parsed TOML object for a theme file.
- * @returns A complete {@link ThemeColors}, backfilled from {@link
-BRAND_PALETTE}.
+ * @returns A complete {@link ThemeColors}, backfilled from {@link BRAND_PALETTE}.
  */
 function extractColors(raw: Record<string, unknown>): ThemeColors {
     const colors: Record<ThemeColorsKeys, string> = { ...BRAND_PALETTE };
@@ -271,22 +268,19 @@ function extractColors(raw: Record<string, unknown>): ThemeColors {
  * @param raw - Raw, already-parsed TOML object for a theme file.
  * @param key - The section name to extract (e.g. `'syntax'`).
  * @returns A flat string map, or `undefined` if the section is
-missing, not an object, or an array.
+ *  missing, not an object, or an array.
  */
-function extractTable(raw: Record<string, unknown>, key: string):
-Record<string, string> | undefined {
+function extractTable(raw: Record<string, unknown>, key: string): Record<string, string> | undefined {
     const value = raw[key];
     // typeof [] === 'object' in JS, so Array.isArray must be checked
     // explicitly — otherwise a TOML array under a table-shaped key (e.g.
     // `syntax = ["array"]`) would pass this guard and get turned into a
     // bogus { '0': 'array' } table via Object.entries() below, instead
     // of correctly degrading to undefined like any other malformed table.
-    if (!value || typeof value !== 'object' || Array.isArray(value))
-return undefined;
+    if (!value || typeof value !== 'object' || Array.isArray(value)) return undefined;
 
     const table: Record<string, string> = {};
-    for (const [entryKey, entryValue] of Object.entries(value as
-Record<string, unknown>)) {
+    for (const [entryKey, entryValue] of Object.entries(value as Record<string, unknown>)) {
         if (typeof entryValue === 'string') table[entryKey] = entryValue;
     }
     return table;
@@ -299,22 +293,19 @@ Record<string, unknown>)) {
  * degrade-never-crash guarantee the rest of the theme system makes.
  *
  * @param raw - The result of parsing a theme TOML file (or anything
-else — untrusted input is safe to pass here).
+ *  else — untrusted input is safe to pass here).
  * @param fallbackName - Name to use if `raw` doesn't provide a valid
-`name` field.
+ *  `name` field.
  * @returns A validated {@link PendexTheme}.
  */
-export function parsePendexTheme(raw: unknown, fallbackName: string):
-PendexTheme {
-    const obj = (raw && typeof raw === 'object' ? raw : {}) as
-Record<string, unknown>;
+export function parsePendexTheme(raw: unknown, fallbackName: string): PendexTheme {
+    const obj = (raw && typeof raw === 'object' ? raw : {}) as Record<string, unknown>;
 
     const theme: { -readonly [K in PendexThemeKeys]: PendexTheme[K] } = {
         name: typeof obj.name === 'string' ? obj.name : fallbackName,
         author: typeof obj.author === 'string' ? obj.author : undefined,
         version: typeof obj.version === 'string' ? obj.version : undefined,
-        description: typeof obj.description === 'string' ?
-obj.description : undefined,
+        description: typeof obj.description === 'string' ? obj.description : undefined,
         colors: extractColors(obj),
     };
 

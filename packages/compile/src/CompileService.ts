@@ -20,7 +20,17 @@
  */
 
 import type { Config, Job, Manifest } from '@pendex/core';
-import { archivePathFor, buildArchiveEntry, Constants, findEmptyDirectories, joinArchiveEntries, joinPath, loadIgnorePatterns, resolveJobFiles, toPosixPath } from '@pendex/core';
+import {
+    archivePathFor,
+    buildArchiveEntry,
+    Constants,
+    findEmptyDirectories,
+    joinArchiveEntries,
+    joinPath,
+    loadIgnorePatterns,
+    resolveJobFiles,
+    toPosixPath
+} from '@pendex/core';
 import type { BunFile } from 'bun';
 import { mkdir, rm } from "node:fs/promises";
 
@@ -88,8 +98,7 @@ export interface CompileHooks {
     // Called before a job starts compiling.
     onJobStart?: (job: Job) => void | Promise<void>;
     // Called after a job finishes compiling successfully.
-    onJobSuccess?: (job: Job, outcome: CompileJobResult) => void |
-Promise<void>;
+    onJobSuccess?: (job: Job, outcome: CompileJobResult) => void | Promise<void>;
     // Called once, after every job has run, with the total file count.
     onCompileSuccess?: (totalFiles: number) => void | Promise<void>;
 }
@@ -101,7 +110,7 @@ Promise<void>;
  * @param config Active Pendex configuration object.
  * @param cwd Current working directory context. Defaults to process.cwd().
  * @returns A promise resolving to an array of consolidated exclude
-glob strings.
+ *  glob strings.
  */
 export const resolveExcludes = async (
     config: Config,
@@ -112,8 +121,7 @@ export const resolveExcludes = async (
 
     // Bun's blazing fast file checking
     if (await gitignoreFile.exists()) {
-        const gitignorePatterns: string[] = await
-loadIgnorePatterns(Constants.GITIGNORE_PATH);
+        const gitignorePatterns: string[] = await loadIgnorePatterns(Constants.GITIGNORE_PATH);
         excludes.push(...gitignorePatterns);
     }
 
@@ -137,20 +145,15 @@ export const prepareOutputDirectory = async (dir: string): Promise<void> => {
  * @param currentJob - The job plus the shared per-run accumulators.
  * @returns The job and how many files it archived.
  */
-export const compileJob = async (currentJob: CompileJob):
-Promise<CompileJobResult> => {
-    const { job, outputDir, excludes, manifest, claimedPaths, cwd }:
-CompileJob = currentJob;
+export const compileJob = async (currentJob: CompileJob): Promise<CompileJobResult> => {
+    const { job, outputDir, excludes, manifest, claimedPaths, cwd }: CompileJob = currentJob;
 
-    const combinedExcludes: string[] = [...new Set([...excludes,
-...job.exclude])];
-    const files: string[] = await resolveJobFiles(job,
-combinedExcludes, claimedPaths, cwd);
+    const combinedExcludes: string[] = [...new Set([...excludes, ...job.exclude])];
+    const files: string[] = await resolveJobFiles(job, combinedExcludes, claimedPaths, cwd);
 
     if (files.length === 0) return { job, fileCount: 0 };
 
-    const posixPaths: string[] = files.map((value: string): string =>
-toPosixPath(value));
+    const posixPaths: string[] = files.map((value: string): string => toPosixPath(value));
 
     manifest.files[job.filename] = posixPaths;
     manifest.categories ??= {};
@@ -171,8 +174,7 @@ toPosixPath(value));
         entries.push(...batchEntries);
     }
 
-    await Bun.write(archivePathFor(outputDir, job.filename),
-joinArchiveEntries(entries));
+    await Bun.write(archivePathFor(outputDir, job.filename), joinArchiveEntries(entries));
 
     return {
         job,
@@ -186,8 +188,7 @@ joinArchiveEntries(entries));
  * @param outputDir - Directory to write `manifest.json` into.
  * @param manifest - The manifest data to serialize.
  */
-export const writeManifest = async (outputDir: string, manifest:
-Manifest): Promise<void> => {
+export const writeManifest = async (outputDir: string, manifest: Manifest): Promise<void> => {
     await Bun.write(
         joinPath(outputDir, 'manifest.json'),
         JSON.stringify(manifest, null, 2)
@@ -201,14 +202,12 @@ Manifest): Promise<void> => {
  * @param hooks - Optional progress callbacks.
  * @returns The full {@link CompileSummary} for this run.
  */
-export const runCompile = async (config: Config, hooks?:
-CompileHooks): Promise<CompileSummary> => {
+export const runCompile = async (config: Config, hooks?: CompileHooks): Promise<CompileSummary> => {
     await prepareOutputDirectory(config.outputDir);
 
     const cwd: string = Constants.BASE_DIR;
     const excludes: string[] = await resolveExcludes(config, cwd);
-    const emptyDirectories: string[] = await findEmptyDirectories(cwd,
-excludes);
+    const emptyDirectories: string[] = await findEmptyDirectories(cwd, excludes);
     const manifest: Manifest = { files: {}, emptyDirectories };
     const claimedPaths: Set<string> = new Set<string>();
 
@@ -260,7 +259,7 @@ excludes);
 
 /**
  * Initializes a new compilation session, resolving global excludes
-and preparing the manifest and claimedPaths set.
+ * and preparing the manifest and claimedPaths set.
  *
  * @param config Application configuration object.
  * @param hooks Optional progress event hook callbacks.
@@ -293,7 +292,7 @@ export const initializeCompile = async (
 
 /**
  * Compiles a single job against the shared accumulators from {@link
-initializeCompile}.
+ * initializeCompile}.
  *
  * @param job - The job to compile.
  * @param ctx - Shared concrete config and per-run accumulators.
@@ -312,19 +311,18 @@ export const compileSingleJob = async (
 
 /**
  * Finishes a manually-sequenced compile run: finds empty directories
-and writes the manifest.
+ * and writes the manifest.
  *
  * @param config - The active application config.
  * @param ctx - Shared concrete excludes and manifest accumulated
-during the run.
+ *  during the run.
  * @returns A {@link CompileSummary} template for the caller to augment.
  */
 export const finalizeCompile = async (
     config: Config,
     ctx: CompileJobContext
 ): Promise<CompileSummary> => {
-    ctx.manifest.emptyDirectories = await
-findEmptyDirectories(ctx.cwd, ctx.excludes);
+    ctx.manifest.emptyDirectories = await findEmptyDirectories(ctx.cwd, ctx.excludes);
     await writeManifest(config.outputDir, ctx.manifest);
 
     return {

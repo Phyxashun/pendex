@@ -20,8 +20,7 @@ locked by Windows.
  */
 const emptyDirectoryContents = async (dirPath: string): Promise<void> => {
     try {
-        // Bun Shell supports globbing and natively executes cleanups
-cross-platform
+        // Bun Shell supports globbing and natively executes cleanups cross-platform
         await $`rm -rf ${dirPath}/*`;
     } catch (err) {
         console.error(`Could not empty locked directory ${dirPath}:`, err);
@@ -36,8 +35,7 @@ const main = async () => {
     const projectRoot = import.meta.dir || ".";
 
     console.log("Scanning for node_modules...");
-    for await (const rawPath of nodeGlob.scan({ cwd: projectRoot,
-onlyFiles: false })) {
+    for await (const rawPath of nodeGlob.scan({ cwd: projectRoot, onlyFiles: false })) {
         console.log("Removing Directory: ", rawPath);
 
         try {
@@ -45,10 +43,8 @@ onlyFiles: false })) {
             await trash(rawPath);
         } catch (err: any) {
             // Handle locked directory fallback safely
-            if (err.message?.includes("EACCES") ||
-err.message?.includes("permission denied")) {
-                console.warn(`⚠️  Directory is locked by system.
-Attempting to empty contents of: ${rawPath}`);
+            if (err.message?.includes("EACCES") || err.message?.includes("permission denied")) {
+                console.warn(`⚠️  Directory is locked by system. Attempting to empty contents of: ${rawPath}`);
                 await emptyDirectoryContents(rawPath);
             } else {
                 console.error(`Failed to remove ${rawPath}:`, err);

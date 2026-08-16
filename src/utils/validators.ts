@@ -15,8 +15,7 @@
 const STRINGS = {
     required: 'This field is required and cannot be left blank.',
     noSpaces: 'Spaces are not allowed in directory path names.',
-    invalidChars: 'Directory name contains illegal path symbols (e.g.,
-\\, :, *, ?, ", <, >, |).',
+    invalidChars: 'Directory name contains illegal path symbols (e.g., \\, :, *, ?, ", <, >, |).',
     emptyGlob: 'Glob lists cannot contain completely blank strings.',
 } as const;
 

@@ -49,7 +49,7 @@ export class View {
 
     /**
      * Renders this view's output. Base implementation is a no-op;
-subclasses override.
+     * subclasses override.
      */
     public async render(): Promise<void> {
         return;
@@ -66,9 +66,9 @@ subclasses override.
      *
      * @param category - The category to look up a brand color for.
      * @param fallback - Style function to use when no brand color is
-defined for `category`.
+     *  defined for `category`.
      * @returns A style function: either the resolved brand-color
-styler, or `fallback`.
+     *  styler, or `fallback`.
      */
     protected categoryStyle(category: Category, fallback:
 StyleFunction): StyleFunction {

@@ -14,7 +14,7 @@ import type { Job } from './types';
 
 /**
  * Base glob-scan options shared by every scan in this file; `cwd` is
-set per-call.
+ * set per-call.
  */
 const GLOB_OPTIONS: Bun.GlobScanOptions = {
     cwd: '',
@@ -38,9 +38,10 @@ export async function loadIgnorePatterns(filePath: string): Promise<string[]> {
 
     return content
         .split(/\r?\n/)
-        .map(line => line.trim()) // Trim whitespace from both ends
-        .filter(line => line.trim() && !line.startsWith('#')); //
-Remove empty lines and comments
+        // Trim whitespace from both ends
+        .map(line => line.trim())
+        // Remove empty lines and comments
+        .filter(line => line.trim() && !line.startsWith('#'));
 }
 
 /**
@@ -60,7 +61,7 @@ Remove empty lines and comments
  * @param job - The job to resolve files for.
  * @param excludes - Glob patterns to exclude from the result.
  * @param claimedPaths - Paths already claimed by earlier jobs
-(read-only; not mutated here).
+ *  (read-only; not mutated here).
  * @param cwd - Directory to scan from (default `'.'`).
  * @returns The list of file paths this job matches.
  */
@@ -97,8 +98,7 @@ export async function resolveJobFiles(
         for await (const file of files) {
             const posixFile = toPosixPath(file);
 
-            if (!excludeGlobs.some(exclude =>
-exclude.match(toPosixPath(posixFile)))) {
+            if (!excludeGlobs.some(exclude => exclude.match(toPosixPath(posixFile)))) {
                 matches.add(file);
             }
         }
@@ -114,8 +114,7 @@ exclude.match(toPosixPath(posixFile)))) {
  * depending on which style the caller used.
  */
 const isExcludedDir = (excludeGlobs: string[], posixDir: string): boolean => {
-    return excludeGlobs.some(glob => glob.match(posixDir) ||
-glob.match(`${posixDir}/`));
+    return excludeGlobs.some(glob => glob.match(posixDir) || glob.match(`${posixDir}/`));
 };
 
 /**
@@ -126,8 +125,7 @@ glob.match(`${posixDir}/`));
  * @param excludes - Glob patterns for directories to skip.
  * @returns Paths of directories with an entirely empty subtree.
  */
-export async function findEmptyDirectories(cwd: string, excludes:
-string[]): Promise<string[]> {
+export async function findEmptyDirectories(cwd: string, excludes: string[]): Promise<string[]> {
     const excludeGlobs = excludes.map(pattern => new Bun.Glob(pattern));
 
     const scanOptions: Bun.GlobScanOptions = {
@@ -137,8 +135,7 @@ string[]): Promise<string[]> {
 
     const allEntries = new Set<string>();
 
-    const dirGlobs = new Bun.Glob('**/*').scan({ ...scanOptions,
-onlyFiles: false });
+    const dirGlobs = new Bun.Glob('**/*').scan({ ...scanOptions, onlyFiles: false });
     for await (const entry of dirGlobs) {
         allEntries.add(toPosixPath(entry));
     }
@@ -146,8 +143,7 @@ onlyFiles: false });
     const allFiles = new Set<string>();
     const nonEmptyDirs = new Set<string>();
 
-    const fileGlobs = new Bun.Glob('**/*').scan({ ...scanOptions,
-onlyFiles: true });
+    const fileGlobs = new Bun.Glob('**/*').scan({ ...scanOptions, onlyFiles: true });
     for await (const file of fileGlobs) {
         const posixFile = toPosixPath(file);
         allFiles.add(posixFile);

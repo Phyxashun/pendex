@@ -19,32 +19,33 @@ const BASE = {
     CURRENT_FILE: import.meta.file,
 
     // A string url to the current file, e.g.
-file:///path/to/project/index.ts. Equivalent to import.meta.url in
-browsers.
+    // file:///path/to/project/index.ts. Equivalent to import.meta.url in
+    // browsers.
     CURRENT_URL: new URL(import.meta.url),
 
     ABSOLUTE_PATH: normalizePath(Bun.fileURLToPath(new URL(import.meta.url))),
+
     // Absolute path to the current file, e.g.
-/path/to/project/index.ts. Equivalent to __filename in CommonJS
-modules (and Node.js). An alias to import.meta.filename for Node.js
-compatibility.
+    // /path/to/project/index.ts. Equivalent to __filename in CommonJS
+    // modules (and Node.js). An alias to import.meta.filename for Node.js
+    // compatibility.
     CURRENT_PATH: normalizePath(import.meta.path),
 
     // Absolute path to the directory containing the current file,
-e.g. /path/to/project. Equivalent to __dirname in CommonJS modules
-(and Node.js). An alias to import.meta.dirname for Node.js
-compatibility.
+    // e.g. /path/to/project. Equivalent to __dirname in CommonJS modules
+    // (and Node.js). An alias to import.meta.dirname for Node.js
+    // compatibility.
     CURRENT_DIR: normalizePath(import.meta.dir),
 
     // Indicates whether the current file is the entrypoint to the
-current bun process: true if it’s executed directly by bun run, false
-if it’s imported.
+    // current bun process: true if it’s executed directly by bun run,
+    // false if it’s imported.
     //ENTRY_POINT: import.meta.main,
 
     // Resolve a module specifier (e.g. "zod" or "./file.tsx") to a
-url. Equivalent to import.meta.resolve in browsers. Example:
-import.meta.resolve("zod") returns
-"file:///path/to/project/node_modules/zod/index.ts"
+    // url. Equivalent to import.meta.resolve in browsers. Example:
+    // import.meta.resolve("zod") returns
+    // "file:///path/to/project/node_modules/zod/index.ts"
     //CURRENT_MODULE_URL: import.meta.resolve('./Config.ts'),
 
     // An alias to process.env.
@@ -52,7 +53,6 @@ import.meta.resolve("zod") returns
     CONFIG_PATH: `${normalizePath(import.meta.dir)}/../config/config.toml`,
     CONFIG_KEYS: ['theme', 'outputDir', 'rebuiltDir', 'exclude', 'jobs'],
     THEMES_PATH: `${normalizePath(import.meta.dir)}/../../../theme`,
-
 } as const;
 
 // DEBUG START
@@ -77,8 +77,7 @@ const CONFIG_KEYS = BASE.CONFIG_KEYS;
  * @param source - Partial object that may or may not define `key`.
  * @param key - The key to conditionally copy.
  */
-export function assignKey<T, K extends keyof T>(target: T, source:
-Partial<T>, key: K) {
+export function assignKey<T, K extends keyof T>(target: T, source: Partial<T>, key: K) {
     const value = source[key];
     if (value !== undefined) {
         target[key] = value;
@@ -111,7 +110,7 @@ export class ConfigManager {
      * Reads and parses the shipped config.toml into a base Config.
      *
      * @returns The base {@link Config}, with job-level excludes
-preserved and the runtime-config path always excluded.
+     *  preserved and the runtime-config path always excluded.
      */
     private static async readTomlDefaults(): Promise<Config> {
         const tomlText = await Bun.file(BASE_CONFIG_PATH).text();
@@ -134,12 +133,11 @@ preserved and the runtime-config path always excluded.
 
     /**
      * Merges a runtime.config.json override (if present) on top of a
-base Config.
+     * base Config.
      *
      * @param base - The base config to merge overrides onto.
      * @returns `base` with any valid on-disk overrides applied;
-`base` unchanged
-     * if the file is missing or invalid.
+     *  `base` unchanged if the file is missing or invalid.
      */
     private static async withDiskOverrides(base: Config): Promise<Config> {
         const overrideFile = Bun.file(Constants.RUNTIME_CONFIG_PATH);
@@ -187,7 +185,7 @@ base Config.
 
     /**
      * Re-reads config.toml + runtime.config.json and replaces the
-cached config.
+     * cached config.
      *
      * @returns The freshly-loaded {@link Config}.
      */
@@ -199,7 +197,7 @@ cached config.
 
     /**
      * Discards runtime overrides in memory (does not touch disk until
-save() is called).
+     * save() is called).
      *
      * @returns The reset, defaults-only {@link Config}.
      */
@@ -212,7 +210,6 @@ save() is called).
      * Persists the current in-memory config to runtime.config.json.
      */
     public async save(): Promise<void> {
-        await Bun.write(Constants.RUNTIME_CONFIG_PATH,
-JSON.stringify(this.config, null, 2));
+        await Bun.write(Constants.RUNTIME_CONFIG_PATH, JSON.stringify(this.config, null, 2));
     }
 }

@@ -43,7 +43,7 @@ export class Compile implements Command {
 /**
  * STANDALONE EXECUTION ENTRY POINT
  * `bun run src/commands/Compile.ts` — only pulls a Config, no
-App/State required.
+ * App/State required.
  */
 // c8 ignore start
 if (import.meta.main) {

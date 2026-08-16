@@ -3,36 +3,10 @@ import { errorNote } from './errorNote';
 import { intro, log, outro } from '@clack/prompts';
 import { Colors } from '@pendex/color';
 
+import type { PathSegment } from './string-extension';
 import './string-extensions';
 
 // DEBUG START
-
-// export class ErrorNote extends Prompt<string> {
-//     constructor(options: { message: string; }) {
-//         super({
-//             ...options,
-//             render: () => {
-//                 const error = {
-//                     icon: Colors.red('■'),
-//                     label: Colors.red('Error Info'),
-//                     message: Colors.red(options.message),
-//                 } as const;
-
-//                 return `${error.icon}  ${error.label}: ${error.message}\n`;
-//             }
-//         });
-//     }
-// }
-// export const error_note = async (message: string) => {
-//     const options = { message };
-//     const p = new ErrorNote(options);
-
-//     // Instantly push to the completed state so it prints as a finished frame
-//     p.state = 'submit';
-
-//     // Execute the terminal printing runner
-//     await p.prompt();
-// };
 
 /**
  * Runs a suite of test cases to thoroughly validate the
@@ -112,7 +86,9 @@ export const testPathExtensions = async (): Promise<void> => {
             expectedPosix: "src/assets/images/logo.png",
             expectedNormalized: "src/assets/images/logo.png"
         },
-        // --- PURPOSEFULLY FAILING TESTS ---
+        /**
+         * PURPOSEFULLY FAILING TESTS
+         */
         {
             name: "Intentional Failure: Incorrect Mapped Path",
             input: "C:\\Users\\Guest",
@@ -129,13 +105,12 @@ export const testPathExtensions = async (): Promise<void> => {
     ];
 
     console.log();
-    intro(Colors.bgYellow(Colors.black(Colors.bold('STRING EXTENSIONS
-TESTING'))));
+    intro(Colors.bgYellow(Colors.black(Colors.bold('STRING EXTENSIONS TESTING'))));
 
     const deferredFailures: any[] = [];
 
-    // Process tasks sequentially to retain full control over failures
-without process abandonment
+    // Process tasks sequentially to retain full control
+    // over failures without process abandonment
     for (const [index, test] of testCases.entries()) {
         const actualPosix = test.segments
             ? test.input.joinPath(...test.segments)
@@ -216,23 +191,19 @@ without process abandonment
             }
             if (details.normalized) {
                 lines.push(
-                    ['Expected Normalized'.label(),
-`"${details.expectedNormalized}"`]
+                    ['Expected Normalized'.label(), `"${details.expectedNormalized}"`]
                 );
                 lines.push(
-                    ['Got Normalized'.label(),
-`"${details.actualNormalized}"`.red()]
+                    ['Got Normalized'.label(), `"${details.actualNormalized}"`.red()]
                 );
             }
 
             const maxLength = Math.max(...lines.map(([label]) => label.length));
             const noteContent = lines
-                .map(([label, value]) => `${label.padEnd(maxLength)} :
-${value}`)
+                .map(([label, value]) => `${label.padEnd(maxLength)} : ${value}`)
                 .join('\n');
 
-            errorNote(noteContent, Colors.red(`Failure Details:
-${details.name}`));
+            errorNote(noteContent, Colors.red(`Failure Details: ${details.name}`));
         }
 
         log.error(Colors.red('Process terminated due to test failures.'));

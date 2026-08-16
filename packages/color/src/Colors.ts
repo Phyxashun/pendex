@@ -51,8 +51,7 @@ const style = (open: string, close: string): Styler => {
 
         // Handle cases where runtime data does not match TypeScript types
         if (typeof text !== 'string') {
-            return `${open}${String(text ?? '').replaceAll(close,
-open)}${close}`;
+            return `${open}${String(text ?? '').replaceAll(close, open)}${close}`;
         }
 
         return `${open}${text.replaceAll(close, open)}${close}`;
@@ -176,7 +175,7 @@ export class Colors {
 
     /**
      * 24-bit truecolor foreground from a hex string — what TOML
-themes are built on.
+     * themes are built on.
      */
     static hex(hexColor: string): Styler {
         const [r, g, b] = parseHex(hexColor);

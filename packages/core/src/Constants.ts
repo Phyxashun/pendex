@@ -31,7 +31,7 @@ export const toPosixPath = (filePath: string): string => {
  *
  * @param filePath - Path to convert.
  * @returns `filePath` with all double forward slashes replaced by
-single forward slashes.
+ *  single forward slashes.
  */
 export const normalizePath = (filePath: string): string => {
     return filePath.toPosixPath().replace(CONSECUTIVE_SLASH_REGEX, SEPARATOR);
@@ -44,8 +44,7 @@ export const normalizePath = (filePath: string): string => {
  * @param segments - Path segments to join; falsy segments are dropped.
  * @returns The joined path.
  */
-export const joinPath = (...segments: (string | undefined | null |
-false | number)[]): string => {
+export const joinPath = (...segments: (string | undefined | null | false | number)[]): string => {
     const allSegments = segments.filter(Boolean) as (string | number)[];
 
     // Convert each segment to a posix path

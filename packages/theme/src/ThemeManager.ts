@@ -53,10 +53,9 @@ export class ThemeManager {
      *
      * @param name - Theme name (file stem under `THEMES_DIR`).
      * @returns The validated {@link PendexTheme}, degrading to the
-brand palette on any failure.
+     *  brand palette on any failure.
      */
-    private static async readPendexTheme(name: ThemeName):
-Promise<PendexTheme> {
+    private static async readPendexTheme(name: ThemeName): Promise<PendexTheme> {
         const fileName: string = `${name}.toml`;
         const filePath: string = `${THEMES_DIR}/${fileName}`;
         const file: BunFile = Bun.file(filePath);
@@ -64,8 +63,7 @@ Promise<PendexTheme> {
         if (!(await file.exists())) return parsePendexTheme(undefined, name);
 
         try {
-            const parsed: Record<string, any> = Bun.TOML.parse(await
-file.text());
+            const parsed: Record<string, any> = Bun.TOML.parse(await file.text());
             return parsePendexTheme(parsed, name);
         } catch {
             return parsePendexTheme(undefined, name);
@@ -79,14 +77,12 @@ file.text());
      * contract as ConfigManager.
      *
      * @param themeName - Theme to load on first call (default
-`'pendex'`); ignored on subsequent calls.
+     *  `'pendex'`); ignored on subsequent calls.
      * @returns The shared {@link ThemeManager} instance.
      */
-    public static async getInstance(themeName: ThemeName = 'pendex'):
-Promise<ThemeManager> {
+    public static async getInstance(themeName: ThemeName = 'pendex'): Promise<ThemeManager> {
         if (!this.instance) {
-            const pendexTheme: PendexTheme = await
-this.readPendexTheme(themeName);
+            const pendexTheme: PendexTheme = await this.readPendexTheme(themeName);
             const theme: Theme = useTheme(buildTheme(pendexTheme.colors));
             this.instance = new ThemeManager({ themeName, theme, pendexTheme });
         }

@@ -49,7 +49,7 @@ export interface ResultSummary {
 
 /**
  * Renders the interactive compile session: intro, per-job progress,
-summary, and outro.
+ * summary, and outro.
  */
 export class CompileView extends View {
 
@@ -76,8 +76,8 @@ export class CompileView extends View {
 
             this.renderExcludes(ctx.excludes.join(', '));
 
-            // Build tasks that execute live service methods inside
-Clack's runner
+            // Build tasks that execute live service methods
+            // inside Clack's runner
             const jobTasks: Task[] = await this.buildJobTasks(ctx);
 
             // Clack runs tasks one-by-one, showing live spinner progress
@@ -89,8 +89,7 @@ Clack's runner
             // Render final summary block
             this.renderSummary(this.totalFiles);
 
-            const success: string =
-`${this.STRINGS.outroSuccess.toUpperCase()}`;
+            const success: string = `${this.STRINGS.outroSuccess.toUpperCase()}`;
             log.success(Colors.bgGreen(Colors.black(success)));
 
         } catch (err: unknown) {
@@ -100,36 +99,27 @@ Clack's runner
         }
     };
 
-    private buildJobTasks = async (ctx: CompileJobContext):
-Promis<BuildTasks> => {
+    private buildJobTasks = async (ctx: CompileJobContext): Promise<BuildTasks> => {
         const theme: Theme = this.state.theme;
         const config: Config = this.state.config;
 
         return config.jobs.map((job: Job): Task => {
             const rawDesc: string = job.description || job.filename;
-            const titleStyle: StyleFunction =
-this.categoryStyle(job.category, theme.bold);
-            const resultStyle: StyleFunction =
-this.categoryStyle(job.category, theme.primary);
+            const titleStyle: StyleFunction = this.categoryStyle(job.category, theme.bold);
+            const resultStyle: StyleFunction = this.categoryStyle(job.category, theme.primary);
 
             return {
                 title: `${this.STRINGS.presentAction} ${titleStyle(rawDesc)}`,
                 task: async (): Promise<string> => {
-                    const outcome: CompileJobResult = await
-compileSingleJob(job, { config, ...ctx });
+                    const outcome: CompileJobResult = await compileSingleJob(job, { config, ...ctx });
 
-                    const warningCount: string =
-`${theme.warning(`${outcome.fileCount}`)}`;
+                    const warningCount: string = `${theme.warning(`${outcome.fileCount}`)}`;
                     const styledCount: string = `${theme.bold(warningCount)}`;
 
-                    const rawDesc1: string =
-`${rawDesc.charAt(0).toUpperCase()}`;
-                    const rawDesc2: string =
-`${rawDesc.slice(1).toLowerCase()}`;
-                    const combinedDesc: string =
-`${rawDesc1}${rawDesc2} ${this.STRINGS.pastAction}`;
-                    const formattedDesc: string =
-`${resultStyle(combinedDesc)}`;
+                    const rawDesc1: string = `${rawDesc.charAt(0).toUpperCase()}`;
+                    const rawDesc2: string = `${rawDesc.slice(1).toLowerCase()}`;
+                    const combinedDesc: string = `${rawDesc1}${rawDesc2} ${this.STRINGS.pastAction}`;
+                    const formattedDesc: string = `${resultStyle(combinedDesc)}`;
 
                     this.totalFiles += outcome.fileCount;
                     return `${styledCount} ${formattedDesc}`;
@@ -148,7 +138,7 @@ compileSingleJob(job, { config, ...ctx });
 
     /**
      * Renders the post-compile summary note (output dir, file count,
-job count).
+     * job count).
      *
      * @param fileCount - Total files compiled across all jobs.
      */
@@ -168,8 +158,7 @@ job count).
             jobCount: `${this.STRINGS.resultJobs}: ${rawResult.jobCount}`,
         };
 
-        const message: string =
-`${result.outputDir}\n${result.fileCount}\n${result.jobCount}`;
+        const message: string = `${result.outputDir}\n${result.fileCount}\n${result.jobCount}`;
         const title: string = `${this.STRINGS.resultTitle}`;
         const options: NoteOptions = { format: this.successFormatter };
 
@@ -177,14 +166,14 @@ job count).
     };
 
     private mutedFormatter = (text: string): string =>
-`${this.state.theme.muted(text)}`;
+        `${this.state.theme.muted(text)}`;
 
     private successFormatter = (text: string): string =>
-`${this.state.theme.success(text)}`;
+        `${this.state.theme.success(text)}`;
 
     private directoryFormatter = (text: string): string =>
-`${this.state.theme.warning(`"/${text}"`)}`;
+        `${this.state.theme.warning(`"/${text}"`)}`;
 
     private numberFormatter = (number: number): string =>
-`${this.state.theme.bold.primary(String(number))}`;
+        `${this.state.theme.bold.primary(String(number))}`;
 }

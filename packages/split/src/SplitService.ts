@@ -45,7 +45,7 @@ export interface SplitSummary {
 
 /**
  * Optional progress callbacks a caller (e.g. the interactive CLI
-view) can hook into a split run.
+ * view) can hook into a split run.
  */
 export interface SplitHooks {
     // Called once, after the manifest is read, before any files are split.
@@ -53,19 +53,17 @@ export interface SplitHooks {
     // Called before a job's archive starts splitting.
     onFileStart?: (filename: string) => void | Promise<void>;
     // Called after a job's archive finishes splitting.
-    onFileSuccess?: (filename: string, outcome: SplitFileOutcome) =>
-void | Promise<void>;
+    onFileSuccess?: (filename: string, outcome: SplitFileOutcome) => void | Promise<void>;
 }
 
 /**
  * Reads and parses manifest.json from an output directory, or null if
-it doesn't exist.
+ * it doesn't exist.
  *
  * @param outputDir - Directory to read `manifest.json` from.
  * @returns The parsed {@link Manifest}, or `null` if the file doesn't exist.
  */
-export async function readManifest(outputDir: string):
-Promise<Manifest | null> {
+export async function readManifest(outputDir: string): Promise<Manifest | null> {
     const normalizedPath = normalizePath(outputDir);
     const manifestFile = Bun.file(joinPath(normalizedPath, 'manifest.json'));
 
@@ -136,8 +134,7 @@ export async function splitArchiveFile(
     let filesRecreated = 0;
     for (const archived of archivedFiles) {
         const normalizedArchivedPath = normalizePath(archived.originalPath);
-        const writePath = joinPath(normalizedRebuiltPath,
-normalizedArchivedPath);
+        const writePath = joinPath(normalizedRebuiltPath, normalizedArchivedPath);
 
         await mkdir(dirName(writePath), { recursive: true });
         await Bun.write(writePath, archived.content);
@@ -157,7 +154,7 @@ normalizedArchivedPath);
  * returns a full summary. Headless counterpart to views/SplitView.ts.
  *
  * @param outputDir - Directory containing the compiled archive files
-and manifest.
+ *  and manifest.
  * @param rebuiltDir - Directory to recreate original files into.
  * @param hooks - Optional progress callbacks.
  * @returns The full {@link SplitSummary} for this run.
@@ -184,8 +181,7 @@ export async function runSplit(
     }
 
     await prepareRebuildDirectory(normalizedRebuiltPath);
-    await restoreEmptyDirectories(normalizedRebuiltPath,
-manifest.emptyDirectories ?? []);
+    await restoreEmptyDirectories(normalizedRebuiltPath, manifest.emptyDirectories ?? []);
 
     const fileOutcomes: SplitFileOutcome[] = [];
 
@@ -215,10 +211,10 @@ manifest.emptyDirectories ?? []);
 
 /**
  * Reads the manifest and prepares the rebuild directory (wipe +
-restore empty dirs).
+ * restore empty dirs).
  *
  * @param outputDir - Directory containing the compiled archive files
-and manifest.
+ * and manifest.
  * @param rebuiltDir - Directory to recreate original files into.
  * @returns The read manifest, or `null` if `manifest.json` wasn't found.
  */
@@ -233,15 +229,14 @@ export async function initializeSplit(
     if (!manifest) return null;
 
     await prepareRebuildDirectory(normalizedRebuiltPath);
-    await restoreEmptyDirectories(normalizedRebuiltPath,
-manifest.emptyDirectories ?? []);
+    await restoreEmptyDirectories(normalizedRebuiltPath, manifest.emptyDirectories ?? []);
 
     return manifest;
 }
 
 /**
  * Splits a single job's archive. A thin wrapper around {@link
-splitArchiveFile}.
+ * splitArchiveFile}.
  *
  * @param outputDir - Directory containing the compiled archive files.
  * @param rebuiltDir - Directory to recreate original files into.
@@ -256,11 +251,9 @@ export async function splitSingleFile(
     const normalizedOutputPath = normalizePath(outputDir);
     const normalizedRebuiltPath = normalizePath(rebuiltDir);
 
-    return await splitArchiveFile(normalizedOutputPath,
-normalizedRebuiltPath, filename);
+    return await splitArchiveFile(normalizedOutputPath, normalizedRebuiltPath, filename);
 }
 
-const filesRecreatedReducer = (sum: number, outcome:
-SplitFileOutcome): number => {
+const filesRecreatedReducer = (sum: number, outcome: SplitFileOutcome): number => {
     return sum + outcome.filesRecreated;
 };

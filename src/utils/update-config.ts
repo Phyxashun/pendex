@@ -11,14 +11,18 @@
 import { Glob } from 'bun';
 import { extname } from 'path';
 
-/** Paths this tool reads from and writes to. */
+/**
+ * Paths this tool reads from and writes to.
+ */
 const Constants = {
     GITIGNORE_PATH: '.gitignore',
     OUT_PATH: 'src/config/jobs.toml'
 };
 
-/** Extension/pattern lists used to bucket discovered files into job
-categories. */
+/**
+ * Extension/pattern lists used to bucket discovered
+ * files into job categories.
+ */
 const CATEGORIES = {
     SOURCE_FILES: ['.js', '.jsx', '.mjs', '.cjs', '.ts', '.tsx',
 '.mts', '.cts', '.vue', '.svelte', '.astro', '.py', '.pyw', '.sh',
@@ -92,8 +96,10 @@ const GLOBAL_EXCLUDES = [
     '**/__mocks__/**/*'
 ];
 
-/** Scans the project, categorizes discovered file extensions, and
-writes a generated `jobs.toml`. */
+/**
+ * Scans the project, categorizes discovered file extensions,
+ * and writes a generated `jobs.toml`.
+ */
 class ConfigUpdater {
     private gitignore: string[] = [];
     private foundExtensions: Set<string> = new Set();
@@ -102,13 +108,12 @@ class ConfigUpdater {
      * Convert glob-style gitignore patterns to simple regex for basic filtering
      *
      * @param filePath - Candidate path to check.
-     * @returns Whether the path is ignored (matches `.gitignore` or a
-hardcoded exclusion).
+     * @returns Whether the path is ignored
+     * (matches `.gitignore` or a hardcoded exclusion).
      */
     private isIgnored(filePath: string): boolean {
         // Quick check against standard hardcoded exclusions
-        if (filePath.includes('node_modules/') ||
-filePath.includes('.git/')) return true;
+        if (filePath.includes('node_modules/') || filePath.includes('.git/')) return true;
 
         for (const pattern of this.gitignore) {
             const cleanPattern = pattern.replace(/^\//, '').replace(/\/$/, '');
@@ -119,32 +124,32 @@ filePath.includes('.git/')) return true;
         return false;
     }
 
-    /** Loads `.gitignore` patterns (if present) into {@link gitignore}. */
+    /**
+     * Loads `.gitignore` patterns (if present) into {@link gitignore}.
+     */
     private async loadGitignore(): Promise<void> {
         const gitignoreFile = Bun.file(Constants.GITIGNORE_PATH);
         if (await gitignoreFile.exists()) {
             const content = await gitignoreFile.text();
-            this.gitignore = content.split(/\r?\n/).filter(line =>
-line.trim() && !line.startsWith('#'));
+            this.gitignore = content.split(/\r?\n/).filter(line => line.trim() && !line.startsWith('#'));
         }
     }
 
-    /** Scans every file under `process.cwd()` and records its
-extension (or test-file pattern) into {@link foundExtensions}. */
+    /**
+     * Scans every file under `process.cwd()` and records its
+     * extension (or test-file pattern) into {@link foundExtensions}.
+     */
     private async scanFiles(): Promise<void> {
         const glob = new Glob('**/*');
 
         // Bun.Glob is insanely fast for scanning directories
-        for await (const file of glob.scan({ cwd: process.cwd(),
-onlyFiles: true })) {
+        for await (const file of glob.scan({ cwd: process.cwd(), onlyFiles: true })) {
             if (this.isIgnored(file)) continue;
 
-            const isTestFile = CATEGORIES.TEST_FILES.some(testExt =>
-file.endsWith(testExt));
+            const isTestFile = CATEGORIES.TEST_FILES.some(testExt => file.endsWith(testExt));
 
             if (isTestFile) {
-                const testExt = CATEGORIES.TEST_FILES.find(ext =>
-file.endsWith(ext))!;
+                const testExt = CATEGORIES.TEST_FILES.find(ext => file.endsWith(ext))!;
                 this.foundExtensions.add(testExt);
             } else {
                 const ext = extname(file).toLowerCase();
@@ -162,9 +167,14 @@ file.endsWith(ext))!;
     private generateTOML(): string {
         const allFoundExts = Array.from(this.foundExtensions);
         const jobMappings: Record<string, string[]> = {
-            SOURCE_FILES: [], WEB_FILES: [], STYLE_FILES: [],
-TERMINAL_FILES: [],
-            CONFIG_FILES: [], DOC_FILES: [], TEST_FILES: [], MISC_FILES: []
+            SOURCE_FILES: [],
+            WEB_FILES: [],
+            STYLE_FILES: [],
+            TERMINAL_FILES: [],
+            CONFIG_FILES: [],
+            DOC_FILES: [],
+            TEST_FILES: [],
+            MISC_FILES: []
         };
 
         // Categorize found extensions
@@ -183,8 +193,7 @@ TERMINAL_FILES: [],
         }
 
         // Build the TOML string manually
-        let tomlString = `theme = "dark"\n\noutputDir =
-"ALL"\nrebuiltDir = "ALL_REBUILT"\n\n`;
+        let tomlString = `theme = "dark"\n\noutputDir = "ALL"\nrebuiltDir = "ALL_REBUILT"\n\n`;
 
         // Format Global Excludes
         tomlString += `exclude = [\n`;
@@ -204,22 +213,18 @@ TERMINAL_FILES: [],
                 .filter(ext => !includeGlobs!.includes(`**/*${ext}`))
                 .map(ext => `**/*${ext}`);
 
-            const description = `Includes files matching:
-${includeGlobs!.length > 0 ? includeGlobs!.join(', ') : 'None'}.
-Excludes all other project extensions.`;
+            const description = `Includes files matching: ${includeGlobs!.length > 0 ? includeGlobs!.join(', ') : 'None'}. Excludes all other project extensions.`;
 
             tomlString += `[[jobs]]\n`;
             tomlString += `filename = "${index}_${jobName}.txt"\n`;
             tomlString += `description = "${description}"\n`;
 
             tomlString += `include = [\n`;
-            if (includeGlobs!.length > 0) tomlString +=
-includeGlobs!.map(inc => `  "${inc}"`).join(',\n') + `\n`;
+            if (includeGlobs!.length > 0) tomlString += includeGlobs!.map(inc => `  "${inc}"`).join(',\n') + `\n`;
             tomlString += `]\n`;
 
             tomlString += `exclude = [\n`;
-            if (excludeGlobs.length > 0) tomlString +=
-excludeGlobs.map(ex => `  "${ex}"`).join(',\n') + `\n`;
+            if (excludeGlobs.length > 0) tomlString += excludeGlobs.map(ex => `  "${ex}"`).join(',\n') + `\n`;
             tomlString += `]\n\n`;
 
             index++;
@@ -228,8 +233,10 @@ excludeGlobs.map(ex => `  "${ex}"`).join(',\n') + `\n`;
         return tomlString.trim() + '\n';
     }
 
-    /** Orchestrates a full run: load `.gitignore`, scan files,
-generate TOML, and write it to {@link Constants.OUT_PATH}. */
+    /**
+     * Orchestrates a full run: load `.gitignore`, scan files,
+     * generate TOML, and write it to {@link Constants.OUT_PATH}.
+     */
     public async run(): Promise<void> {
         console.log('Loading .gitignore...');
         await this.loadGitignore();

@@ -62,8 +62,8 @@ export interface State {
     theme: Theme;
     // The loaded application configuration.
     config: Config;
-    // Optional per-category brand colors, derived from the active
-theme's `[brand]` table.
+    // Optional per-category brand colors, derived from the
+    // active theme's `[brand]` table.
     categoryColors?: Partial<Record<Category, string>>;
 }
 
@@ -85,15 +85,15 @@ export interface ExitState extends State {
  * degrades to no coloring when it's absent.
  */
 export interface Manifest {
-    // Maps each compiled output filename to the list of source files
-consolidated into it.
+    // Maps each compiled output filename to the list of source
+    // files consolidated into it.
     files: Record<string, string[]>;
-    // Maps each compiled output filename to the {@link Category} it
-was compiled under. Optional for backward compatibility with older
-manifests.
+    // Maps each compiled output filename to the {@link Category}
+    // it was compiled under. Optional for backward compatibility
+    // with older manifests.
     categories?: Record<string, Category>;
-    // Directories that were empty at compile time and so contain no
-consolidated files.
+    // Directories that were empty at compile time and
+    // so contain no consolidated files.
     emptyDirectories: string[];
 }
 
@@ -127,8 +127,8 @@ export interface Job {
 }
 
 export interface ThemeConfig {
-    // Name of a theme file in the themes dir (without .toml), e.g.
-"pendex", "dracula".
+    // Name of a theme file in the themes dir (without .toml),
+    // e.g. "pendex", "dracula".
     name: ThemeName;
     // Path to the themes dir.
     path: string;

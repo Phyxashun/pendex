@@ -24,7 +24,7 @@ interface ClackTask {
 
 /**
  * Renders the interactive split session: intro, per-file progress,
-summary, and outro.
+ * summary, and outro.
  */
 export class SplitView extends View {
 
@@ -63,12 +63,10 @@ export class SplitView extends View {
         intro(theme.title(this.STRINGS.title));
 
         try {
-            const manifest: Manifest | null = await
-initializeSplit(outputDir, rebuiltDir);
+            const manifest: Manifest | null = await initializeSplit(outputDir, rebuiltDir);
 
             if (!manifest) {
-                log.error(`${theme.error(`${this.STRINGS.noManifest} /
-${outputDir}. ${this.STRINGS.pleaseCompile}`)}`);
+                log.error(`${theme.error(`${this.STRINGS.noManifest} / ${outputDir}. ${this.STRINGS.pleaseCompile}`)}`);
                 outro(theme.muted(this.STRINGS.outroNoManifest));
                 return;
             }
@@ -85,24 +83,19 @@ ${outputDir}. ${this.STRINGS.pleaseCompile}`)}`);
 
             const outcomes: number[] = [];
 
-            const fileTasks: ClackTask[] =
-Object.keys(manifest.files).map((filename, index) =>
+            const fileTasks: ClackTask[] = Object.keys(manifest.files).map((filename, index) =>
                 this.buildFileTask(filename, index, manifest, outcomes)
             );
 
             await tasks(fileTasks);
 
-            const totalRecreated = outcomes.reduce((sum, count) => sum
-+ (count || 0), 0);
+            const totalRecreated = outcomes.reduce((sum, count) => sum + (count || 0), 0);
 
             const styledRebuiltDir = theme.muted('/' + rebuiltDir);
-            log.step(`${theme.success(`${this.STRINGS.success}
-${styledRebuiltDir}.`)}`);
+            log.step(`${theme.success(`${this.STRINGS.success} ${styledRebuiltDir}.`)}`);
 
-            const styledTotal =
-theme.bold(theme.warning(totalRecreated.toString()));
-            log.success(`${theme.success(this.STRINGS.totalLabel)}:
-${styledTotal}`);
+            const styledTotal = theme.bold(theme.warning(totalRecreated.toString()));
+            log.success(`${theme.success(this.STRINGS.totalLabel)}: ${styledTotal}`);
 
             const success = this.STRINGS.outroSuccess.toUpperCase();
             log.success(Colors.bgGreen(Colors.black(success)));
@@ -118,7 +111,7 @@ ${styledTotal}`);
 
     /**
      * Builds a single localized execution block formatted for the
-Clack task pipeline.
+     * Clack task pipeline.
      */
     private buildFileTask(
         filename: string,
@@ -130,14 +123,12 @@ Clack task pipeline.
         const config: Config = this.state.config;
 
         const category = manifest.categories?.[filename];
-        const titleStyle = category ? this.categoryStyle(category,
-theme.bold) : theme.bold;
+        const titleStyle = category ? this.categoryStyle(category, theme.bold) : theme.bold;
 
         return {
             title: `${this.STRINGS.presentAction} ${titleStyle(filename)}`,
             task: async (): Promise<string> => {
-                const outcome = await
-splitSingleFile(config.outputDir, config.rebuiltDir, filename);
+                const outcome = await splitSingleFile(config.outputDir, config.rebuiltDir, filename);
 
                 if (!outcome.archiveFound) {
                     outcomes[index] = 0;
@@ -145,14 +136,11 @@ splitSingleFile(config.outputDir, config.rebuiltDir, filename);
                 }
 
                 outcomes[index] = outcome.filesRecreated;
-                const styledCount =
-theme.bold(theme.warning(outcome.filesRecreated.toString()));
-                return `${styledCount}
-${theme.primary(this.STRINGS.filesRecreated)}`;
+                const styledCount = theme.bold(theme.warning(outcome.filesRecreated.toString()));
+                return `${styledCount} ${theme.primary(this.STRINGS.filesRecreated)}`;
             },
         };
     }
 
-    private mutedFormatter = (text: string) =>
-`${this.state.theme.muted(text)}`;
+    private mutedFormatter = (text: string) => `${this.state.theme.muted(text)}`;
 }

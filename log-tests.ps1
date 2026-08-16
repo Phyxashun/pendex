@@ -25,8 +25,7 @@ function Get-ScriptConfiguration {
         LogDir       = "$scriptFolder/logs"
         Appendage    = "$appendage"
         LogFile      = "$logFileName"
-        LogFilePath  = Join-Path -Path "$scriptFolder/logs" -ChildPath
-"$logFileName"
+        LogFilePath  = Join-Path -Path "$scriptFolder/logs" -ChildPath "$logFileName"
         BorderColor  = "Gray"
         BoxColor     = "Yellow"
     }
@@ -57,8 +56,7 @@ function Manage-Log {
         $logsToRemoveCount = $currentCount - $MaxLogs
 
         # Select the oldest ones and force remove them
-        $existingLogs | Select-Object -First $logsToRemoveCount |
-Remove-Item -Force
+        $existingLogs | Select-Object -First $logsToRemoveCount | Remove-Item -Force
         return $true
     }
     return $false
@@ -85,17 +83,14 @@ $script:GreenCheck = "$([char]0x1b)[92m$($script:Line.Check)$([char]0x1b)[0m"
 # Safely enable ANSI/VT processing for legacy PowerShell 5.1
 if ($PSVersionTable.PSVersion.Major -le 5) {
     $Signatures = @'
-    [DllImport("kernel32.dll", SetLastError = true)]
-    public static extern IntPtr GetStdHandle(int nStdHandle);
-    [DllImport("kernel32.dll", SetLastError = true)]
-    public static extern bool GetConsoleMode(IntPtr hConsoleHandle,
-out uint lpMode);
-    [DllImport("kernel32.dll", SetLastError = true)]
-    public static extern bool SetConsoleMode(IntPtr hConsoleHandle,
-uint dwMode);
+[DllImport("kernel32.dll", SetLastError = true)]
+public static extern IntPtr GetStdHandle(int nStdHandle);
+[DllImport("kernel32.dll", SetLastError = true)]
+public static extern bool GetConsoleMode(IntPtr hConsoleHandle, out uint lpMode);
+[DllImport("kernel32.dll", SetLastError = true)]
+public static extern bool SetConsoleMode(IntPtr hConsoleHandle, uint dwMode);
 '@
-    $type = Add-Type -MemberDefinition $Signatures -Name "Win32Utils"
--Namespace "Win32" -PassThru 2>$null
+    $type = Add-Type -MemberDefinition $Signatures -Name "Win32Utils" -Namespace "Win32" -PassThru 2>$null
     if ($type) {
         $stdOutHandle = $type::GetStdHandle(-11) # STD_OUTPUT_HANDLE
         $mode = 0
@@ -113,65 +108,49 @@ function Get-TerminalLine { param($Key) return $script:Line[$Key] }
 function Get-GreenCheck { return $script:GreenCheck }
 
 function Write-Pill {
-    param ([string]$Text, [ConsoleColor]$PillColor = 'Magenta',
-[ConsoleColor]$TextColor = 'Black')
-    Write-Host "$([char]0xE0B6)$([char]0x2588)" -ForegroundColor
-$PillColor -NoNewline
-    Write-Host " $Text " -BackgroundColor $PillColor -ForegroundColor
-$TextColor -NoNewline
+    param ([string]$Text, [ConsoleColor]$PillColor = 'Magenta', [ConsoleColor]$TextColor = 'Black')
+    Write-Host "$([char]0xE0B6)$([char]0x2588)" -ForegroundColor $PillColor -NoNewline
+    Write-Host " $Text " -BackgroundColor $PillColor -ForegroundColor $TextColor -NoNewline
     Write-Host "$([char]0x2588)$([char]0xE0B4)" -ForegroundColor $PillColor
 }
 
 function Write-Intro {
     param ([string]$Title, [string]$BorderColor = "Gray")
     Write-Host
-    Write-Host "$($script:Line.TopLeft)$($script:Line.Horizontal)"
--ForegroundColor $BorderColor -NoNewline
-    Write-Pill -Text "$([char]27)[1m $Title " -PillColor Magenta
--TextColor Black
+    Write-Host "$($script:Line.TopLeft)$($script:Line.Horizontal)" -ForegroundColor $BorderColor -NoNewline
+    Write-Pill -Text "$([char]27)[1m $Title " -PillColor Magenta -TextColor Black
     Write-Host $script:Line.Vertical -ForegroundColor $BorderColor
 }
 
 function Write-Step {
-    param ([string]$Message, [string]$MessageColor = "White",
-[string]$BorderColor = "Gray")
-    Write-Host "$($script:Line.RightTee)$($script:Line.Horizontal) "
--ForegroundColor $BorderColor -NoNewline
+    param ([string]$Message, [string]$MessageColor = "White", [string]$BorderColor = "Gray")
+    Write-Host "$($script:Line.RightTee)$($script:Line.Horizontal) " -ForegroundColor $BorderColor -NoNewline
     Write-Host $Message -ForegroundColor $MessageColor
     Write-Host $script:Line.Vertical -ForegroundColor $BorderColor
 }
 
 function Write-Box {
-    param ([string]$Text, [int]$MaxWidth = 50, [string]$BorderColor =
-"Gray", [string]$BoxColor = "Yellow")
-    if ($Text.Length -gt ($MaxWidth - 10)) { $Text =
-$Text.Substring(0, $MaxWidth - 13) + "..." }
+    param ([string]$Text, [int]$MaxWidth = 50, [string]$BorderColor = "Gray", [string]$BoxColor = "Yellow")
+    if ($Text.Length -gt ($MaxWidth - 10)) { $Text = $Text.Substring(0, $MaxWidth - 13) + "..." }
     $innerBoxWidth = $MaxWidth - 2
     $textWithEmoji = "📜 " + $Text
     $totalPadding = $innerBoxWidth - $textWithEmoji.Length
-    $centeredText = (" " * [math]::Floor($totalPadding / 2)) +
-$textWithEmoji + (" " * [math]::Ceiling($totalPadding / 2))
+    $centeredText = (" " * [math]::Floor($totalPadding / 2)) + $textWithEmoji + (" " * [math]::Ceiling($totalPadding / 2))
 
-    Write-Host "$($script:Line.Vertical) " -ForegroundColor
-$BorderColor -NoNewline
-    Write-Host ($script:Line.TopLeft + ($script:Line.Horizontal *
-($MaxWidth - 2)) + $script:Line.TopRight) -ForegroundColor $BoxColor
-    Write-Host "$($script:Line.Vertical) " -ForegroundColor
-$BorderColor -NoNewline
+    Write-Host "$($script:Line.Vertical) " -ForegroundColor $BorderColor -NoNewline
+    Write-Host ($script:Line.TopLeft + ($script:Line.Horizontal * ($MaxWidth - 2)) + $script:Line.TopRight) -ForegroundColor $BoxColor
+    Write-Host "$($script:Line.Vertical) " -ForegroundColor $BorderColor -NoNewline
     Write-Host $script:Line.Vertical -ForegroundColor $BoxColor -NoNewline
     Write-Host $centeredText -ForegroundColor Magenta -NoNewline
     Write-Host $script:Line.Vertical -ForegroundColor $BoxColor
-    Write-Host "$($script:Line.Vertical) " -ForegroundColor
-$BorderColor -NoNewline
-    Write-Host ($script:Line.BotLeft + ($script:Line.Horizontal *
-($MaxWidth - 2)) + $script:Line.BotRight) -ForegroundColor $BoxColor
+    Write-Host "$($script:Line.Vertical) " -ForegroundColor $BorderColor -NoNewline
+    Write-Host ($script:Line.BotLeft + ($script:Line.Horizontal * ($MaxWidth - 2)) + $script:Line.BotRight) -ForegroundColor $BoxColor
     Write-Host $script:Line.Vertical -ForegroundColor $BorderColor
 }
 
 function Write-Outro {
     param ([string]$Message, [bool]$Success, [string]$BorderColor = "Gray")
-    Write-Host "$($script:Line.BotLeft)$($script:Line.Horizontal) "
--ForegroundColor $BorderColor -NoNewline
+    Write-Host "$($script:Line.BotLeft)$($script:Line.Horizontal) " -ForegroundColor $BorderColor -NoNewline
 
     if ($Success) {
         Write-Host $Message -ForegroundColor Green
@@ -190,10 +169,8 @@ function Invoke-Tests {
 
     # Render initial View layouts
     Write-Intro -Title "EXECUTING TESTS" -BorderColor $config.BorderColor
-    Write-Step -Message "Running tests and logging output to:"
--MessageColor Cyan -BorderColor $config.BorderColor
-    Write-Box -Text $config.LogFile -MaxWidth $config.MaxWidth
--BorderColor $config.BorderColor -BoxColor $config.BoxColor
+    Write-Step -Message "Running tests and logging output to:" -MessageColor Cyan -BorderColor $config.BorderColor
+    Write-Box -Text $config.LogFile -MaxWidth $config.MaxWidth -BorderColor $config.BorderColor -BoxColor $config.BoxColor
 
     # Pull presentation symbols from ViewModel
     $prefix = "$(Get-TerminalLine 'BotLeft')$(Get-TerminalLine 'Horizontal')"
@@ -212,14 +189,11 @@ function Invoke-Tests {
             Start-Sleep -Milliseconds 100
             $i++
         }
-    }).AddArgument([char[]]'◒◐◓◑').AddArgument("Executing bun
-tests...").AddArgument($prefix)
+    }).AddArgument([char[]]'◒◐◓◑').AddArgument("Executing bun tests...").AddArgument($prefix)
 
     $spinnerAsyncResult = $spinnerPowerShell.BeginInvoke()
 
-    & bun test --coverage "$($config.TestsPath)" 2>&1 | Out-File
--FilePath $config.LogFilePath -Width $config.LogMaxWidth -Encoding
-utf8
+    & bun test --coverage "$($config.TestsPath)" 2>&1 | Out-File -FilePath $config.LogFilePath -Width $config.LogMaxWidth -Encoding utf8
     $exitCode = $LASTEXITCODE
 
     # Stop Spinner UI and clear line
@@ -228,25 +202,18 @@ utf8
     [Console]::Write("`r" + (" " * 50) + "`r")
 
     # Update layout results
-    Write-Step -Message "$greenCheck Executing bun tests...
-Completed." -MessageColor Gray -BorderColor $config.BorderColor
+    Write-Step -Message "$greenCheck Executing bun tests... Completed." -MessageColor Gray -BorderColor $config.BorderColor
 
     # Safely invoke log removal utility
-    $removedLogs = Manage-Log -LogDir $config.LogDir -MaxLogs
-$config.MaxLogs -Appendage $config.Appendage
+    $removedLogs = Manage-Log -LogDir $config.LogDir -MaxLogs $config.MaxLogs -Appendage $config.Appendage
     if ($removedLogs) {
-        Write-Step -Message "$greenCheck Oldest log file(s) removed to
-maintain retention cap." -MessageColor Gray -BorderColor
-$config.BorderColor
+        Write-Step -Message "$greenCheck Oldest log file(s) removed to maintain retention cap." -MessageColor Gray -BorderColor $config.BorderColor
     }
 
     if ($exitCode -eq 0) {
-        Write-Outro -Message "✨ Tests completed successfully. All
-tests passed." -Success $true -BorderColor $config.BorderColor
+        Write-Outro -Message "✨ Tests completed successfully. All tests passed." -Success $true -BorderColor $config.BorderColor
     } else {
-        Write-Outro -Message "⚠️ Some tests failed. See log for
-details: $($config.LogFilePath)" -Success $false -BorderColor
-$config.BorderColor
+        Write-Outro -Message "⚠️ Some tests failed. See log for details: $($config.LogFilePath)" -Success $false -BorderColor   $config.BorderColor
     }
 
     exit $exitCode

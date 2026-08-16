@@ -76,8 +76,8 @@ export class Application {
      * Must be called (directly or via {@link run}) before
      * {@link runSingleIteration}.
      *
-     * @param exitFn - Function used by the Exit command to terminate
-the process.
+     * @param exitFn - Function used by the Exit command
+     * to terminate the process.
      */
     public async init(exitFn: (code?: number) => void): Promise<void> {
         this._state = await resolveRunnerDeps();;
@@ -120,8 +120,7 @@ the process.
             console.log();
             await command.execute();
 
-            const wantsToReturn = await confirm({ message:
-this.STRINGS.returnToMenu });
+            const wantsToReturn = await confirm({ message: this.STRINGS.returnToMenu });
             if (isCancel(wantsToReturn) || !wantsToReturn) {
                 return false;
             }
@@ -134,8 +133,7 @@ this.STRINGS.returnToMenu });
      *
      * @param exitFn - Optional exit function (defaults to `process.exit`)
      */
-    public async run(exitFn?: (code?: number | string | null) =>
-never): Promise<void> {
+    public async run(exitFn?: (code?: number | string | null) => never): Promise<void> {
         await this.init(exitFn ?? process.exit);
 
         while (await this.runSingleIteration()) {

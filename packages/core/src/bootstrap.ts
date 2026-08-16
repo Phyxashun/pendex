@@ -21,7 +21,7 @@ import type { Category, Config, Theme } from './types';
 
 /**
  * The eight recognized job categories, used to filter a theme's
-`[brand]` table.
+ * `[brand]` table.
  */
 const CATEGORIES = [
     'source',
@@ -38,23 +38,22 @@ const CATEGORIES = [
  * A free-form map of theme color definitions.
  *
  * This represents a raw, unvalidated string dictionary from a parsed
-theme file,
- * where keys represent UI components or categories (e.g.,
-'bookCover', 'manifest',
- * 'source', 'terminal') and values are their corresponding HEX color strings.
+ * theme file, where keys represent UI components or categories (e.g.,
+ * 'bookCover', 'manifest', 'source', 'terminal') and values are their
+ * corresponding HEX color strings.
  */
 export type BrandColors = Record<string, string>;
 
 /**
  * Filtered theme color definitions mapped strictly to recognized Job
-Categories.
+ * Categories.
  *
  * An object where keys are a subset of the eight literal {@link
-Category} values
- * and values are the HEX color strings extracted from the theme's raw
-brand table.
- * If a category is missing from this object, it means the theme did not provide
- * a specific color override for it.
+ * Category} values and values are the HEX color strings extracted
+ * from the theme's raw brand table.
+ *
+ * If a category is missing from this object, it means the theme did not
+ * provide a specific color override for it.
  */
 export type CategoryColors = Partial<Record<Category, string>>;
 
@@ -85,8 +84,7 @@ export interface ResolvedDeps {
  * @param brand - The raw `[brand]` table from a parsed theme, if any.
  * @returns Per-category brand colors, or `undefined` if none apply.
  */
-const extractCategoryColors = (brand: BrandColors | undefined):
-CategoryColors | undefined => {
+const extractCategoryColors = (brand: BrandColors | undefined): CategoryColors | undefined => {
     if (!brand) return undefined;
 
     const colors: CategoryColors = {};
@@ -113,8 +111,7 @@ export const resolveRunnerDeps = async (): Promise<ResolvedDeps> => {
     const configManager: ConfigManager = await ConfigManager.getInstance();
     const config: Config = configManager.get();
 
-    const themeManager: ThemeManager = await
-ThemeManager.getInstance(config.theme);
+    const themeManager: ThemeManager = await ThemeManager.getInstance(config.theme);
     const theme: Theme = themeManager.get();
 
     const brandColors: BrandColors = themeManager.extended().brand;

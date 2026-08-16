@@ -14,7 +14,7 @@ import { View } from '@pendex/core';
 
 /**
  * The "Exit Program" command: prints a goodbye message and terminates
-the process.
+ * the process.
  */
 export class Exit extends View implements Command {
     readonly key: string;
