@@ -1,6 +1,11 @@
 {
   "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["typescript", "unicorn", "oxc", "react"],
+  "plugins": [
+    "typescript",
+    "unicorn",
+    "oxc",
+    "react"
+  ],
   "categories": {
     "correctness": "error"
   },
@@ -11,18 +16,33 @@
   },
   "ignorePatterns": [
     ".vscode/**",
+    "**/ALL/**",
+    "**/ALL_REBUILT/**",
+    "**/coverage/**",
+    "**/logs/**",
     "**/node_modules/**",
     "**/public/**",
     "**/dist/**",
     "**/*.txt",
-    "**/*.pdf",
-    "**/ALL/**",
-    "**/ALL_REBUILT/**"
+    "**/*.pdf"
   ],
   "rules": {
-    "no-unused-vars": "off",
-    "typescript/no-unused-vars": ["error", { "argsIgnorePattern": "^_" }],
-    "typescript/no-explicit-any": ["warn", { "ignoreRestArgs": false }],
-    "no-console": "off"
+    "no-unused-vars": "error",
+    "typescript/no-unused-vars": "error",
+    "typescript/no-explicit-any": [
+      "warn",
+      {
+        "ignoreRestArgs": false
+      }
+    ],
+    "no-console": "off",
+    "no-irregular-whitespace": "off",
+    "unicorn/empty-brace-spaces": "off",
+    "typescript/prefer-nullish-coalescing": "error",
+    "typescript/prefer-optional-chain": "error"
+  },
+  "options": {
+    "typeAware": true,
+    "typeCheck": true
   }
 }

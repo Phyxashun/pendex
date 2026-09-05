@@ -1,5 +1,5 @@
 {
-  "name": "@pendex/split",
+  "name": "@pendex/utils",
   "version": "0.1.0",
   "private": true,
   "type": "module",

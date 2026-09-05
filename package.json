@@ -1,66 +1,58 @@
 {
   "name": "pendex",
   "version": "2.0.2",
-  "description": "Pendex turns an entire source tree into portable, plain-text archives — ideal for AI prompts, code reviews backups, and sharing. Compile a project into banner-delimited `.txt` files grouped by job (source, web, style,  terminal, configuration, documentation, testing, misc), then reconstruct the whole tree later with `px split`.",
-  "author": {
-    "name": "Dustin Dew",
-    "email": "phyxashun@gmail.com",
-    "url": "https://phyxashun.github.io/home/"
-  },
-  "license": "APGL-3.0",
   "private": true,
-  "type": "module",
-  "module": "src/index.ts",
-  "workspaces": [
-    "packages/*"
-  ],
-  "bin": {
-    "px": "./src/index.ts"
-  },
+  "description": "Pendex turns an entire source tree into portable, plain-text archives — ideal for AI prompts, code reviews backups, and sharing. Compile a project into banner-delimited `.txt` files grouped by job (source, web, style, terminal, configuration, documentation, testing, misc), then reconstruct the whole tree later with `px split`.",
   "keywords": [
-    "pendex",
     "@pendex",
     "compile",
-    "split",
     "consolidate",
     "devtools",
     "merge",
+    "pendex",
     "project",
-    "rebuild"
+    "rebuild",
+    "split"
   ],
-  "devEngines": {
-    "runtime": {
-      "name": "bun",
-      "onFail": "error"
-    },
-    "packageManager": {
-      "name": "bun",
-      "onFail": "error"
-    }
+  "license": "APGL-3.0",
+  "author": {
+    "name": "Dustin Dew",
+    "email": "phyxashun@gmail.com",
+    "url": "https: //phyxashun.github.io/home/"
   },
+  "bin": {
+    "px": "./packages/utils/src/cli.ts"
+  },
+  "workspaces": [
+    "packages/*"
+  ],
+  "type": "module",
+  "module": "./packages/utils/src/cli.ts",
   "scripts": {
+    "clean:deps": "powershell -Command \"Remove-Item -Recurse -Force node_modules, packages /*/node_modules, bun.lock -ErrorAction SilentlyContinue\"",
+    "refresh": "Remove-Item -Recurse -Force node_modules, packages/*/node_modules, bun.lock -ErrorAction SilentlyContinue",
+    "reset": "rmdir /s /q node_modules && del bun.lock",
+    "restart": "rm -rf node_modules packages/*/node_modules bun.lock",
     "clear": "bun pm cache rm",
-    "clean": "bun run ./clean.ts",
-    "typecheck": "tsc --noEmit; bun run --filter '*' typecheck",
-    "build": "bun --cwd packages/home vite build --config ../../vite.config.ts",
-    "build:pendex": "bun run typecheck; bun build --compile --outfile=./dist/px ./src/index.ts",
-    "build:home": "bun --filter ./packages/home build",
-    "build:pendex:home": "bun --filter @pendex/home run build",
-    "build:api-docs": "bun run --cwd packages/api-docs build",
-    "build:pendex:api-docs": "bun --filter @pendex/api-docs run build",
-    "dev": "bun vite --config ./vite.config.ts",
-    "dev:filter": "bun --filter '*' run dev",
-    "dev:pendex:home": "cd packages/home && bun run dev",
-    "dev:pendex:api-docs": "cd packages/api-docs && bun run dev",
-    "preview": "bun --filter '*' run preview",
-    "start": "bun run ./src/index.ts",
-    "compile": "bun run packages/compile/src/Compile.ts",
-    "split": "bun run packages/split/src/Split.ts",
+    "clean": "rm -rf node_modules packages/*/node_modules bun.lock",
+    "fmt": "powershell -Command \"New-Item -ItemType Directory -Force logs | Out-Null; oxfmt 2>&1 | Out-File -Encoding utf8 logs/oxfmt.log\"",
+    "fmt:check": "powershell -Command \"New-Item -ItemType Directory -Force logs | Out-Null; oxfmt --check2>&1 | Out-File -Encoding utf8 logs/oxfmt-check.log\"",
+    "lint": "powershell -Command \"New-Item -ItemType Directory -Force logs | Out-Null; oxlint | Out-File -Encoding utf8 logs/oxlint.log\"",
+    "lint:fix": "powershell -Command \"New-Item -ItemType Directory -Force logs | Out-Null; oxlint --fix --type-aware --type-check | Out-File -Encoding utf8 logs/oxlint-types-fix.log\"",
+    "lint:types": "powershell -Command \"New-Item -ItemType Directory -Force logs | Out-Null; oxlint --type-aware --type-check | Out-File -Encoding utf8 logs/oxlint-types.log\"",
+    "typecheck": "bun run lint:types; bun run --workspaces typecheck",
+    "build": "bun run typecheck; bun build --compile --outfile=./dist/px ./packages/utils/src/cli.ts",
+    "start": "bun run ./packages/utils/src/cli.ts",
+    "compile": "bun run packages/compile/src/Compile.bin.ts",
+    "split": "bun run packages/split/src/Split.bin.ts",
     "git:push": "git add . && git commit -m 'Updates' && git push origin main",
-    "test": "bun test; bun --filter '*' run test",
-    "test:log:win": "powershell -ExecutionPolicy Bypass -File ./log-tests.ps1",
-    "test:log:linux": "./log-tests.fish",
-    "nuke": "taskkill /f /im node.exe /im bun.exe /im vite.exe 2>nul || exit 0"
+    "test": "bun test",
+    "test:coverage": "bun test --coverage",
+    "test:log": "powershell -ExecutionPolicy Bypass -File ./utils/log-tests.ps1",
+    "test:dos": "powershell -ExecutionPolicy Bypass -File ./utils/powershell-tests.ps1",
+    "test:log:linux": "./utils/log-tests.fish",
+    "nuke": "taskkill /f /im node.exe /im bun.exe /im vite.exe 2>nul || exit 0",
+    "one": "bun run ./utils/one-text.ts"
   },
   "dependencies": {
     "@clack/core": "^1.4.3",
@@ -69,35 +61,31 @@
     "@pendex/compile": "workspace:*",
     "@pendex/core": "workspace:*",
     "@pendex/exit": "workspace:*",
-    "@pendex/home": "workspace:*",
     "@pendex/split": "workspace:*",
     "@pendex/theme": "workspace:*",
-    "daisyui": "^5.7.17",
-    "fast-string-width": "^3.0.2",
-    "fast-wrap-ansi": "^0.2.2",
-    "react": "^19.2.8",
-    "react-dom": "^19.2.8",
-    "tailwindcss": "^4.3.3",
-    "trash": "^10.1.1",
-    "typescript": "^7.0.2"
+    "@pendex/utils": "workspace:*"
   },
   "devDependencies": {
-    "@tailwindcss/vite": "^4.3.3",
-    "@types/bun": "^1.3.14",
-    "@types/node": "^24.13.3",
-    "@types/prismjs": "^1.26.6",
-    "@types/react": "^19.2.18",
-    "@types/react-dom": "^19.2.4",
-    "@vitejs/plugin-react": "^6.0.5",
-    "oxfmt": "^0.61.0",
-    "oxlint": "^1.78.0",
-    "vite": "^8.2.1"
+    "@types/bun": "^1.4.0",
+    "fast-string-width": "^3.0.2",
+    "fast-wrap-ansi": "^0.2.2",
+    "oxfmt": "^0.64.0",
+    "oxlint": "^1.80.0",
+    "oxlint-tsgolint": "^7.0.2001",
+    "typescript": "^7.0.2"
   },
-  "_comment": "Move these to dependencies when starting the PDF export and syntax highlighting features",
   "optionalDependencies": {
     "@pdf-lib/fontkit": "^1.1.1",
     "@types/prismjs": "^1.26.6",
     "pdf-lib": "^1.17.1",
     "prismjs": "^1.30.0"
-  }
+  },
+  "devEngines": {
+    "runtime": {
+      "name": "bun",
+      "onFail": "error"
+    }
+  },
+  "packageManager": "bun@1.3.14",
+  "_comment": "Move these to dependencies when starting the PDF export and syntax highlighting features"
 }

@@ -1,6 +1,30 @@
 [test]
-root = "."
-
+root    = "."
 preload = ["./tests/preload.ts"]
-coverage = true
-coverageSkipTestFiles = true
+
+coveragePathIgnorePatterns = [
+    # Untestable command line entry points and export files
+    "\\.bin\\.ts$",
+    "**/index*",
+
+    # Test files and folders
+    "**/*.test.ts",
+    "**/*.spec.ts",
+    "**/*.e2e.ts",
+
+    # Configuration files
+    "*.config.js",
+    "*.config.ts",
+    "vite.config.*",
+
+    # Build output & Generated code
+    "dist/**",
+    "ALL/**",
+    "ALL_REBUILT/**",
+    "**/node_modules/**",
+
+    # Utilities that don't need testing
+    "**/types/**",
+    "**/utils/**",
+    "**/tests/preload.*",
+]

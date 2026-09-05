@@ -1,8 +1,14 @@
+# FILE-PATH: .vscode/cspell-dictionary.txt
+#
+# Custom CSpell Dictionary
+#
+# Add additional words to this file
+#
+# There should be one word per line
 #
 acss
 adoc
 Allman
-APGL
 appconfig
 AUTOINCREMENT
 bandaid
@@ -20,8 +26,8 @@ brwhite
 bryellow
 bun
 bunfig
-chdir
 Cheatsheet
+Chrs
 clike
 clsx
 crustjs
@@ -38,9 +44,10 @@ eslintrc
 FILECONFIG
 FILESCONFIG
 fontkit
+Frms
 gulpfile
-hcenter
 headlessly
+HKCU
 horiz
 Howitworks
 IGNORECONFIG
@@ -56,15 +63,20 @@ Libertinus
 lockfiles
 max_line_length
 mhtml
+mshorthand
+mtruecolor
 NAMESLIST
-njsproj
+native
 nodir
 ntvs
+ONEDRIVE
 oxfmt
+oxfmtrc
 oxlint
+oxlintrc
 pcss
 pendex
-𝒫endex
+endex
 phyxashun
 prefersdark
 prettierrc
@@ -73,25 +85,27 @@ pycache
 Rebuilder
 Renderable
 root_by_default
+Segoe
 serviceworker
 smol
 styl
 tailwind
 tailwindcss
-taskkill
 TEARLINE
 Terminess
 toml
-topbar
 trim_trailing_whitespace
 Truecolor
 tsgo
-typedoc
-𝕌NICODE
+tsgolint
+UNICODE
+unparseable
 vbhtml
 venv
 vite
 vitejs
 vitest
+WCAG
+whichdir
 wxss
 zalgo

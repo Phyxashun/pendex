@@ -12,6 +12,10 @@
   "bracketSameLine": false,
   "arrowParens": "avoid",
   "endOfLine": "lf",
+  "insertFinalNewline": true,
+  "htmlWhitespaceSensitivity": "strict",
+  "singleAttributePerLine": true,
+  "objectWrap": "preserve",
   "ignorePatterns": [
     "**/node_modules/**",
     "**/dist/**",
@@ -19,12 +23,20 @@
     "**/*.txt",
     "**/*.pdf",
     "**/ALL/**",
-    "**/ALL_REBUILT/**"
+    "**/ALL_REBUILT/**",
+    "**/logs/**"
   ],
   "overrides": [
     {
-      "files": ["*.json", "*.jsonc", "*.md", "*.toml"],
-      "options": { "tabWidth": 2 }
+      "files": [
+        "*.json",
+        "*.jsonc",
+        "*.md",
+        "*.toml"
+      ],
+      "options": {
+        "tabWidth": 2
+      }
     }
   ]
 }

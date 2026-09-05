@@ -1,9 +1,11 @@
 # FILE-PATH: src/config/config.toml
-
+#
 # DEFAULT THEME
-theme = { name = "default", path = "packages/theme/themes/" }
+theme = { name = "pendex", path = "packages/theme/themes/" }
+http  = true
 
-# DEFAULT OUTPUT DIRECTORIES
+# DEFAULT OUTPUT CONFIGURATION
+outputType = 'pdf'
 outputDir  = "ALL"
 rebuiltDir = "ALL_REBUILT"
 
@@ -17,6 +19,7 @@ exclude = [
     "**/package-lock.json",
     "**/*.pnpm-lock.yaml",
     "**/.env",
+
     # Build
     "**/dist/**",
     "**/build/**",
@@ -28,12 +31,14 @@ exclude = [
     "**/.stylelintrc*",
     "**/stylelint.config.*",
     "**/logs/**",
+
     # Fonts
     "**/*.ttf",
     "**/*.otf",
     "**/*.woff",
     "**/*.woff2",
     "**/*.eot",
+
     # Docs
     "**/*.pdf",
     "**/*.doc",
@@ -42,6 +47,7 @@ exclude = [
     "**/*.pptx",
     "**/*.xls",
     "**/*.xlsx",
+
     # Raster/Vector
     "**/*.png",
     "**/*.jpg",
@@ -53,6 +59,7 @@ exclude = [
     "**/*.tiff",
     "**/*.psd",
     "**/*.heic",
+
     # Audio/Video
     "**/*.mp3",
     "**/*.mp4",
@@ -61,6 +68,7 @@ exclude = [
     "**/*.avi",
     "**/*.webm",
     "**/*.ogg",
+
     # Archives/Binaries
     "**/*.zip",
     "**/*.tar",
@@ -76,13 +84,13 @@ exclude = [
     "**/*.jar",
     "**/*.db",
     "**/*.sqlite",
+
     # Pendex Specific
     "**/ALL/**",
     "**/ALL_REBUILT/**",
-    "**/cspell*",
 ]
 
-# DEFAULT INCLUDED JOBS
+# DEFAULT INCLUDE JOBS
 [[jobs]]
 filename = "1_SOURCE_FILES.txt"
 category = "source"
@@ -150,6 +158,7 @@ exclude = [
     "**/tests/**/*",
     "**/specs/**/*",
     "**/test/**/*",
+    "**/*cspell*",
 ]
 
 [[jobs]]
@@ -206,6 +215,7 @@ exclude = [
     "**/*.sss",
     "**/*.wxss",
     "**/*.acss",
+    "**/*cspell*",
 ]
 
 [[jobs]]
@@ -233,6 +243,7 @@ exclude = [
     "**/*.txt",
     "**/.stylelintrc*",
     "**/stylelint.config.*",
+    "**/*cspell*",
 ]
 
 [[jobs]]
@@ -247,6 +258,7 @@ exclude = [
     "**/*.md",
     "**/*.toml",
     "**/*.txt",
+    "**/*cspell*",
 ]
 
 [[jobs]]
@@ -302,7 +314,14 @@ include = [
     "**/.vscode/**/*.json",
     "**/.idea/**/*.xml",
 ]
-exclude = ["**/*.lock", "**/*.ts", "**/*.ps1", "**/*.md", "**/*.txt"]
+exclude = [
+    "**/*.lock",
+    "**/*.ts",
+    "**/*.ps1",
+    "**/*.md",
+    "**/*.txt",
+    "**/*cspell*",
+]
 
 [[jobs]]
 filename = "6_DOC_FILES.txt"
@@ -343,7 +362,14 @@ include = [
     "**/.github/ISSUE_TEMPLATE/**/*",
     "**/.github/PULL_REQUEST_TEMPLATE/**/*",
 ]
-exclude = ["**/*.lock", "**/*.ts", "**/*.ps1", "**/*.json", "**/*.toml"]
+exclude = [
+    "**/*.lock",
+    "**/*.ts",
+    "**/*.ps1",
+    "**/*.json",
+    "**/*.toml",
+    "**/*cspell*",
+]
 
 [[jobs]]
 filename = "7_TEST_FILES.txt"
@@ -376,10 +402,20 @@ include = [
     "**/test-setup.*",
     "**/test.setup.*",
 ]
-exclude = []
+exclude = ["**/*cspell*"]
 
 [[jobs]]
-filename    = "8_MISC_FILES.txt"
+filename = "8_CSPELL_FILES.txt"
+category = "cspell"
+description = "CSpell files"
+include = [
+    # Matches target files in the root directory AND all subdirectories
+    "**/*cspell*",
+]
+exclude = ["**/*cspell-dictionary-*"]
+
+[[jobs]]
+filename    = "9_MISC_FILES.txt"
 category    = "misc"
 description = "All remaining project files"
 # Empty include = "remainder job": FileScanner.resolveJobFiles() treats an
@@ -388,4 +424,4 @@ description = "All remaining project files"
 # resolution depends on every prior job having already run. See
 # src/core/FileScanner.ts and src/core/CompileService.ts.
 include = []
-exclude = ["**/*.svg"]
+exclude = ["**/*cspell-dictionary*.txt", "**/*.svg"]

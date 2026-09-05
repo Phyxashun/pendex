@@ -1,7 +1,7 @@
 # EditorConfig is awesome: https://editorconfig.org
 root = true
 
-# All Files (Default baseline configuration)
+# All Files
 [*]
 charset = utf-8
 indent_style = space
@@ -13,34 +13,29 @@ max_line_length = 80
 
 # TypeScript
 [*.{ts,tsx}]
-# Inherits all [*] defaults
 
 # JavaScript
 [*.{js,jsx}]
-# Inherits all [*] defaults
 
 # HTML
 [*.{html}]
-# Inherits all [*] defaults
 
 # Style Sheets
 [*.css]
-# Inherits all [*] defaults
 
 # Mermaid
 [*.{mermaid}]
-# Inherits all [*] defaults
 
 # JSON and JSONC
-[*.{json,jsonc}]
+[*.{json,jsonc,lock}]
 indent_size = 2
 
 # TOML
 [*.{toml}]
-indent_size = 2
 
 # Markdown
 [*.md]
 indent_size = 2
+
 # Markdown uses trailing double-spaces for soft line breaks
 trim_trailing_whitespace = false

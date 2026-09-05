@@ -1,4 +1,0 @@
-# .prettierignore
-**/config.toml
-**/presets.toml
-**/*.toml

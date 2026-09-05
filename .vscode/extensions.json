@@ -1,8 +1,62 @@
 {
+  /**
+* @file extensions.json
+* @description This file defines recommended and optional extensions for the workspace.
+*
+* VS Code uses this file to suggest extensions to anyone who opens the project.
+* - "recommendations": Extensions that are strongly suggested for all contributors.
+* - "unwantedRecommendations": Extensions that should be avoided in this workspace.
+*
+* This helps maintain a consistent development environment across the team.
+*
+* @usage
+* Place this file inside the `.vscode` folder at the root of your project.
+* VS Code will automatically read it and prompt users to install the listed extensions.
+*
+* @note This file is in JSONC (JSON with comments) format so comments are allowed.
+*/
   "recommendations": [
+    "aaron-bond.better-comments",
+    "alexcvzz.vscode-sqlite",
+    "bierner.markdown-mermaid",
+    "bradlc.vscode-tailwindcss",
+    "christian-kohler.npm-intellisense",
+    "christian-kohler.path-intellisense",
+    "dannyconnell.split-html-attributes",
+    "davidanson.vscode-markdownlint",
+    "dskwrk.vscode-generate-getter-setter",
+    "ecmel.vscode-html-css",
+    "editorconfig.editorconfig",
+    "esdete.tailwind-rainbow",
+    "fabiospampinato.vscode-highlight",
+    "gydunhn.javascript-essentials",
+    "gydunhn.typescript-essentials",
+    "gydunhn.vsc-essentials-core",
+    "hyoban.tailwindcss-classname-highlight",
+    "irongeek.vscode-env",
+    "kamikillerto.vscode-colorize",
+    "maptz.regionfolder",
+    "ms-vscode.powershell",
+    "ms-vscode.vscode-typescript-next",
+    "oderwat.indent-rainbow",
+    "oven.bun-vscode",
     "oxc.oxc-vscode",
+    "pkief.material-product-icons",
+    "pmneo.tsimporter",
+    "quentiumyt.vscode-tailwindcss-directives",
+    "readbysearch.code2pdf",
+    "streetsidesoftware.code-spell-checker",
+    "streetsidesoftware.code-spell-checker-cspell-bundled-dictionaries",
+    "sudoaugustin.tailwindcss-transpiler",
+    "tal7aouy.theme",
     "tamasfe.even-better-toml",
-    "EditorConfig.EditorConfig",
-    "oven.bun-vscode"
+    "thang-nm.flow-icons",
+    "tombonnike.vscode-status-bar-format-toggle",
+    "tomoki1207.pdf",
+    "typescriptteam.native-preview",
+    "wzulfikar.vscode-bun-test-explorer",
+    "xabikos.javascriptsnippets",
+    "yoavbls.pretty-ts-errors",
+    "yzhang.markdown-all-in-one"
   ]
 }

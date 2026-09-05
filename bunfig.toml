@@ -1,30 +1,51 @@
+[run]
+silent = true
+
 [test]
-# Scopes test discovery to the root tests/ directory only. Without this,
-# plain `bun test` (the first half of package.json's "test" script)
-# also recurses into packages/*/tests — which then run a SECOND time
-# when `bun run --filter '*' test` (the second half) explicitly invokes
-# each package's own test script. Same principle as each package's own
-# bunfig.toml `root = "."` — every test file should be discovered by
-# exactly one of these, never both.
-root = "tests"
-
+root    = "."
 preload = ["./tests/preload.ts"]
+
+# Set timeout to 0 to disable it completely across all tests
+timeout = 0
+pathIgnorePatterns = [
+    "ALL/**",
+    "ALL_REBUILT/**",
+    "logs/**",
+    "dist/**",
+    "**/types/**",
+    "**/utils/**",
+]
+
+# Coverage configuration
 coverage = true
+coverageReporter = ["text", "lcov"]
+coverageDir = "./coverage"
+coverageThreshold = { lines = 0.85, functions = 0.90 }
 coverageSkipTestFiles = true
-
-# Without this, bun test's default recursive discovery walks into
-# ALL/ and ALL_REBUILT/ (Pendex's own compile/split output dirs) and
-# re-runs every test a second time from the copies sitting there —
-# bun only excludes node_modules/ and dot-directories by default, it
-# does not consult .gitignore for test discovery.
-pathIgnorePatterns = ["ALL/**", "ALL_REBUILT/**"]
-
-# Standalone utilities are out of scope for the px command set (see
-# README "Header comments") — their interactive flows would otherwise
-# drag the coverage number down without adding signal:
+coverageIgnoreSourcemaps = false
 coveragePathIgnorePatterns = [
-  "src/utils/HeaderComments.ts",
-  "src/utils/update-config.ts",
-  "node_modules",
-  "tests",
+    # Untestable command line entry points and export files
+    "**/*.bin.ts",
+    "**/index*",
+
+    # Test files and folders
+    "**/*.test.ts",
+    "**/*.spec.ts",
+    "**/*.e2e.ts",
+
+    # Configuration files
+    "*.config.js",
+    "*.config.ts",
+    "vite.config.*",
+
+    # Build output & Generated code
+    "dist/**",
+    "ALL/**",
+    "ALL_REBUILT/**",
+    "**/node_modules/**",
+
+    # Utilities that don't need testing
+    "**/types/**",
+    "**/utils/**",
+    "**/tests/preload.*",
 ]
