@@ -3,8 +3,8 @@ import { errorNote } from './errorNote';
 import { intro, log, outro } from '@clack/prompts';
 import { Colors } from '@pendex/color';
 
-import type { PathSegment } from './string-extension';
 import './string-extensions';
+import type { PathSegment } from './string-extensions';
 
 // DEBUG START
 

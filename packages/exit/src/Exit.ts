@@ -9,7 +9,7 @@
  */
 
 import { outro } from '@clack/prompts';
-import type { Command, ExitState } from '@pendex/core';
+import type { Command, ExitState, Theme } from '@pendex/core';
 import { View } from '@pendex/core';
 
 /**
@@ -21,7 +21,9 @@ export class Exit extends View implements Command {
     readonly label: string;
     readonly hint: string;
 
-    private readonly STRINGS: Record<string, string> = {
+    public override readonly state: ExitState;
+
+    private readonly STRINGS = {
         key: 'exit',
         label: 'Exit program',
         hint: 'Terminate system process',
@@ -30,6 +32,7 @@ export class Exit extends View implements Command {
 
     constructor(state: ExitState) {
         super(state);
+        this.state = state;
 
         this.key = this.STRINGS.key;
         this.label = `${this.state.theme.secondary(this.STRINGS.label)}`;
