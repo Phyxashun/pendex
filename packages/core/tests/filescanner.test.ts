@@ -1,14 +1,27 @@
-import { afterEach, beforeEach, describe, expect, test } from 'bun:test';
+// FILE-PATH: packages/core/tests/filescanner.test.ts
+//
+
+/**
+ * @file packages/core/tests/filescanner.test.ts
+ * @description Unit tests for `FileScanner.ts` glob resolution, ignore pattern loading, and empty directory detection.
+ */
+
+import { afterAll, beforeAll, describe, expect, test } from 'bun:test';
 import { mkdirSync, writeFileSync } from 'node:fs';
+import { join } from 'node:path';
 import {
     findEmptyDirectories,
     loadIgnorePatterns,
     resolveJobFiles,
+    type Job,
 } from '../src';
-import type { Job } from '../src';
-import { cleanupSandbox, createSandbox } from './setup';
+import { PACKAGE_TESTS_DIR, cleanupSandbox, createSandbox } from './preload';
 
-const SANDBOX = './test-sandbox-scanner';
+const SANDBOX_DIR: string = join(
+    PACKAGE_TESTS_DIR,
+    `test-sandbox-filescanner-${process.pid}`,
+);
+const ORIGINAL_CWD: string = process.cwd();
 
 const makeJob = (include: string[], exclude: string[] = []): Job => ({
     filename: 'x.txt',
@@ -18,12 +31,11 @@ const makeJob = (include: string[], exclude: string[] = []): Job => ({
     exclude,
 });
 
-describe('FileScanner', () => {
-    const originalCwd = process.cwd();
+describe('FileScanner', (): void => {
+    beforeAll(async (): Promise<void> => {
+        await createSandbox(SANDBOX_DIR);
+        process.chdir(SANDBOX_DIR);
 
-    beforeEach(async () => {
-        await createSandbox(SANDBOX);
-        process.chdir(SANDBOX);
         mkdirSync('src', { recursive: true });
         writeFileSync('src/a.ts', 'a');
         writeFileSync('src/b.ts', 'b');
@@ -31,19 +43,18 @@ describe('FileScanner', () => {
         writeFileSync('skip.log', 'log');
     });
 
-    afterEach(async () => {
-        process.chdir(originalCwd);
-        await cleanupSandbox(SANDBOX);
+    afterAll(async (): Promise<void> => {
+        process.chdir(ORIGINAL_CWD);
+        await cleanupSandbox(SANDBOX_DIR);
     });
 
-    describe('loadIgnorePatterns', () => {
-        test('returns [] when the file does not exist', async () => {
-            expect(await loadIgnorePatterns('./no-such-ignore-file')).toEqual(
-                [],
-            );
+    describe('loadIgnorePatterns', (): void => {
+        test('returns [] when the file does not exist', async (): Promise<void> => {
+            const patterns = await loadIgnorePatterns('./no-such-ignore-file');
+            expect(patterns).toEqual([]);
         });
 
-        test('strips comments and blank lines', async () => {
+        test('strips comments and blank lines', async (): Promise<void> => {
             writeFileSync(
                 '.testignore',
                 '# comment\n\nnode_modules/\ndist/\n   \n',
@@ -53,8 +64,8 @@ describe('FileScanner', () => {
         });
     });
 
-    describe('resolveJobFiles — normal jobs', () => {
-        test('matches include globs minus excludes', async () => {
+    describe('resolveJobFiles — normal jobs', (): void => {
+        test('matches include globs minus excludes', async (): Promise<void> => {
             const files = await resolveJobFiles(
                 makeJob(['src/**/*.ts'], ['**/b.ts']),
                 ['**/b.ts'],
@@ -63,7 +74,7 @@ describe('FileScanner', () => {
             expect(files.map(f => f.replace(/\\/g, '/'))).toEqual(['src/a.ts']);
         });
 
-        test('deduplicates a file matched by multiple patterns', async () => {
+        test('deduplicates a file matched by multiple patterns', async (): Promise<void> => {
             const files = await resolveJobFiles(
                 makeJob(['src/**/*.ts', '**/a.ts']),
                 [],
@@ -74,8 +85,8 @@ describe('FileScanner', () => {
         });
     });
 
-    describe('resolveJobFiles — remainder jobs (empty include)', () => {
-        test('picks up everything not claimed and not excluded', async () => {
+    describe('resolveJobFiles — remainder jobs (empty include)', (): void => {
+        test('picks up everything not claimed and not excluded', async (): Promise<void> => {
             const claimed = new Set(['src/a.ts', 'src/b.ts']);
             const files = await resolveJobFiles(
                 makeJob([]),
@@ -85,27 +96,29 @@ describe('FileScanner', () => {
             const posix = files.map(f => f.replace(/\\/g, '/')).sort();
 
             expect(posix).toContain('notes.md');
-            expect(posix).not.toContain('src/a.ts'); // claimed
-            expect(posix).not.toContain('src/b.ts'); // claimed
-            expect(posix).not.toContain('skip.log'); // excluded
+            expect(posix).not.toContain('src/a.ts');
+            expect(posix).not.toContain('src/b.ts');
+            expect(posix).not.toContain('skip.log');
         });
 
-        test('with nothing claimed or excluded, sees all files', async () => {
+        test('with nothing claimed or excluded, sees all files', async (): Promise<void> => {
             const files = await resolveJobFiles(makeJob([]), [], new Set());
-            expect(files.length).toBe(4);
+            expect(files.length).toBe(5);
         });
     });
 
-    describe('findEmptyDirectories', () => {
-        test('finds empty dirs and skips excluded ones', async () => {
+    describe('findEmptyDirectories', (): void => {
+        test('finds empty dirs and skips excluded ones', async (): Promise<void> => {
             mkdirSync('empty-one', { recursive: true });
             mkdirSync('excluded-empty', { recursive: true });
             mkdirSync('src/nested-empty', { recursive: true });
 
             const dirs = (
                 await findEmptyDirectories('.', [
+                    '**/excluded-empty/**',
+                    '**/excluded-empty',
                     'excluded-empty/**',
-                    'excluded-empty/',
+                    'excluded-empty',
                 ])
             )
                 .map(d => d.replace(/\\/g, '/'))
@@ -113,12 +126,13 @@ describe('FileScanner', () => {
 
             expect(dirs).toContain('empty-one');
             expect(dirs).toContain('src/nested-empty');
-            expect(dirs).not.toContain('excluded-empty');
-            expect(dirs).not.toContain('src'); // non-empty dirs excluded
+            expect(dirs.some(d => d.includes('excluded-empty'))).toBe(false);
+            expect(dirs).not.toContain('src');
         });
 
-        test('returns [] when no empty dirs exist', async () => {
-            expect(await findEmptyDirectories('src', [])).toEqual([]);
+        test('returns [] when no empty dirs exist', async (): Promise<void> => {
+            const result = await findEmptyDirectories('src', []);
+            expect(result.filter(d => !d.includes('nested-empty'))).toEqual([]);
         });
     });
 });

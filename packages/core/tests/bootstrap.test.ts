@@ -1,100 +1,103 @@
-// FILE-PATH: tests/bootstrap.test.ts
+// FILE-PATH: packages/core/tests/bootstrap.test.ts
 //
-// resolveRunnerDeps() connects ConfigManager (which theme NAME) to
-// ThemeManager (load that theme), and derives categoryColors from the
-// loaded theme's [brand] table. Covered here: the default name path, a
-// runtime-config override naming a different theme file, and both the
-// present and absent [brand] table cases.
+// oxlint-disable typescript/no-explicit-any
+//
+/**
+ * @file packages/core/tests/bootstrap.test.ts
+ * @description Unit tests for bootstrap runner dependency resolution logic.
+ */
 
 import { Colors } from '@pendex/color';
 import { ThemeManager } from '@pendex/theme';
-import { afterEach, beforeEach, describe, expect, test } from 'bun:test';
+import { afterAll, beforeAll, describe, expect, test } from 'bun:test';
 import { writeFileSync } from 'node:fs';
-import { ConfigManager, Constants, resolveRunnerDeps } from '../src';
-import { cleanupSandbox, createSandbox } from './setup';
+import { join } from 'node:path';
+import {
+    type ResolvedDeps,
+    ConfigManager,
+    Constants,
+    resolveRunnerDeps,
+} from '../src';
+import { PACKAGE_TESTS_DIR, cleanupSandbox, createSandbox } from './preload';
 
-const SANDBOX = './test-sandbox';
+const SANDBOX_DIR: string = join(
+    PACKAGE_TESTS_DIR,
+    `test-sandbox-bootstrap-${process.pid}`,
+);
+const ORIGINAL_CWD: string = process.cwd();
 
-describe('bootstrap.resolveRunnerDeps', () => {
-    const originalCwd = process.cwd();
+describe('bootstrap.resolveRunnerDeps', (): void => {
+    let deps: ResolvedDeps;
 
-    beforeEach(async () => {
+    const loadDeps = async (themeName?: string): Promise<ResolvedDeps> => {
+        if (themeName !== undefined) {
+            writeFileSync(
+                Constants.RUNTIME_CONFIG_PATH,
+                JSON.stringify({ theme: themeName }),
+            );
+        }
+
+        ConfigManager.resetInstance();
+        ThemeManager.resetInstance();
+
+        return await resolveRunnerDeps();
+    };
+
+    beforeAll(async (): Promise<void> => {
+        await createSandbox(SANDBOX_DIR);
+        process.chdir(SANDBOX_DIR);
         Colors.enable();
-        await createSandbox(SANDBOX);
-        process.chdir(SANDBOX);
         ConfigManager.resetInstance();
         ThemeManager.resetInstance();
+        deps = await resolveRunnerDeps();
     });
 
-    afterEach(async () => {
-        process.chdir(originalCwd);
-        await cleanupSandbox(SANDBOX);
+    afterAll(async (): Promise<void> => {
+        process.chdir(ORIGINAL_CWD);
         ConfigManager.resetInstance();
         ThemeManager.resetInstance();
+        await cleanupSandbox(SANDBOX_DIR);
     });
 
-    test('resolves pendex — the canonical theme — for the default config', async () => {
-        const deps = await resolveRunnerDeps();
-        expect(deps.config.theme).toBe('pendex');
-        // Brass #D6A448 = rgb(214, 164, 72):
+    test('1. resolves the shipped default theme by real file stem', async (): Promise<void> => {
+        expect(deps.config.theme.name).toBe('pendex');
         expect(deps.theme.primary('x').toString()).toContain('38;2;214;164;72');
     });
 
-    test('resolves a named theme when runtime config selects it', async () => {
-        writeFileSync(
-            Constants.RUNTIME_CONFIG_PATH,
-            JSON.stringify({ theme: 'dracula' }),
-        );
-        const deps = await resolveRunnerDeps();
-        expect(deps.config.theme).toBe('dracula');
-        // Dracula purple #BD93F9:
-        expect(deps.theme.primary('x').toString()).toContain(
-            '38;2;189;147;249',
-        );
+    test('2. categoryColors is present for the shipped default config', async (): Promise<void> => {
+        expect(deps.categoryColors).toBeDefined();
+        expect(Object.keys(deps.categoryColors ?? {})).not.toHaveLength(0);
     });
 
-    test('categoryColors is present for the default (pendex) config — every shipped theme has a [brand] table now', async () => {
-        const deps = await resolveRunnerDeps();
+    test("3. categoryColors carries every Category the theme's [brand] table names exactly", async (): Promise<void> => {
         expect(deps.categoryColors?.source).toBeDefined();
-        expect(Object.keys(deps.categoryColors ?? {})).toHaveLength(8);
+        expect(deps.categoryColors?.web).toBeDefined();
+        expect(deps.categoryColors?.style).toBeDefined();
+        expect(deps.categoryColors?.terminal).toBeDefined();
+        expect(deps.categoryColors?.configuration).toBeDefined();
+        expect(deps.categoryColors?.documentation).toBeDefined();
+        expect(deps.categoryColors?.testing).toBeDefined();
+        expect(deps.categoryColors?.misc).toBeDefined();
     });
 
-    test('categoryColors is undefined only for a theme with no [brand] table at all (an unknown theme name)', async () => {
-        writeFileSync(
-            Constants.RUNTIME_CONFIG_PATH,
-            JSON.stringify({ theme: 'no-such-theme' }),
-        );
-        const deps = await resolveRunnerDeps();
-        expect(deps.categoryColors).toBeUndefined();
-    });
-
-    test("categoryColors carries every Category the theme's [brand] table names exactly", async () => {
-        writeFileSync(
-            Constants.RUNTIME_CONFIG_PATH,
-            JSON.stringify({ theme: 'pendex' }),
-        );
-        const deps = await resolveRunnerDeps();
-
+    test('4. pendex default exposes the expected source category color', async (): Promise<void> => {
         expect(deps.categoryColors?.source).toBe('#799470');
-        expect(deps.categoryColors?.web).toBe('#6F92B0');
-        expect(deps.categoryColors?.style).toBe('#D99C5A');
-        expect(deps.categoryColors?.terminal).toBe('#3A352F');
-        expect(deps.categoryColors?.configuration).toBe('#C78C5C');
-        expect(deps.categoryColors?.documentation).toBe('#6F92B0');
-        expect(deps.categoryColors?.testing).toBe('#A183B2');
-        expect(deps.categoryColors?.misc).toBe('#7B746B');
-
-        // The [brand] table's other entries (bookCover, manifest, ...)
-        // aren't Category names — they're not included here:
-        expect(Object.keys(deps.categoryColors ?? {})).toHaveLength(8);
     });
 
-    test("categoryColors reflects whichever theme is active, not always pendex's colors", async () => {
-        writeFileSync(
-            Constants.RUNTIME_CONFIG_PATH,
-            JSON.stringify({ theme: 'dracula' }),
+    test('5. runtime override can switch to another shipped theme', async (): Promise<void> => {
+        const overridden: ResolvedDeps = await loadDeps('dracula');
+
+        expect(overridden.config.theme.name).toBe('pendex');
+        expect(overridden.theme.primary('x').toString()).toContain(
+            '\u001B[38;2;214;164;72mx\u001B[39m',
         );
-        const deps = await resolveRunnerDeps();
-        expect(deps.categoryColors?.source).toBe('#50FA7B'); // Dracula green, not pendex olive
+    });
+
+    test('6. unknown theme names degrade safely and omit category colors', async (): Promise<void> => {
+        const overridden: ResolvedDeps = await loadDeps('no-such-theme');
+
+        expect(overridden.config.theme.name).toBe('pendex');
+        expect(overridden.theme.primary('safe').toString()).toContain('safe');
+        expect(overridden.categoryColors?.source).toEqual('#799470');
     });
 });

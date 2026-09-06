@@ -1,3 +1,5 @@
+// FILE-PATH: packages/core/tests/archiveformat.test.ts
+//
 import { describe, expect, test } from 'bun:test';
 import {
     archivePathFor,

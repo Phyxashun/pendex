@@ -18,7 +18,7 @@ pathIgnorePatterns = [
 
 # Coverage configuration
 coverage = true
-coverageReporter = ["text", "lcov"]
+coverageReporter = ["text"]
 coverageDir = "./coverage"
 coverageThreshold = { lines = 0.85, functions = 0.90 }
 coverageSkipTestFiles = true
