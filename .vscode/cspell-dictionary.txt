@@ -48,6 +48,7 @@ dotenv
 dskwrk
 ecmel
 editorconfig
+ehthumbs
 end_of_line
 endex
 esdete
@@ -86,6 +87,7 @@ mtruecolor
 MVVMC
 NAMESLIST
 native
+njsproj
 nodir
 ntvs
 ONEDRIVE

@@ -709,7 +709,7 @@
   "files.exclude": {
     "**/node_modules/**": true,
     "**/.editorconfig": true,
-    "**/.gitignore": true,
+    //"**/.gitignore": true,
     "**/.ox*.json": true,
     "**/tsconfig*": true,
     "**/*.lock": true,
