@@ -28,8 +28,6 @@ import { Message } from './components/Message';
 /**
  * MAIN ENTRY POINT
  */
-
-// c8 ignore start
 if (import.meta.main) {
     try {
         await App.run();
@@ -38,4 +36,3 @@ if (import.meta.main) {
         process.exit(1);
     }
 }
-// c8 ignore stop
