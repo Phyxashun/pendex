@@ -199,8 +199,8 @@ export const compileJob = async (
 
         // Convert text archive to PDF using ToPdf utility
         const converter: ToPdfService = ToPdf.create({
-            fontSize: 8,
-            lineHeight: 12,
+            fontSize: 7,
+            lineHeight: 11,
             oneLongPage: false,
             syntaxHighlighting: true,
         });
