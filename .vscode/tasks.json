@@ -1,0 +1,25 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Run Pendex Home Server",
+      "type": "shell",
+      "command": "cd packages/home && bun run dev",
+      "isBackground": true
+    },
+    {
+      "label": "Run Pendex API Docs Server",
+      "type": "shell",
+      "command": "cd packages/api-docs && bun run dev",
+      "isBackground": true
+    },
+    {
+      "label": "Start All Pendex Servers",
+      "dependsOn": ["Run Home Server", "Run API Docs Server"],
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      }
+    }
+  ]
+}

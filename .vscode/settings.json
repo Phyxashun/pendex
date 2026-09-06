@@ -33,7 +33,7 @@
   //
   // // #region* 📁 EDITOR CORE
   //
-  "editor.fontFamily": "'JetBrainsMono NFM Regular'",
+  "editor.fontFamily": "'Iosevka NFM'",
   "editor.fontSize": 14,
   "editor.lineHeight": 1.4,
   "editor.fontLigatures": true,
@@ -88,7 +88,7 @@
   //
   // // #region* 📁 TERMINAL
   //
-  "terminal.integrated.fontFamily": "'JetBrainsMono NFM Regular'",
+  "terminal.integrated.fontFamily": "'Iosevka NFM'",
   "terminal.integrated.fontSize": 14,
   "terminal.integrated.lineHeight": 1,
   "terminal.integrated.enablePersistentSessions": false,

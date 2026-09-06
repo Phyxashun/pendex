@@ -1,0 +1,65 @@
+{
+  // FILE-PATH: .vscode/cspell-dictionary.json
+  //
+  //@ CSpell dictionary config to import into cspell.json configuration file
+  //
+  "version": "0.2",
+  "dictionaries": [
+    // Local custom dictionaries
+    "cspell-dictionary",
+    "cspell-acronyms",
+    "cspell-dictionary-en_GB",
+    "cspell-dictionary-en_US-A-D",
+    "cspell-dictionary-en_US-E-L",
+    "cspell-dictionary-en_US-M-R",
+    "cspell-dictionary-en_US-S-Z",
+    // CSpell built-in dictionaries
+    "typescript",
+    "javascript",
+    "html",
+    "css",
+    "markdown",
+    "npm",
+    "node",
+    "react-components",
+    "software-terms",
+    "software-tools"
+  ],
+  "dictionaryDefinitions": [
+    {
+      "name": "cspell-dictionary",
+      "path": "./cspell-dictionary.txt",
+      "addWords": true
+    },
+    {
+      "name": "cspell-acronyms",
+      "path": "./cspell-acronyms.txt",
+      "addWords": false
+    },
+    {
+      "name": "cspell-dictionary-en_GB",
+      "path": "./cspell-dictionary-en_GB.txt",
+      "addWords": false
+    },
+    {
+      "name": "cspell-dictionary-en_US-A-D",
+      "path": "./cspell-dictionary-en_US-A-D.txt",
+      "addWords": false
+    },
+    {
+      "name": "cspell-dictionary-en_US-E-L",
+      "path": "./cspell-dictionary-en_US-E-L.txt",
+      "addWords": false
+    },
+    {
+      "name": "cspell-dictionary-en_US-M-R",
+      "path": "./cspell-dictionary-en_US-M-R.txt",
+      "addWords": false
+    },
+    {
+      "name": "cspell-dictionary-en_US-S-Z",
+      "path": "./cspell-dictionary-en_US-S-Z.txt",
+      "addWords": false
+    }
+  ]
+}
