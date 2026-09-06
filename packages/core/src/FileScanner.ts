@@ -41,10 +41,17 @@ export async function loadIgnorePatterns(filePath: string): Promise<string[]> {
     return (
         content
             .split(/\r?\n/)
+
             // Trim whitespace from both ends
             .map(line => line.trim())
+
             // Remove empty lines and comments
-            .filter(line => line.trim() && !line.startsWith('#'))
+            .filter(
+                line =>
+                    line.trim() &&
+                    !line.startsWith('#') &&
+                    !line.startsWith('!'),
+            )
     );
 }
 

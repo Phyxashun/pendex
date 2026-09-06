@@ -32,7 +32,7 @@ import {
 } from '@pendex/core';
 import type { BunFile } from 'bun';
 import { mkdir, rm } from 'node:fs/promises';
-import ToPdf, { ToPdfService } from '../../../utils/ToPdf';
+import { ToPdf, ToPdfService } from '../../../utils/ToPdf';
 
 /**
  * Accumulators shared across every job in a compile run, before
@@ -201,7 +201,7 @@ export const compileJob = async (
         const converter: ToPdfService = ToPdf.create({
             fontSize: 8,
             lineHeight: 12,
-            oneLongPage: true,
+            oneLongPage: false,
             syntaxHighlighting: true,
         });
         await converter.convertToPdf(tempTxtPath, pdfPath);

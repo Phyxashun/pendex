@@ -51,7 +51,7 @@ export const DEFAULT_CONFIG: Required<Config> = {
     marginLeft: 50,
     marginRight: 50,
     fontFile:
-        '../assets/JetBrainsMono/JetBrainsMonoNLNerdFontPropo-Regular.ttf',
+        './assets/JetBrainsMonoNerdFont-Regular.ttf',
     textColor: rgb(0.96, 0.96, 0.94),
     textOpacity: 1.0,
     pageSize: 'Letter',
@@ -511,7 +511,7 @@ export class ToPdfService {
     }
 }
 
-export default class ToPdf {
+export class ToPdf {
     public static create(options?: Config): ToPdfService {
         const mergedConfig: Required<Config> = {
             ...DEFAULT_CONFIG,
