@@ -9,25 +9,25 @@
 # 3:1 for the intentionally de-emphasized comment/muted color).
 # ============================================================================
 
-name        = "Dracula"
-author      = "Zeno Rocha & contributors"
-version     = "1.1.0"
+name = "Dracula"
+author = "Zeno Rocha & contributors"
+version = "1.1.0"
 description = "Official Dracula palette, mirrored to Pendex's theme layout."
 
 ###############################################################################
 # ThemeColors interface
 ###############################################################################
 
-primary    = "#BD93F9"
-secondary  = "#FF79C6"
-success    = "#50FA7B"
-warning    = "#FFB86C"
-error      = "#FF5555"
-info       = "#8BE9FD"
-muted      = "#6272A4"
+primary = "#BD93F9"
+secondary = "#FF79C6"
+success = "#50FA7B"
+warning = "#FFB86C"
+error = "#FF5555"
+info = "#8BE9FD"
+muted = "#6272A4"
 foreground = "#F8F8F2"
 background = "#1A1A1A"
-titleBg    = "#262626"
+titleBg = "#262626"
 
 ###############################################################################
 # Extended Brand Palette
@@ -35,17 +35,17 @@ titleBg    = "#262626"
 
 [palette]
 
-background  = "#282A36"
+background = "#282A36"
 currentLine = "#44475A"
-foreground  = "#F8F8F2"
-comment     = "#6272A4"
-cyan        = "#8BE9FD"
-green       = "#50FA7B"
-orange      = "#FFB86C"
-pink        = "#FF79C6"
-purple      = "#BD93F9"
-red         = "#FF5555"
-yellow      = "#F1FA8C"
+foreground = "#F8F8F2"
+comment = "#6272A4"
+cyan = "#8BE9FD"
+green = "#50FA7B"
+orange = "#FFB86C"
+pink = "#FF79C6"
+purple = "#BD93F9"
+red = "#FF5555"
+yellow = "#F1FA8C"
 
 ###############################################################################
 # Website
@@ -58,17 +58,17 @@ yellow      = "#F1FA8C"
 
 heroBackground = "#F7F2E8"
 cardBackground = "#ECE3D4"
-border         = "#000000"
-heading        = "#2E2A27"
-body           = "#443E39"
-link           = "#3F5D78"
-linkHover      = "#6AAFB5"
-buttonPrimary  = "#D6A448"
-buttonHover    = "#E8C56A"
-buttonText     = "#1A1A1A"
-shadow         = "#00000055"
-grid           = "#DDD2C2"
-math           = "#8B5E3C"
+border = "#000000"
+heading = "#2E2A27"
+body = "#443E39"
+link = "#3F5D78"
+linkHover = "#6AAFB5"
+buttonPrimary = "#D6A448"
+buttonHover = "#E8C56A"
+buttonText = "#1A1A1A"
+shadow = "#00000055"
+grid = "#DDD2C2"
+math = "#8B5E3C"
 
 ###############################################################################
 # Terminal
@@ -76,10 +76,10 @@ math           = "#8B5E3C"
 
 [terminal]
 
-cursor            = "#BD93F9"
-cursorText        = "#1A1A1A"
-selection         = "#44475A"
-findHighlight     = "#F1FA8C"
+cursor = "#BD93F9"
+cursorText = "#1A1A1A"
+selection = "#44475A"
+findHighlight = "#F1FA8C"
 inactiveSelection = "#2C2C2C"
 
 ###############################################################################
@@ -88,22 +88,22 @@ inactiveSelection = "#2C2C2C"
 
 [ansi]
 
-black         = "#21222C"
-red           = "#FF5555"
-green         = "#50FA7B"
-yellow        = "#F1FA8C"
-blue          = "#BD93F9"
-magenta       = "#FF79C6"
-cyan          = "#8BE9FD"
-white         = "#F8F8F2"
-brightBlack   = "#6272A4"
-brightRed     = "#FF6E6E"
-brightGreen   = "#69FF94"
-brightYellow  = "#FFFFA5"
-brightBlue    = "#D6ACFF"
+black = "#21222C"
+red = "#FF5555"
+green = "#50FA7B"
+yellow = "#F1FA8C"
+blue = "#BD93F9"
+magenta = "#FF79C6"
+cyan = "#8BE9FD"
+white = "#F8F8F2"
+brightBlack = "#6272A4"
+brightRed = "#FF6E6E"
+brightGreen = "#69FF94"
+brightYellow = "#FFFFA5"
+brightBlue = "#D6ACFF"
 brightMagenta = "#FF92DF"
-brightCyan    = "#A4FFFF"
-brightWhite   = "#FFFFFF"
+brightCyan = "#A4FFFF"
+brightWhite = "#FFFFFF"
 
 ###############################################################################
 # Syntax Highlighting
@@ -111,18 +111,18 @@ brightWhite   = "#FFFFFF"
 
 [syntax]
 
-keyword   = "#FF79C6"
-type      = "#8BE9FD"
-class     = "#8BE9FD"
+keyword = "#FF79C6"
+type = "#8BE9FD"
+class = "#8BE9FD"
 interface = "#8BE9FD"
-function  = "#50FA7B"
-string    = "#F1FA8C"
-number    = "#BD93F9"
-constant  = "#BD93F9"
-property  = "#F8F8F2"
-operator  = "#FF79C6"
-comment   = "#6272A4"
-regex     = "#FF5555"
+function = "#50FA7B"
+string = "#F1FA8C"
+number = "#BD93F9"
+constant = "#BD93F9"
+property = "#F8F8F2"
+operator = "#FF79C6"
+comment = "#6272A4"
+regex = "#FF5555"
 attribute = "#50FA7B"
 namespace = "#8BE9FD"
 
@@ -132,11 +132,11 @@ namespace = "#8BE9FD"
 
 [git]
 
-added    = "#50FA7B"
+added = "#50FA7B"
 modified = "#FFB86C"
-deleted  = "#FF5555"
-renamed  = "#8BE9FD"
-ignored  = "#6272A4"
+deleted = "#FF5555"
+renamed = "#8BE9FD"
+ignored = "#6272A4"
 
 ###############################################################################
 # Diagnostics
@@ -144,10 +144,10 @@ ignored  = "#6272A4"
 
 [diagnostics]
 
-hint    = "#8BE9FD"
-info    = "#BD93F9"
+hint = "#8BE9FD"
+info = "#BD93F9"
 warning = "#FFB86C"
-error   = "#FF5555"
+error = "#FF5555"
 
 ###############################################################################
 # Diff
@@ -155,8 +155,8 @@ error   = "#FF5555"
 
 [diff]
 
-addedBackground    = "#1E3A2A"
-removedBackground  = "#3A1E28"
+addedBackground = "#1E3A2A"
+removedBackground = "#3A1E28"
 modifiedBackground = "#3A3320"
 
 ###############################################################################
@@ -171,22 +171,22 @@ modifiedBackground = "#3A3320"
 
 [brand]
 
-bookCover     = "#24303A"
-bookSpine     = "#2F3B45"
-paper         = "#F7F2E8"
-banner        = "#F3E9D6"
-outline       = "#000000"
-math          = "#8B5E3C"
-folder        = "#50FA7B"
-manifest      = "#8BE9FD"
-compile       = "#BD93F9"
-split         = "#50FA7B"
-scanner       = "#FF79C6"
-source        = "#50FA7B"
-web           = "#8BE9FD"
-style         = "#FFB86C"
-terminal      = "#44475A"
+bookCover = "#24303A"
+bookSpine = "#2F3B45"
+paper = "#F7F2E8"
+banner = "#F3E9D6"
+outline = "#000000"
+math = "#8B5E3C"
+folder = "#50FA7B"
+manifest = "#8BE9FD"
+compile = "#BD93F9"
+split = "#50FA7B"
+scanner = "#FF79C6"
+source = "#50FA7B"
+web = "#8BE9FD"
+style = "#FFB86C"
+terminal = "#44475A"
 configuration = "#F1FA8C"
 documentation = "#8BE9FD"
-testing       = "#FF79C6"
-misc          = "#6272A4"
+testing = "#FF79C6"
+misc = "#6272A4"

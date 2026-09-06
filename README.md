@@ -208,45 +208,45 @@ Promise~SplitFileOutcome~
 ### Why this split, and why not everywhere
 
 - **`ArchiveFormat.ts` exists because `Compile` and `Split` used to
-each have half-knowledge of the same text format** — banners were
-_written_ in one file and _parsed_ with separately-maintained regexes
-in another. That's the exact failure mode SoC prevents: two places
-that must agree on one thing, with nothing enforcing it. Now there's
-one file that owns the format in both directions.
+  each have half-knowledge of the same text format** — banners were
+  _written_ in one file and _parsed_ with separately-maintained regexes
+  in another. That's the exact failure mode SoC prevents: two places
+  that must agree on one thing, with nothing enforcing it. Now there's
+  one file that owns the format in both directions.
 - **`CompileService`/`SplitService` never import `@clack/prompts`.**
-That's the actual test of the boundary — if a service needed the
-terminal to do its job, the split wouldn't be real. It also means
-`runCompile()` / `runSplit()` work headlessly (used by the standalone
-`import.meta.main` entry points) without dragging along
-interactive-only rendering.
+  That's the actual test of the boundary — if a service needed the
+  terminal to do its job, the split wouldn't be real. It also means
+  `runCompile()` / `runSplit()` work headlessly (used by the standalone
+  `import.meta.main` entry points) without dragging along
+  interactive-only rendering.
 - **`Exit.ts` is deliberately _not_ split** into command/service/view.
-It's one `outro()` call and a `process.exit()` — three files for that
-would be separation for its own sake. See the comment at the top of
-`Exit.ts`.
+  It's one `outro()` call and a `process.exit()` — three files for that
+  would be separation for its own sake. See the comment at the top of
+  `Exit.ts`.
 - **`Application` (`App.ts`) is deliberately _not_ split** either.
-It's the root — in the React analogy, the thing that mounts everything
-else — and its only real behavior (the menu select-loop) is inherently
-both state and render at once. Forcing that apart would add
-indirection without adding clarity.
+  It's the root — in the React analogy, the thing that mounts everything
+  else — and its only real behavior (the menu select-loop) is inherently
+  both state and render at once. Forcing that apart would add
+  indirection without adding clarity.
 - **`ThemePalette.ts` / `useTheme.ts`** split the same way: palette
-(_what colors mean_) from the Proxy-based chaining engine (_how
-composition works_). `useTheme.ts` doesn't know what a color is;
-`ThemePalette.ts` doesn't know how chaining works. This also means
-swapping `picocolors` for a custom `Color` class later only touches
-`ThemePalette.ts`.
+  (_what colors mean_) from the Proxy-based chaining engine (_how
+  composition works_). `useTheme.ts` doesn't know what a color is;
+  `ThemePalette.ts` doesn't know how chaining works. This also means
+  swapping `picocolors` for a custom `Color` class later only touches
+  `ThemePalette.ts`.
 
 ## Configuration
 
 Defaults live in [`src/config/config.toml`](./src/config/config.toml):
 
 - `outputDir` / `rebuiltDir` — where `compile` writes archives and
-`split` rebuilds into, respectively.
+  `split` rebuilds into, respectively.
 - `exclude` — glob patterns applied globally, on top of `.gitignore`.
 - `[[jobs]]` — one block per output `.txt` file: `filename`,
-`description`, `include` globs, and job-specific `exclude` globs. **A
-job with an empty `include` list is a _remainder_ job** — it catches
-every file no earlier job claimed (see `8_MISC_FILES`) — and must stay
-last in the array.
+  `description`, `include` globs, and job-specific `exclude` globs. **A
+  job with an empty `include` list is a _remainder_ job** — it catches
+  every file no earlier job claimed (see `8_MISC_FILES`) — and must stay
+  last in the array.
 
 At runtime, an optional `runtime.config.json` in the project root
 overrides any of the above. There's no interactive settings editor;
@@ -260,18 +260,18 @@ present, and hands back the same `Config` object to every command.
 ## Conventions
 
 - **No `any`.** The whole tree type-checks under `strict` with zero
-explicit-`any` usage.
+  explicit-`any` usage.
 - **Bun over Node.** File I/O, globbing, TOML parsing, and shelling
-out all use Bun's built-ins (`Bun.file`, `Bun.write`, `Bun.Glob`,
-`Bun.$`, `Bun.TOML`); there are no `node:*` imports anywhere in
-`src/`. Path manipulation (`joinPath`/`dirName`/`baseName`/`extName`
-in `Constants.ts`) is implemented with small local string helpers
-instead of `node:path` for the same reason.
+  out all use Bun's built-ins (`Bun.file`, `Bun.write`, `Bun.Glob`,
+  `Bun.$`, `Bun.TOML`); there are no `node:*` imports anywhere in
+  `src/`. Path manipulation (`joinPath`/`dirName`/`baseName`/`extName`
+  in `Constants.ts`) is implemented with small local string helpers
+  instead of `node:path` for the same reason.
 - **User-facing strings live as a `STRINGS` field on the class that
-uses them**, not in a shared strings module. Every command and view
-has its own `private readonly STRINGS = { ... } as const` at the top —
-the tradeoff is intentional: it favors "one obvious place to edit this
-copy" over textbook copy/logic separation.
+  uses them**, not in a shared strings module. Every command and view
+  has its own `private readonly STRINGS = { ... } as const` at the top —
+  the tradeoff is intentional: it favors "one obvious place to edit this
+  copy" over textbook copy/logic separation.
 
 ## Header comments
 

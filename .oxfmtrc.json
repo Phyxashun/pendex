@@ -24,16 +24,12 @@
     "**/*.pdf",
     "**/ALL/**",
     "**/ALL_REBUILT/**",
-    "**/logs/**"
+    "**/logs/**",
+    "utils/**"
   ],
   "overrides": [
     {
-      "files": [
-        "*.json",
-        "*.jsonc",
-        "*.md",
-        "*.toml"
-      ],
+      "files": ["*.json", "*.jsonc", "*.md", "*.toml"],
       "options": {
         "tabWidth": 2
       }

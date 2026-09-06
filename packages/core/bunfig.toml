@@ -1,34 +1,34 @@
 # FILE-PATH: packages/core/bunfig.toml
 #
 [test]
-root    = "."
+root = "."
 preload = ["./tests/preload.ts"]
 
 # Set timeout to 0 to disable it completely across all tests
 timeout = 0
 coveragePathIgnorePatterns = [
-    # Untestable command line entry points and export files
-    "\\.bin\\.ts$",
-    "**/index*",
+  # Untestable command line entry points and export files
+  "\\.bin\\.ts$",
+  "**/index*",
 
-    # Test files and folders
-    "**/*.test.ts",
-    "**/*.spec.ts",
-    "**/*.e2e.ts",
+  # Test files and folders
+  "**/*.test.ts",
+  "**/*.spec.ts",
+  "**/*.e2e.ts",
 
-    # Configuration files
-    "*.config.js",
-    "*.config.ts",
-    "vite.config.*",
+  # Configuration files
+  "*.config.js",
+  "*.config.ts",
+  "vite.config.*",
 
-    # Build output & Generated code
-    "dist/**",
-    "ALL/**",
-    "ALL_REBUILT/**",
-    "**/node_modules/**",
+  # Build output & Generated code
+  "dist/**",
+  "ALL/**",
+  "ALL_REBUILT/**",
+  "**/node_modules/**",
 
-    # Utilities that don't need testing
-    "**/types/**",
-    "**/utils/**",
-    "**/tests/preload.*",
+  # Utilities that don't need testing
+  "**/types/**",
+  "**/utils/**",
+  "**/tests/preload.*",
 ]

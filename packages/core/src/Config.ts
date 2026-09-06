@@ -204,8 +204,7 @@ export class ConfigManager {
 
             if (parsed.exclude) {
                 merged.exclude = Array.from(
-                    // Safely falls back to an empty array if
-parsed.exclude is malformed
+                    // Safely falls back to an empty array if parsed.exclude is malformed
                     new Set([
                         ...(parsed.exclude ?? []),
                         Constants.RUNTIME_CONFIG_PATH,
@@ -214,8 +213,7 @@ parsed.exclude is malformed
             }
 
             if (parsed.jobs) {
-                // Re-mapping incoming partial jobs ensures strict Job
-compliance
+                // Re-mapping incoming partial jobs ensures strict Job compliance
                 merged.jobs = parsed.jobs.map(
                     (job: DeepPartial<Job>, index: number): Job => {
                         const baseJob: Job | undefined = merged.jobs[index];

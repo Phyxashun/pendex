@@ -37,7 +37,7 @@ Bun workspaces, strictly acyclic package graph:
   "The website" below). It has no relationship to the CLI packages
   other than living in the same workspace.
 - Cross-package round-trip tests live at the repo root
-(`tests/integration.test.ts`).
+  (`tests/integration.test.ts`).
 - Root `src/` is the CLI shell: `App.ts` (menu orchestrator), `commands/`
   (thin containers), `components/`, `utils/`.
 
@@ -91,7 +91,7 @@ byte-fidelity is the entire point of the format.
   with no `default.toml` on disk, which silently degraded every fresh
   install to the fallback palette instead of loading `pendex.toml` —
   caught only because a test asserted on it
-(`packages/core/tests/bootstrap.test.ts`).
+  (`packages/core/tests/bootstrap.test.ts`).
   Don't reintroduce a theme name that doesn't correspond to a file.
 - `[brand]` table's Category-named keys (`source`, `web`, `style`,
   `terminal`, `configuration`, `documentation`, `testing`, `misc`) drive

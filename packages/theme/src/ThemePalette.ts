@@ -329,8 +329,7 @@ export function parsePendexTheme(
         description:
             typeof obj.description === 'string' ? obj.description : undefined,
         colors: extractColors(obj),
-    } as Partial<MutableTheme> as MutableTheme; // Double assertion
-tells TS it will be filled
+    } as Partial<MutableTheme> as MutableTheme; // Double assertion tells TS it will be filled
 
     // The loop safely populates the remaining keys
     for (const key of EXTENDED_TABLE_KEYS) {

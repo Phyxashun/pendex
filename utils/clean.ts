@@ -1,4 +1,4 @@
-import { $, Glob } from "bun";
+import { $, Glob } from 'bun';
 
 /**
  * Logs a fatal, uncaught error to the console in a consistent format.
@@ -28,23 +28,31 @@ const emptyDirectoryContents = async (dirPath: string): Promise<void> => {
 };
 
 const main = async () => {
-    const nodeGlob = new Glob("**/node_modules");
-    const bunGlob = new Glob("**/*.{lock,lockb}");
+    const nodeGlob = new Glob('**/node_modules');
+    const bunGlob = new Glob('**/*.{lock,lockb}');
 
     // Using Bun's global "import.meta.dir" to ensure absolute execution paths
-    const projectRoot = import.meta.dir || ".";
+    const projectRoot = import.meta.dir || '.';
 
-    console.log("Scanning for node_modules...");
-    for await (const rawPath of nodeGlob.scan({ cwd: projectRoot, onlyFiles: false })) {
-        console.log("Removing Directory: ", rawPath);
+    console.log('Scanning for node_modules...');
+    for await (const rawPath of nodeGlob.scan({
+        cwd: projectRoot,
+        onlyFiles: false,
+    })) {
+        console.log('Removing Directory: ', rawPath);
 
         try {
             // This moves the directory safely to your OS Recycle Bin/Trash
             await trash(rawPath);
         } catch (err: any) {
             // Handle locked directory fallback safely
-            if (err.message?.includes("EACCES") || err.message?.includes("permission denied")) {
-                console.warn(`⚠️  Directory is locked by system. Attempting to empty contents of: ${rawPath}`);
+            if (
+                err.message?.includes('EACCES') ||
+                err.message?.includes('permission denied')
+            ) {
+                console.warn(
+                    `⚠️  Directory is locked by system. Attempting to empty contents of: ${rawPath}`,
+                );
                 await emptyDirectoryContents(rawPath);
             } else {
                 console.error(`Failed to remove ${rawPath}:`, err);
@@ -52,9 +60,9 @@ const main = async () => {
         }
     }
 
-    console.log("Scanning for lockfiles...");
+    console.log('Scanning for lockfiles...');
     for await (const rawPath of bunGlob.scan({ cwd: projectRoot })) {
-        console.log("Removing File: ", rawPath);
+        console.log('Removing File: ', rawPath);
         try {
             await $`rm -f ${rawPath}`;
         } catch (err) {
@@ -62,7 +70,7 @@ const main = async () => {
         }
     }
 
-    console.log("✨ Clean completed successfully!");
+    console.log('✨ Clean completed successfully!');
 };
 
 /**

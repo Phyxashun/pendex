@@ -35,12 +35,12 @@ const wrapWithFormat = (
     };
     const wrapMsg = wrapAnsi(message, width, opts).split('\n');
     const maxWidthNormal = wrapMsg.reduce(
-        (sum: number, ln: number) => Math.max(stringWidth(ln), sum),
+        (sum, ln) => Math.max(stringWidth(ln), sum),
         0,
     );
     const maxWidthFormat = wrapMsg
         .map(format)
-        .reduce((sum: number, ln: number) => Math.max(stringWidth(ln), sum), 0);
+        .reduce((sum, ln) => Math.max(stringWidth(ln), sum), 0);
     const wrapWidth = width - (maxWidthFormat - maxWidthNormal);
     return wrapAnsi(message, wrapWidth, opts);
 };

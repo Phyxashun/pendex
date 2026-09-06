@@ -48,5 +48,5 @@ the detected terminal environment:
 
 ```ts
 Colors.disable(); // All stylers will now return plain, unmodified strings
-Colors.enable();  // Force colors back on
+Colors.enable(); // Force colors back on
 ```

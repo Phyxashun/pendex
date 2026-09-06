@@ -32,7 +32,7 @@ import {
 } from '@pendex/core';
 import type { BunFile } from 'bun';
 import { mkdir, rm } from 'node:fs/promises';
-import TxtToPdf, { TxtToPdfConverter } from '../../../utils/TxtToPdf';
+import ToPdf, { ToPdfService } from '../../../utils/ToPdf';
 
 /**
  * Accumulators shared across every job in a compile run, before
@@ -197,14 +197,14 @@ export const compileJob = async (
         // Write temp text archive
         await Bun.write(tempTxtPath, archiveContent);
 
-        // Convert text archive to PDF using TxtToPdf utility
-        const converter: TxtToPdfConverter = TxtToPdf.create({
+        // Convert text archive to PDF using ToPdf utility
+        const converter: ToPdfService = ToPdf.create({
             fontSize: 8,
             lineHeight: 12,
             oneLongPage: true,
             syntaxHighlighting: true,
         });
-        await converter.convertTxtToPdf(tempTxtPath, pdfPath);
+        await converter.convertToPdf(tempTxtPath, pdfPath);
 
         // Remove temporary text file via Bun Shell
         await Bun.$`rm -f ${tempTxtPath}`;

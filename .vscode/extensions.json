@@ -1,20 +1,20 @@
 {
   /**
-* @file extensions.json
-* @description This file defines recommended and optional extensions for the workspace.
-*
-* VS Code uses this file to suggest extensions to anyone who opens the project.
-* - "recommendations": Extensions that are strongly suggested for all contributors.
-* - "unwantedRecommendations": Extensions that should be avoided in this workspace.
-*
-* This helps maintain a consistent development environment across the team.
-*
-* @usage
-* Place this file inside the `.vscode` folder at the root of your project.
-* VS Code will automatically read it and prompt users to install the listed extensions.
-*
-* @note This file is in JSONC (JSON with comments) format so comments are allowed.
-*/
+   * @file extensions.json
+   * @description This file defines recommended and optional extensions for the workspace.
+   *
+   * VS Code uses this file to suggest extensions to anyone who opens the project.
+   * - "recommendations": Extensions that are strongly suggested for all contributors.
+   * - "unwantedRecommendations": Extensions that should be avoided in this workspace.
+   *
+   * This helps maintain a consistent development environment across the team.
+   *
+   * @usage
+   * Place this file inside the `.vscode` folder at the root of your project.
+   * VS Code will automatically read it and prompt users to install the listed extensions.
+   *
+   * @note This file is in JSONC (JSON with comments) format so comments are allowed.
+   */
   "recommendations": [
     "aaron-bond.better-comments",
     "alexcvzz.vscode-sqlite",

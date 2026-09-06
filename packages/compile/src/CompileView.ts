@@ -76,8 +76,7 @@ export class CompileView extends View {
 
             this.renderExcludes(ctx.excludes.join(', '));
 
-            // Build tasks that execute live service methods inside
-Clack's runner
+            // Build tasks that execute live service methods inside Clack's runner
             const jobTasks: Task[] = await this.buildJobTasks(ctx);
 
             // Clack runs tasks one-by-one, showing live spinner progress
@@ -89,8 +88,7 @@ Clack's runner
             // Render final summary block
             this.renderSummary(this.totalFiles);
 
-            const success: string =
-`${this.STRINGS.outroSuccess.toUpperCase()}`;
+            const success: string = `${this.STRINGS.outroSuccess.toUpperCase()}`;
             log.success(Colors.bgGreen(Colors.black(success)));
         } catch (err: unknown) {
             log.error(`${theme.error(this.STRINGS.error)}`);
@@ -125,18 +123,13 @@ Clack's runner
                         },
                     );
 
-                    const warningCount: string =
-`${theme.warning(`${outcome.fileCount}`)}`;
+                    const warningCount: string = `${theme.warning(`${outcome.fileCount}`)}`;
                     const styledCount: string = `${theme.bold(warningCount)}`;
 
-                    const rawDesc1: string =
-`${rawDesc.charAt(0).toUpperCase()}`;
-                    const rawDesc2: string =
-`${rawDesc.slice(1).toLowerCase()}`;
-                    const combinedDesc: string =
-`${rawDesc1}${rawDesc2} ${this.STRINGS.pastAction}`;
-                    const formattedDesc: string =
-`${resultStyle(combinedDesc)}`;
+                    const rawDesc1: string = `${rawDesc.charAt(0).toUpperCase()}`;
+                    const rawDesc2: string = `${rawDesc.slice(1).toLowerCase()}`;
+                    const combinedDesc: string = `${rawDesc1}${rawDesc2} ${this.STRINGS.pastAction}`;
+                    const formattedDesc: string = `${resultStyle(combinedDesc)}`;
 
                     this.totalFiles += outcome.fileCount;
                     return `${styledCount} ${formattedDesc}`;
@@ -176,8 +169,7 @@ Clack's runner
             jobCount: `${this.STRINGS.resultJobs}: ${rawResult.jobCount}`,
         };
 
-        const message: string =
-`${result.outputDir}\n${result.fileCount}\n${result.jobCount}`;
+        const message: string = `${result.outputDir}\n${result.fileCount}\n${result.jobCount}`;
         const title: string = `${this.STRINGS.resultTitle}`;
         const options: NoteOptions = {
             format: this.successFormatter,

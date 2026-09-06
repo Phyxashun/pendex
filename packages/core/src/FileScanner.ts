@@ -98,7 +98,7 @@ export async function resolveJobFiles(
     }
 
     for (const pattern of job.include) {
-        const files = new Bun.Glob(pattern).scan(scanOptions);
+        const files = new Bun.Glob(pattern!).scan(scanOptions);
         for await (const file of files) {
             const posixFile = toPosixPath(file);
 
