@@ -51,7 +51,7 @@ export const DEFAULT_CONFIG: Required<Config> = {
     marginLeft: 50,
     marginRight: 50,
     fontFile:
-        './assets/IosevkaNerdFontMono-Regular.ttf',
+        './assets/IosevkaNerdFontMono-Regular-stripped.ttf',
     textColor: rgb(0.96, 0.96, 0.94),
     textOpacity: 1.0,
     pageSize: 'Letter',
