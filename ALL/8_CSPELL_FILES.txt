@@ -1,0 +1,555 @@
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■-< START >-■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+// FILE NAME: : cspell-dictionary.txt 
+// TYPE     : .TXT
+// PATH     : .vscode/cspell-dictionary.txt
+// PROCESSED: 2026-09-06T20:42:17.704Z
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■-< START >-■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+# FILE-PATH: .vscode/cspell-dictionary.txt
+#
+# Custom CSpell Dictionary
+#
+# Add additional words to this file
+#
+# There should be one word per line
+#
+acss
+adoc
+alexcvzz
+Allman
+aouy
+APGL
+appconfig
+ARGB
+AUTOINCREMENT
+background-color
+bandaid
+bierner
+BLOCKEND
+BLOCKNAME
+BLOCKSTART
+bradlc
+brblack
+brblue
+brcyan
+brgreen
+brmagenta
+browserslistrc
+brred
+brwhite
+bryellow
+bun
+bunfig
+Cheatsheet
+Chrs
+clike
+clsx
+crustjs
+CTYPE
+daisyui
+darkgray
+deconsolidate
+Deconsolidation
+deconsolidator
+dotenv
+dskwrk
+ecmel
+editorconfig
+end_of_line
+endex
+esdete
+eslintcache
+eslintrc
+fabiospampinato
+FILECONFIG
+FILESCONFIG
+Fira
+fontkit
+Frms
+gulpfile
+gydunhn
+headlessly
+HKCU
+horiz
+Howitworks
+hyoban
+IGNORECONFIG
+IGNORELIST
+indent_size
+indent_style
+insert_final_newline
+Iosevka
+ipynb
+jspx
+kamikillerto
+LASTEXITCODE
+Libertinus
+lockfiles
+maptz
+max_line_length
+mhtml
+mshorthand
+mtruecolor
+MVVMC
+NAMESLIST
+native
+nodir
+ntvs
+ONEDRIVE
+oxfmt
+oxfmtrc
+oxlint
+oxlintrc
+pcss
+pendex
+𝒫endex
+phyxashun
+pkief
+pmneo
+prefersdark
+prettierrc
+Propo
+pycache
+quentiumyt
+readbysearch
+Rebuilder
+Renderable
+root_by_default
+Segoe
+serviceworker
+smol
+styl
+sudoaugustin
+tailwind
+tailwindcss
+tamasfe
+TEARLINE
+Terminess
+thang
+toml
+tomoki
+trim_trailing_whitespace
+Truecolor
+tsgo
+tsgolint
+tsimporter
+UNICODE
+𝕌NICODE
+unparseable
+vbhtml
+venv
+vite
+vitejs
+vitest
+WCAG
+whichdir
+wxss
+wzulfikar
+xabikos
+yoavbls
+yzhang
+zalgo
+
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■-<  END  >-■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+// FILE NAME: : cspell-dictionary.txt 
+// TYPE     : .TXT
+// PATH     : .vscode/cspell-dictionary.txt
+// PROCESSED: 2026-09-06T20:42:17.704Z
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■-<  END  >-■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■-< START >-■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+// FILE NAME: : cspell-dicitionary-acronyms.txt 
+// TYPE     : .TXT
+// PATH     : .vscode/cspell-dicitionary-acronyms.txt
+// PROCESSED: 2026-09-06T20:42:17.704Z
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■-< START >-■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+## Acronyms, and Initialisms specific to American English only
+##
+## For acronyms that are valid for all English variants,
+## add them to en_shared/src/acronyms.txt
+AITA # Am I the Asshole ?
+ATF # Bureau of Alcohol, Tobacco, Firearms and Explosives
+ATM # Automated Teller Machine
+BATFE # Bureau of Alcohol, Tobacco, Firearms and Explosives
+BFF # Best Friends Forever
+BFFs # Best Friends Forever
+CDT # Central Daylight Time
+CIA # Central Intelligence Agency
+CST # Central Standard Time
+CTA # Counter-Terrorism Act (and other acronyms)
+DEA # Drug Enforcement Administration
+DHS # Department of Homeland Security
+DNC # Democratic National Committee
+DoD # Department of Defense
+DOD # Department of Defense
+DoJ # Department of Justice
+DOJ # Department of Justice
+DoT # Department of Transportation
+DOT # Department of Transportation
+DRM # Digital Rights Management
+EDT # Eastern Daylight Time
+EEA # European Economic Area
+EPA # Environmental Protection Agency
+ER # Emergency Room
+EST # Eastern Standard Time
+FAQ # Frequently Asked Questions
+FBI # Federal Bureau of Investigation
+FCC # Federal Communications Commission
+FDA # Food and Drug Administration
+FLOTUS # First Lady of the United States
+FTC # Federal Trade Commission
+GMT # Greenwich Mean Time
+GOP # Grand Old Party (Republican Party)
+HHS # Department of Health and Human Services
+IFTTT # If This Then That (used in computing)
+LPGA # Ladies Professional Golf Association
+MDT # Mountain Daylight Time
+MLB # Major League Baseball
+MST # Mountain Standard Time
+NAIA # National Association of Intercollegiate Athletics
+NASA # National Aeronautics and Space Administration
+NASCAR # National Association for Stock Car Auto Racing
+NBA # National Basketball Association
+NCAA # National Collegiate Athletic Association
+NHL # National Hockey League
+NPS # National Park Service
+NRA # National Rifle Association
+PDT # Pacific Daylight Time
+PGA # Professional Golfers Association
+POTUS # President of the United States
+PST # Pacific Standard Time
+PTO # Paid Time Off
+ROI # Return On Investment
+SCOTUS # Supreme Court of the United States
+SEC # Securities and Exchange Commission
+TSA # Transportation Security Administration
+USOPC # United States Olympic & Paralympic Committee
+USPS # United States Postal Service
+USTA # United States Tennis Association
+UTC # Coordinated Universal Time
+VPPA # Video Privacy Protection Act
+WNBA # Women's National Basketball Association
+YMCA # Young Men's Christian Association
+YWCA # Young Women's Christian Association
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■-<  END  >-■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+// FILE NAME: : cspell-dicitionary-acronyms.txt 
+// TYPE     : .TXT
+// PATH     : .vscode/cspell-dicitionary-acronyms.txt
+// PROCESSED: 2026-09-06T20:42:17.704Z
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■-<  END  >-■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■-< START >-■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+// FILE NAME: : cspell.json 
+// TYPE     : .JSON
+// PATH     : .vscode/cspell.json
+// PROCESSED: 2026-09-06T20:42:17.704Z
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■-< START >-■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+{
+  // FILE-PATH: .vscode/cspell.json
+  //
+  "enabled": true,
+  "version": "0.2",
+  "language": "en, en-GB",
+  "words": [
+    // List of words to be considered correct
+  ],
+  "flagWords": [
+    // List of words to be always considered incorrect
+    // Extracted into .vscode/cspell-flagwords.json via the import block below
+  ],
+  "ignoreWords": [
+    // Add any specific words you want to ignore here
+  ],
+  "ignorePaths": [
+    "**/ALL/**",
+    "**/ALL_REBUILT/**",
+    "**/node_modules/**",
+    "**/dist/**",
+    "**/build/**"
+  ],
+  "maxNumberOfProblems": 10000,
+  "minWordLength": 4,
+  "allowCompoundWords": true,
+  "dictionaries": [
+    // Local custom dictionaries
+    // Extracted into .vscode/cspell-dictionary.json via the import block below
+  ],
+  "dictionaryDefinitions": [
+    // Local custom dictionary definition files
+    // Extracted into .vscode/cspell-dictionary.json via the import block below
+  ],
+  "ignoreRegExpList": [
+    // List of patterns to be ignored
+  ],
+  "includeRegExpList": [
+    // (Advanced) limits the text checked to be only that matching the expressions in the list
+  ],
+  "patterns": [
+    // Define named patterns to be used with ignoreRegExpList and includeRegExpList
+  ],
+  "languageSettings": [
+    // Allow configuration to be based upon the programming language and/or the language locale
+    // https://cspell.org/docs/Configuration/language-settings
+  ],
+  "overrides": [
+    // Apply settings for specific files in your project
+    //
+    // Force `*.lock` and `*.lockb` files to be treated as `cpp` files:
+    {
+      "filename": "**/{*.lock,*.lockb}",
+      "languageId": "json"
+    },
+    {
+      "filename": "**/images/**",
+      "enabled": false // Disable spellchecking.
+    }
+  ],
+  "import": [
+    // Import other cspell configuration files if necessary
+    "./cspell-flagwords.json",
+    "./cspell-dictionary.json"
+  ]
+}
+
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■-<  END  >-■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+// FILE NAME: : cspell.json 
+// TYPE     : .JSON
+// PATH     : .vscode/cspell.json
+// PROCESSED: 2026-09-06T20:42:17.704Z
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■-<  END  >-■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■-< START >-■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+// FILE NAME: : cspell-flagwords.json 
+// TYPE     : .JSON
+// PATH     : .vscode/cspell-flagwords.json
+// PROCESSED: 2026-09-06T20:42:17.704Z
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■-< START >-■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+{
+  // FILE-PATH: .vscode/cspell-flagwords.json
+  //
+  //@ CSpell flagword list to import into cspell.json configuration file
+  //
+  "version": "0.2",
+  "flagWords": [
+    //* Regional Spelling Clashes (US / GB Variant Expansion)
+    "aluminium -> aluminum",
+    "analyse -> analyze",
+    "cancelled -> canceled",
+    "catalogue -> catalog",
+    "centre -> center",
+    "colour -> color",
+    "defence -> defense",
+    "dialogue -> dialog",
+    "favourite -> favorite",
+    "initialise -> initialize",
+    "labour -> labor",
+    "licence -> license",
+    "moulding -> molding",
+    "neighbour -> neighbor",
+    "offence -> offense",
+    "organise -> organize",
+    "programme -> program",
+    "serialise -> serialize",
+    "travelled -> traveled",
+
+    //* Tech, Code Quality, & Inclusive Language Flagwords
+    "blacklist -> denylist, blocklist",
+    "dummy -> stub, mock, placeholder",
+    "grandfathered -> legacy",
+    "he_she -> they",
+    "man_hours -> person-hours, effort-hours",
+    "master -> main, primary",
+    "native -> built-in, local",
+    "sanity -> smoke, confidence-check",
+    "slave -> replica, secondary",
+    "whitelist -> allowlist",
+
+    //* Database & HTTP State Terminology
+    "authenicate -> authenticate",
+    "authorisation -> authorization",
+    "cashe -> cache",
+    "clien -> client",
+    "cookies -> cookie",
+    "persistance -> persistence",
+    "querystring -> query string",
+    "statelessness -> stateless",
+
+    //* Time, Scheduling, & Cron Formatting
+    "cronjob -> cron job",
+    "intervale -> interval",
+    "milisecond -> millisecond",
+    "nanosecond -> nanosecond",
+    "scheduale -> schedule",
+    "timestamped -> timestamp",
+    "timezone -> time zone",
+
+    //* Git Operations & DevOps Actions
+    "cherrypick -> cherry-pick",
+    "deploiement -> deployment",
+    "initilize -> initialize",
+    "merg -> merge",
+    "rebaseing -> rebasing",
+    "stach -> stash",
+    "upstream -> upstream",
+
+    //* API & Data Format Standards
+    "endipoint -> endpoint",
+    "graphql -> GraphQL",
+    "jason -> json",
+    "paylod -> payload",
+    "restfull -> restful",
+    "serializer -> serialiser",
+    "web_socket -> websocket",
+
+    //* UI Elements & Layout (Tailwind/CSS Specific)
+    "alignement -> alignment",
+    "background-color -> background",
+    "border-radius -> rounded",
+    "flexbox -> flex",
+    "font-stile -> font-style",
+    "pading -> padding",
+    "responsiv -> responsive",
+    "z-indes -> z-index",
+
+    //* Mathematical & Cryptographic Key Terms
+    "algoritm -> algorithm",
+    "asymetric -> asymmetric",
+    "decritp -> decrypt",
+    "encryp -> encrypt",
+    "indices -> indexes",
+    "integer -> integer",
+
+    //* Common Typo Corrections & Full-Stack Tech Misspellings
+    "asynchronus -> asynchronous",
+    "begining -> beginning",
+    "calender -> calendar",
+    "canot -> cannot",
+    "callack -> callback",
+    "comit -> commit",
+    "componente -> component",
+    "configuation -> configuration",
+    "creds -> credentials",
+    "definately -> definitely",
+    "dependancy -> dependency",
+    "depricated -> deprecated",
+    "deserialise -> deserialize",
+    "documet -> document",
+    "enviroment -> environment",
+    "environement -> environment",
+    "exced -> exceed",
+    "extention -> extension",
+    "funtion -> function",
+    "incase -> in case, encase",
+    "interfece -> interface",
+    "librery -> library",
+    "lisener -> listener",
+    "middelware -> middleware",
+    "neccessary -> necessary",
+    "occured -> occurred",
+    "overide -> override",
+    "packege -> package",
+    "paramater -> parameter",
+    "promis -> promise",
+    "recieve -> receive",
+    "referal -> referral",
+    "reposetory -> repository",
+    "reqest -> request",
+    "responce -> response",
+    "seperate -> separate",
+    "stiled -> styled",
+    "submited -> submitted",
+    "successfull -> successful",
+    "teh -> the",
+    "tomorow -> tomorrow",
+    "truely -> truly",
+    "unhandeld -> unhandled",
+    "untill -> until",
+    "wether -> whether",
+    "wich -> which"
+  ]
+}
+
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■-<  END  >-■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+// FILE NAME: : cspell-flagwords.json 
+// TYPE     : .JSON
+// PATH     : .vscode/cspell-flagwords.json
+// PROCESSED: 2026-09-06T20:42:17.704Z
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■-<  END  >-■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■-< START >-■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+// FILE NAME: : cspell-dictionary.json 
+// TYPE     : .JSON
+// PATH     : .vscode/cspell-dictionary.json
+// PROCESSED: 2026-09-06T20:42:17.704Z
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■-< START >-■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+{
+  // FILE-PATH: .vscode/cspell-dictionary.json
+  //
+  //@ CSpell dictionary config to import into cspell.json configuration file
+  //
+  "version": "0.2",
+  "dictionaries": [
+    // Local custom dictionaries
+    "cspell-dictionary",
+    "cspell-acronyms",
+    "cspell-dictionary-en_GB",
+    "cspell-dictionary-en_US-A-D",
+    "cspell-dictionary-en_US-E-L",
+    "cspell-dictionary-en_US-M-R",
+    "cspell-dictionary-en_US-S-Z",
+    // CSpell built-in dictionaries
+    "typescript",
+    "javascript",
+    "html",
+    "css",
+    "markdown",
+    "npm",
+    "node",
+    "react-components",
+    "software-terms",
+    "software-tools"
+  ],
+  "dictionaryDefinitions": [
+    {
+      "name": "cspell-dictionary",
+      "path": "./cspell-dictionary.txt",
+      "addWords": true
+    },
+    {
+      "name": "cspell-acronyms",
+      "path": "./cspell-acronyms.txt",
+      "addWords": false
+    },
+    {
+      "name": "cspell-dictionary-en_GB",
+      "path": "./cspell-dictionary-en_GB.txt",
+      "addWords": false
+    },
+    {
+      "name": "cspell-dictionary-en_US-A-D",
+      "path": "./cspell-dictionary-en_US-A-D.txt",
+      "addWords": false
+    },
+    {
+      "name": "cspell-dictionary-en_US-E-L",
+      "path": "./cspell-dictionary-en_US-E-L.txt",
+      "addWords": false
+    },
+    {
+      "name": "cspell-dictionary-en_US-M-R",
+      "path": "./cspell-dictionary-en_US-M-R.txt",
+      "addWords": false
+    },
+    {
+      "name": "cspell-dictionary-en_US-S-Z",
+      "path": "./cspell-dictionary-en_US-S-Z.txt",
+      "addWords": false
+    }
+  ]
+}
+
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■-<  END  >-■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+// FILE NAME: : cspell-dictionary.json 
+// TYPE     : .JSON
+// PATH     : .vscode/cspell-dictionary.json
+// PROCESSED: 2026-09-06T20:42:17.704Z
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■-<  END  >-■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■

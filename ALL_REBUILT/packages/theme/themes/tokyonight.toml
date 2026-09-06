@@ -1,0 +1,193 @@
+# ============================================================================
+# Tokyo Night Theme for Pendex (night variant)
+# https://github.com/folke/tokyonight.nvim
+#
+# Mirrors pendex.toml's layout exactly. Background/titleBg standardized
+# to #1A1A1A/#262626; comment/muted and brightBlack nudged brighter from
+# the upstream values (#565F89, #414868) to clear the 3:1 floor against
+# both backgrounds — everything else is Tokyo Night's own palette,
+# already dark-terminal-legible by design.
+# ============================================================================
+
+name = "Tokyo Night"
+author = "Folke Lemaitre & contributors"
+version = "1.1.0"
+description = "Tokyo Night (night variant), mirrored to Pendex's theme layout."
+
+###############################################################################
+# ThemeColors interface
+###############################################################################
+
+primary = "#7AA2F7"
+secondary = "#BB9AF7"
+success = "#9ECE6A"
+warning = "#E0AF68"
+error = "#F7768E"
+info = "#7DCFFF"
+muted = "#656F9E"
+foreground = "#C0CAF5"
+background = "#1A1A1A"
+titleBg = "#262626"
+
+###############################################################################
+# Extended Brand Palette
+###############################################################################
+
+[palette]
+
+background = "#1A1B26"
+surface = "#24283B"
+foreground = "#C0CAF5"
+comment = "#656F9E"
+blue = "#7AA2F7"
+purple = "#BB9AF7"
+green = "#9ECE6A"
+yellow = "#E0AF68"
+red = "#F7768E"
+cyan = "#7DCFFF"
+orange = "#FF9E64"
+teal = "#2AC3DE"
+
+###############################################################################
+# Website
+###############################################################################
+#
+# Shared across every theme — the Pendex site keeps one identity
+# regardless of which terminal accent theme is active.
+
+[website]
+
+heroBackground = "#F7F2E8"
+cardBackground = "#ECE3D4"
+border = "#000000"
+heading = "#2E2A27"
+body = "#443E39"
+link = "#3F5D78"
+linkHover = "#6AAFB5"
+buttonPrimary = "#D6A448"
+buttonHover = "#E8C56A"
+buttonText = "#1A1A1A"
+shadow = "#00000055"
+grid = "#DDD2C2"
+math = "#8B5E3C"
+
+###############################################################################
+# Terminal
+###############################################################################
+
+[terminal]
+
+cursor = "#7AA2F7"
+cursorText = "#1A1A1A"
+selection = "#33467C"
+findHighlight = "#E0AF68"
+inactiveSelection = "#2C2C2C"
+
+###############################################################################
+# ANSI
+###############################################################################
+
+[ansi]
+
+black = "#15161E"
+red = "#F7768E"
+green = "#9ECE6A"
+yellow = "#E0AF68"
+blue = "#7AA2F7"
+magenta = "#BB9AF7"
+cyan = "#7DCFFF"
+white = "#A9B1D6"
+brightBlack = "#636D9D"
+brightRed = "#F7768E"
+brightGreen = "#9ECE6A"
+brightYellow = "#E0AF68"
+brightBlue = "#7AA2F7"
+brightMagenta = "#BB9AF7"
+brightCyan = "#7DCFFF"
+brightWhite = "#C0CAF5"
+
+###############################################################################
+# Syntax Highlighting
+###############################################################################
+
+[syntax]
+
+keyword = "#BB9AF7"
+type = "#2AC3DE"
+class = "#2AC3DE"
+interface = "#2AC3DE"
+function = "#7AA2F7"
+string = "#9ECE6A"
+number = "#FF9E64"
+constant = "#FF9E64"
+property = "#C0CAF5"
+operator = "#89DDFF"
+comment = "#656F9E"
+regex = "#B4F9F8"
+attribute = "#7AA2F7"
+namespace = "#2AC3DE"
+
+###############################################################################
+# Git
+###############################################################################
+
+[git]
+
+added = "#9ECE6A"
+modified = "#E0AF68"
+deleted = "#F7768E"
+renamed = "#7DCFFF"
+ignored = "#656F9E"
+
+###############################################################################
+# Diagnostics
+###############################################################################
+
+[diagnostics]
+
+hint = "#7DCFFF"
+info = "#7AA2F7"
+warning = "#E0AF68"
+error = "#F7768E"
+
+###############################################################################
+# Diff
+###############################################################################
+
+[diff]
+
+addedBackground = "#1E332A"
+removedBackground = "#332028"
+modifiedBackground = "#332C1E"
+
+###############################################################################
+# Pendex Brand
+###############################################################################
+#
+# Keys under `source`/`web`/`style`/`terminal`/`configuration`/
+# `documentation`/`testing`/`misc` are looked up by the CLI to color a
+# compile/split job's title by its Category — they must match the
+# Category string exactly (e.g. `configuration`, not `config`) or that
+# job silently falls back to the theme's default styling instead.
+
+[brand]
+
+bookCover = "#24303A"
+bookSpine = "#2F3B45"
+paper = "#F7F2E8"
+banner = "#F3E9D6"
+outline = "#000000"
+math = "#8B5E3C"
+folder = "#9ECE6A"
+manifest = "#7DCFFF"
+compile = "#7AA2F7"
+split = "#9ECE6A"
+scanner = "#BB9AF7"
+source = "#9ECE6A"
+web = "#7DCFFF"
+style = "#E0AF68"
+terminal = "#414868"
+configuration = "#FF9E64"
+documentation = "#7DCFFF"
+testing = "#BB9AF7"
+misc = "#656F9E"

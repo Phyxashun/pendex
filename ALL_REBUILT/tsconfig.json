@@ -1,0 +1,5 @@
+{
+  "extends": "./tsconfig.base.json",
+  "include": ["./tsconfig.root.json", "./packages/**/*"],
+  "exclude": ["./dist/**/*", "./logs/**/*"]
+}

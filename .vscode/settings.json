@@ -7,7 +7,7 @@
   //@
   //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
   //
-  // 📁👇 GENERAL SETTINGS
+  // // #region* 📁 GENERAL
   //
   "explorer.confirmDelete": false,
   "explorer.confirmDragAndDrop": false,
@@ -21,17 +21,17 @@
     "*.psd1": "powershell",
     "*.ps1": "powershell"
   },
-  // 🛑
+  // #endregion
   //
-  // 📁👇 WORKBENCH & APPEARANCE
+  // // #region* 📁 WORKBENCH & APPEARANCE
   //
   "workbench.colorTheme": "Theme Darker",
   "workbench.iconTheme": "flow-deep",
   "workbench.productIconTheme": "material-product-icons",
   "workbench.panel.defaultLocation": "right",
-  // 🛑
+  // #endregion
   //
-  // 📁👇 EDITOR CORE SETTINGS
+  // // #region* 📁 EDITOR CORE
   //
   "editor.fontFamily": "'JetBrainsMono NFM Regular'",
   "editor.fontSize": 14,
@@ -84,9 +84,9 @@
     "strings": true
   },
   "files.autoSave": "onFocusChange",
-  // 🛑
+  // #endregion
   //
-  // 📁👇 TERMINAL SETTINGS
+  // // #region* 📁 TERMINAL
   //
   "terminal.integrated.fontFamily": "'JetBrainsMono NFM Regular'",
   "terminal.integrated.fontSize": 14,
@@ -103,7 +103,7 @@
   },
   "terminal.integrated.defaultProfile.linux": "fish",
   "terminal.integrated.minimumContrastRatio": 1,
-  // 🛑
+  // #endregion
   //
   //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
   //@
@@ -111,7 +111,7 @@
   //@
   //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
   //
-  // 📁👇 HTML/CSS/TAILWINDCSS SETTINGS
+  // // #region* 📁 HTML/CSS/TAILWINDCSS
   //
   "css.styleSheets": ["node_modules/bulma/css/bulma.min.css", "src/**/*.css"],
   "css.lint.unknownAtRules": "ignore",
@@ -130,9 +130,9 @@
     "editor.formatOnSave": true
   },
   "html.format.wrapAttributes": "force-expand-multiline",
-  // 🛑
+  // #endregion
   //
-  // 📁👇 JAVASCRIPT/TYPESCRIPT SETTINGS
+  // // #region* 📁 JAVASCRIPT/TYPESCRIPT
   //
   "extensions.experimental.affinity": {
     "better-ts-errors.better-ts-errors": 1
@@ -224,17 +224,17 @@
   //
   // 🔍 CODE LENS (REFERENCES COUNTER)
   "js/ts.referencesCodeLens.enabled": true,
-  // 🛑
+  // #endregion
   //
-  // 📁👇 MARKDOWN SETTINGS
+  // // #region* 📁 MARKDOWN
   //
   "markdown.validate.enabled": true,
   "[markdown]": {
     "editor.defaultFormatter": "yzhang.markdown-all-in-one"
   },
-  // 🛑
+  // #endregion
   //
-  // 📁👇 JSON/JSONC SETTINGS
+  // // #region* 📁 JSON/JSONC
   //
   "json.schemaDownload.enable": false,
   "[json]": {
@@ -245,9 +245,9 @@
     "editor.defaultFormatter": "oxc.oxc-vscode",
     "editor.formatOnSave": true
   },
-  // 🛑
+  // #endregion
   //
-  // 📁👇 BUN SETTINGS
+  // // #region* 📁 BUN
   //
   // HOME SETTINGS:
   // The path to the `bun` executable.
@@ -267,22 +267,22 @@
   //"bun.debugTerminal.stopOnEntry": false,
   //"bun.test.filePattern": "**/*{.test.,.spec.,_test_,_spec_}{js,ts,tsx,jsx,mts,cts,cjs,mjs}",
   //"bun.test.customScript": "bun test",
-  // 🛑
+  // #endregion
   //
-  // 📁👇 GIT SETTINGS
+  // // #region* 📁 GIT
   //
   "git.enableSmartCommit": true,
   "git.autofetch": true,
   "git.confirmSync": false,
   "git.openRepositoryInParentFolders": "always",
-  // 🛑
+  // #endregion
   //
-  // 📁👇 POWERSHELL SETTINGS
+  // // #region* 📁 POWERSHELL
   //
   "[powershell]": {
     "editor.defaultFormatter": "ms-vscode.powershell"
   },
-  // 🛑
+  // #endregion
   //
   //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
   //@
@@ -290,7 +290,7 @@
   //@
   //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
   //
-  // 📁👇 TOML AND EDITORCONFIG SETTINGS
+  // // #region* 📁 TOML AND EDITORCONFIG
   //
   "[toml]": {
     "editor.defaultFormatter": "tamasfe.even-better-toml",
@@ -302,56 +302,56 @@
   "[editorconfig]": {
     "editor.defaultFormatter": "oxc.oxc-vscode"
   },
-  // 🛑
+  // #endregion
   //
-  // 📁👇 LINTING/FORMATTING SETTINGS
+  // // #region* 📁 LINTING/FORMATTING
   //
   "oxc.enable": true,
   "oxc.lint.run": "onType",
   "oxc.requireConfig": true,
-  // 🛑
+  // #endregion
   //
-  // 📁👇 REGION FOLDING SETTINGS
+  // // #region* 📁 REGION FOLDING
   //
   "maptz.regionfolder": {
     "[json]": {
-      "foldEnd": "// 🛑",
-      "foldStart": "// 📁 [NAME]",
+      "foldEnd": "// #endregion",
+      "foldStart": "// #region [NAME]",
       "foldDefinitions": [
         {
-          // Matches: // 📁👇 My Section Name
-          "foldStartRegex": "//[\\s]*📁👇[\\s]*(.*)",
-          "foldEndRegex": "//[\\s]*🛑",
+          // Matches: // // #region* My Section Name
+          "foldStartRegex": "//[\\s]*// #region*[\\s]*(.*)",
+          "foldEndRegex": "//[\\s]*#endregion",
           "isFoldedByDefault": true
         },
         {
           // Matches: // 📁 My Section Name
-          "foldStartRegex": "//[\\s]*📁[\\s]*(.*)",
-          "foldEndRegex": "//[\\s]*🛑",
+          "foldStartRegex": "//[\\s]*#region[\\s]*(.*)",
+          "foldEndRegex": "//[\\s]*#endregion",
           "isFoldedByDefault": false
         }
       ]
     },
     "[jsonc]": {
-      "foldEnd": "// 🛑",
-      "foldStart": "// 📁 [NAME]",
+      "foldEnd": "// #endregion",
+      "foldStart": "// #region [NAME]",
       "foldDefinitions": [
         {
-          "foldStartRegex": "//[\\s]*📁👇[\\s]*(.*)",
-          "foldEndRegex": "//[\\s]*🛑",
+          "foldStartRegex": "//[\\s]*// #region*[\\s]*(.*)",
+          "foldEndRegex": "//[\\s]*#endregion",
           "isFoldedByDefault": true
         },
         {
-          "foldStartRegex": "//[\\s]*📁[\\s]*(.*)",
-          "foldEndRegex": "//[\\s]*🛑",
+          "foldStartRegex": "//[\\s]*#region[\\s]*(.*)",
+          "foldEndRegex": "//[\\s]*#endregion",
           "isFoldedByDefault": false
         }
       ]
     }
   },
-  // 🛑
+  // #endregion
   //
-  // 📁👇 BETTER COMMENTS SETTINGS
+  // // #region* 📁 BETTER COMMENTS
   //
   "better-comments.multilineComments": true,
   "better-comments.highlightPlainText": false,
@@ -483,9 +483,9 @@
       "italic": false
     }
   ],
-  // 🛑
+  // #endregion
   //
-  // 📁👇 INDENT RAINBOW SETTINGS
+  // // #region* 📁 INDENT RAINBOW
   //
   "indentRainbow.excludedLanguages": ["plaintext", "log", "logfile"],
   "indentRainbow.indicatorStyle": "classic",
@@ -500,9 +500,9 @@
     "rgba(255,127,255,0.07)",
     "rgba(79,236,236,0.07)"
   ],
-  // 🛑
+  // #endregion
   //
-  // 📁👇 COLORIZE SETTINGS
+  // // #region* 📁 COLORIZE
   //
   "colorize.decoration_type": "background",
   "colorize.enable_search_variables": true,
@@ -540,9 +540,9 @@
   ],
   "colorize.exclude": ["**/node_modules/**", "**/ALL/**"],
   "colorize.colorized_variables": ["LESS"],
-  // 🛑
+  // #endregion
   //
-  // 📁👇 HIGHLIGHT SETTINGS
+  // // #region* 📁 HIGHLIGHT
   //
   //
   // Dracula Classic:
@@ -671,9 +671,9 @@
       ]
     }
   },
-  // 🛑
+  // #endregion
   //
-  // 📁👇 SPLIT HTML ATTRIBUTES SETTINGS
+  // // #region* 📁 SPLIT HTML ATTRIBUTES
   //
   "splitHTMLAttributes.tabSize": 2,
   "splitHTMLAttributes.useSpacesForTabs": true,
@@ -702,16 +702,19 @@
     "^points$",
     "^.*=\""
   ],
-  // 🛑
+  // #endregion
   //
-  // 📁👇 HIDE PROJECT CONFIGURATION FILES FROM VIEW
+  // // #region* 📁 HIDE PROJECT CONFIGURATION FILES FROM VIEW
   //
   "files.exclude": {
-    //"**/node_modules/**": true,
-    //"**/.editorconfig": true,
-    //"**/.gitignore": true,
-    //"**/.ox*.json": true,
-    //"**/tsconfig*": true
+    "**/node_modules/**": true,
+    "**/.editorconfig": true,
+    "**/.gitignore": true,
+    "**/.ox*.json": true,
+    "**/tsconfig*": true,
+    "**/*.lock": true,
+    "**/*.md": true,
+    "**/bunfig.toml": true
   }
-  // 🛑
+  // #endregion
 }

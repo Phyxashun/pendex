@@ -1,0 +1,3543 @@
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■-< START >-■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+// FILE NAME: : tsconfig.json 
+// TYPE     : .JSON
+// PATH     : tsconfig.json
+// PROCESSED: 2026-09-06T20:42:17.446Z
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■-< START >-■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+{
+  "extends": "./tsconfig.base.json",
+  "include": ["./tsconfig.root.json", "./packages/**/*"],
+  "exclude": ["./dist/**/*", "./logs/**/*"]
+}
+
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■-<  END  >-■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+// FILE NAME: : tsconfig.json 
+// TYPE     : .JSON
+// PATH     : tsconfig.json
+// PROCESSED: 2026-09-06T20:42:17.446Z
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■-<  END  >-■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■-< START >-■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+// FILE NAME: : tsconfig.root.json 
+// TYPE     : .JSON
+// PATH     : tsconfig.root.json
+// PROCESSED: 2026-09-06T20:42:17.446Z
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■-< START >-■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+{
+  "extends": "./tsconfig.base.json",
+  "include": ["src/**/*", "tests/**/*"]
+}
+
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■-<  END  >-■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+// FILE NAME: : tsconfig.root.json 
+// TYPE     : .JSON
+// PATH     : tsconfig.root.json
+// PROCESSED: 2026-09-06T20:42:17.446Z
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■-<  END  >-■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■-< START >-■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+// FILE NAME: : package.json 
+// TYPE     : .JSON
+// PATH     : package.json
+// PROCESSED: 2026-09-06T20:42:17.446Z
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■-< START >-■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+{
+  "name": "pendex",
+  "version": "2.0.2",
+  "private": true,
+  "description": "Pendex turns an entire source tree into portable, plain-text archives — ideal for AI prompts, code reviews backups, and sharing. Compile a project into banner-delimited `.txt` files grouped by job (source, web, style, terminal, configuration, documentation, testing, misc), then reconstruct the whole tree later with `px split`.",
+  "keywords": [
+    "@pendex",
+    "compile",
+    "consolidate",
+    "devtools",
+    "merge",
+    "pendex",
+    "project",
+    "rebuild",
+    "split"
+  ],
+  "license": "APGL-3.0",
+  "author": {
+    "name": "Dustin Dew",
+    "email": "phyxashun@gmail.com",
+    "url": "https: //phyxashun.github.io/home/"
+  },
+  "bin": {
+    "px": "./packages/utils/src/cli.ts"
+  },
+  "workspaces": [
+    "packages/*"
+  ],
+  "type": "module",
+  "module": "./packages/utils/src/cli.ts",
+  "scripts": {
+    "clean:deps": "powershell -Command \"Remove-Item -Recurse -Force node_modules, packages /*/node_modules, bun.lock -ErrorAction SilentlyContinue\"",
+    "refresh": "Remove-Item -Recurse -Force node_modules, packages/*/node_modules, bun.lock -ErrorAction SilentlyContinue",
+    "reset": "rmdir /s /q node_modules && del bun.lock",
+    "restart": "rm -rf node_modules packages/*/node_modules bun.lock",
+    "clear": "bun pm cache rm",
+    "clean": "rm -rf node_modules packages/*/node_modules bun.lock",
+    "fmt": "powershell -Command \"New-Item -ItemType Directory -Force logs | Out-Null; oxfmt 2>&1 | Out-File -Encoding utf8 logs/oxfmt.log\"",
+    "fmt:check": "powershell -Command \"New-Item -ItemType Directory -Force logs | Out-Null; oxfmt --check2>&1 | Out-File -Encoding utf8 logs/oxfmt-check.log\"",
+    "lint": "powershell -Command \"New-Item -ItemType Directory -Force logs | Out-Null; oxlint | Out-File -Encoding utf8 logs/oxlint.log\"",
+    "lint:fix": "powershell -Command \"New-Item -ItemType Directory -Force logs | Out-Null; oxlint --fix --type-aware --type-check | Out-File -Encoding utf8 logs/oxlint-types-fix.log\"",
+    "lint:types": "powershell -Command \"New-Item -ItemType Directory -Force logs | Out-Null; oxlint --type-aware --type-check | Out-File -Encoding utf8 logs/oxlint-types.log\"",
+    "typecheck": "bun run lint:types; bun run --workspaces typecheck",
+    "build": "bun run typecheck; bun build --compile --outfile=./dist/px ./packages/utils/src/cli.ts",
+    "start": "bun run ./packages/utils/src/cli.ts",
+    "compile": "bun run packages/compile/src/Compile.bin.ts",
+    "split": "bun run packages/split/src/Split.bin.ts",
+    "git:push": "git add . && git commit -m 'Updates' && git push origin main",
+    "test": "bun test",
+    "test:coverage": "bun test --coverage",
+    "test:log": "powershell -ExecutionPolicy Bypass -File ./utils/log-tests.ps1",
+    "test:dos": "powershell -ExecutionPolicy Bypass -File ./utils/powershell-tests.ps1",
+    "test:log:linux": "./utils/log-tests.fish",
+    "nuke": "taskkill /f /im node.exe /im bun.exe /im vite.exe 2>nul || exit 0",
+    "one": "bun run ./utils/one-text.ts"
+  },
+  "dependencies": {
+    "@clack/core": "^1.4.3",
+    "@clack/prompts": "^1.7.0",
+    "@pendex/color": "workspace:*",
+    "@pendex/compile": "workspace:*",
+    "@pendex/core": "workspace:*",
+    "@pendex/exit": "workspace:*",
+    "@pendex/split": "workspace:*",
+    "@pendex/theme": "workspace:*",
+    "@pendex/utils": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/bun": "^1.4.1",
+    "fast-string-width": "^3.0.2",
+    "fast-wrap-ansi": "^0.2.2",
+    "oxfmt": "^0.66.0",
+    "oxlint": "^1.81.0",
+    "oxlint-tsgolint": "^7.0.2001",
+    "typescript": "^7.0.2"
+  },
+  "optionalDependencies": {
+    "@pdf-lib/fontkit": "^1.1.1",
+    "@types/prismjs": "^1.26.6",
+    "pdf-lib": "^1.17.1",
+    "prismjs": "^1.30.0"
+  },
+  "devEngines": {
+    "runtime": {
+      "name": "bun",
+      "onFail": "error"
+    }
+  },
+  "packageManager": "bun@1.3.14",
+  "_comment": "Move these to dependencies when starting the PDF export and syntax highlighting features"
+}
+
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■-<  END  >-■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+// FILE NAME: : package.json 
+// TYPE     : .JSON
+// PATH     : package.json
+// PROCESSED: 2026-09-06T20:42:17.446Z
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■-<  END  >-■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■-< START >-■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+// FILE NAME: : .oxfmtrc.json 
+// TYPE     : .JSON
+// PATH     : .oxfmtrc.json
+// PROCESSED: 2026-09-06T20:42:17.446Z
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■-< START >-■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+{
+  "$schema": "./node_modules/oxfmt/configuration_schema.json",
+  "printWidth": 80,
+  "tabWidth": 4,
+  "useTabs": false,
+  "semi": true,
+  "singleQuote": true,
+  "jsxSingleQuote": true,
+  "quoteProps": "as-needed",
+  "trailingComma": "all",
+  "bracketSpacing": true,
+  "bracketSameLine": false,
+  "arrowParens": "avoid",
+  "endOfLine": "lf",
+  "insertFinalNewline": true,
+  "htmlWhitespaceSensitivity": "strict",
+  "singleAttributePerLine": true,
+  "objectWrap": "preserve",
+  "ignorePatterns": [
+    "**/node_modules/**",
+    "**/dist/**",
+    "**/public/**",
+    "**/*.txt",
+    "**/*.pdf",
+    "**/ALL/**",
+    "**/ALL_REBUILT/**",
+    "**/logs/**",
+    "utils/**"
+  ],
+  "overrides": [
+    {
+      "files": ["*.json", "*.jsonc", "*.md", "*.toml"],
+      "options": {
+        "tabWidth": 2
+      }
+    }
+  ]
+}
+
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■-<  END  >-■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+// FILE NAME: : .oxfmtrc.json 
+// TYPE     : .JSON
+// PATH     : .oxfmtrc.json
+// PROCESSED: 2026-09-06T20:42:17.446Z
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■-<  END  >-■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■-< START >-■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+// FILE NAME: : tsconfig.base.json 
+// TYPE     : .JSON
+// PATH     : tsconfig.base.json
+// PROCESSED: 2026-09-06T20:42:17.446Z
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■-< START >-■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+{
+  "compilerOptions": {
+    //
+    // Environment setup & latest features
+    "lib": ["ESNext"],
+    "target": "ESNext",
+    "module": "Preserve",
+    "moduleDetection": "force",
+    "jsx": "react-jsx",
+    "allowJs": true,
+    "types": ["bun"],
+    //
+    // Bundler mode
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
+    "verbatimModuleSyntax": true,
+    "noEmit": true,
+    //
+    // Best practices
+    "strict": true,
+    "skipLibCheck": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUncheckedIndexedAccess": true,
+    "noImplicitOverride": true,
+    //
+    // Some stricter flags (disabled by default)
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
+    "noPropertyAccessFromIndexSignature": false,
+    //
+    // I added these
+    "resolveJsonModule": true,
+    "esModuleInterop": true
+  }
+}
+
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■-<  END  >-■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+// FILE NAME: : tsconfig.base.json 
+// TYPE     : .JSON
+// PATH     : tsconfig.base.json
+// PROCESSED: 2026-09-06T20:42:17.446Z
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■-<  END  >-■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■-< START >-■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+// FILE NAME: : .oxlintrc.json 
+// TYPE     : .JSON
+// PATH     : .oxlintrc.json
+// PROCESSED: 2026-09-06T20:42:17.446Z
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■-< START >-■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+{
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "plugins": ["typescript", "unicorn", "oxc", "react"],
+  "categories": {
+    "correctness": "error"
+  },
+  "env": {
+    "builtin": true,
+    "browser": true,
+    "node": true
+  },
+  "ignorePatterns": [
+    ".vscode/**",
+    "**/ALL/**",
+    "**/ALL_REBUILT/**",
+    "**/coverage/**",
+    "**/logs/**",
+    "**/node_modules/**",
+    "**/public/**",
+    "**/dist/**",
+    "**/*.txt",
+    "**/*.pdf",
+    "utils/**",
+    "**/tests/**"
+  ],
+  "rules": {
+    "no-unused-vars": "error",
+    "typescript/no-unused-vars": "error",
+    "typescript/no-explicit-any": [
+      "warn",
+      {
+        "ignoreRestArgs": false
+      }
+    ],
+    "no-console": "off",
+    "no-irregular-whitespace": "off",
+    "unicorn/empty-brace-spaces": "off",
+    "typescript/prefer-nullish-coalescing": "error",
+    "typescript/prefer-optional-chain": "error"
+  },
+  "options": {
+    "typeAware": true,
+    "typeCheck": true
+  }
+}
+
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■-<  END  >-■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+// FILE NAME: : .oxlintrc.json 
+// TYPE     : .JSON
+// PATH     : .oxlintrc.json
+// PROCESSED: 2026-09-06T20:42:17.446Z
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■-<  END  >-■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■-< START >-■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+// FILE NAME: : tasks.json 
+// TYPE     : .JSON
+// PATH     : .vscode/tasks.json
+// PROCESSED: 2026-09-06T20:42:17.446Z
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■-< START >-■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Run Pendex Home Server",
+      "type": "shell",
+      "command": "cd packages/home && bun run dev",
+      "isBackground": true
+    },
+    {
+      "label": "Run Pendex API Docs Server",
+      "type": "shell",
+      "command": "cd packages/api-docs && bun run dev",
+      "isBackground": true
+    },
+    {
+      "label": "Start All Pendex Servers",
+      "dependsOn": ["Run Home Server", "Run API Docs Server"],
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      }
+    }
+  ]
+}
+
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■-<  END  >-■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+// FILE NAME: : tasks.json 
+// TYPE     : .JSON
+// PATH     : .vscode/tasks.json
+// PROCESSED: 2026-09-06T20:42:17.446Z
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■-<  END  >-■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■-< START >-■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+// FILE NAME: : extensions.json 
+// TYPE     : .JSON
+// PATH     : .vscode/extensions.json
+// PROCESSED: 2026-09-06T20:42:17.446Z
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■-< START >-■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+{
+  /**
+   * @file extensions.json
+   * @description This file defines recommended and optional extensions for the workspace.
+   *
+   * VS Code uses this file to suggest extensions to anyone who opens the project.
+   * - "recommendations": Extensions that are strongly suggested for all contributors.
+   * - "unwantedRecommendations": Extensions that should be avoided in this workspace.
+   *
+   * This helps maintain a consistent development environment across the team.
+   *
+   * @usage
+   * Place this file inside the `.vscode` folder at the root of your project.
+   * VS Code will automatically read it and prompt users to install the listed extensions.
+   *
+   * @note This file is in JSONC (JSON with comments) format so comments are allowed.
+   */
+  "recommendations": [
+    "aaron-bond.better-comments",
+    "alexcvzz.vscode-sqlite",
+    "bierner.markdown-mermaid",
+    "bradlc.vscode-tailwindcss",
+    "christian-kohler.npm-intellisense",
+    "christian-kohler.path-intellisense",
+    "dannyconnell.split-html-attributes",
+    "davidanson.vscode-markdownlint",
+    "dskwrk.vscode-generate-getter-setter",
+    "ecmel.vscode-html-css",
+    "editorconfig.editorconfig",
+    "esdete.tailwind-rainbow",
+    "fabiospampinato.vscode-highlight",
+    "gydunhn.javascript-essentials",
+    "gydunhn.typescript-essentials",
+    "gydunhn.vsc-essentials-core",
+    "hyoban.tailwindcss-classname-highlight",
+    "irongeek.vscode-env",
+    "kamikillerto.vscode-colorize",
+    "maptz.regionfolder",
+    "ms-vscode.powershell",
+    "ms-vscode.vscode-typescript-next",
+    "oderwat.indent-rainbow",
+    "oven.bun-vscode",
+    "oxc.oxc-vscode",
+    "pkief.material-product-icons",
+    "pmneo.tsimporter",
+    "quentiumyt.vscode-tailwindcss-directives",
+    "readbysearch.code2pdf",
+    "streetsidesoftware.code-spell-checker",
+    "streetsidesoftware.code-spell-checker-cspell-bundled-dictionaries",
+    "sudoaugustin.tailwindcss-transpiler",
+    "tal7aouy.theme",
+    "tamasfe.even-better-toml",
+    "thang-nm.flow-icons",
+    "tombonnike.vscode-status-bar-format-toggle",
+    "tomoki1207.pdf",
+    "typescriptteam.native-preview",
+    "wzulfikar.vscode-bun-test-explorer",
+    "xabikos.javascriptsnippets",
+    "yoavbls.pretty-ts-errors",
+    "yzhang.markdown-all-in-one"
+  ]
+}
+
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■-<  END  >-■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+// FILE NAME: : extensions.json 
+// TYPE     : .JSON
+// PATH     : .vscode/extensions.json
+// PROCESSED: 2026-09-06T20:42:17.446Z
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■-<  END  >-■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■-< START >-■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+// FILE NAME: : settings.json 
+// TYPE     : .JSON
+// PATH     : .vscode/settings.json
+// PROCESSED: 2026-09-06T20:42:17.446Z
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■-< START >-■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+{
+  // ~ FILE-PATH: .vscode/settings.json
+  //
+  //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+  //@
+  //@                   ⚙️  GENERAL EDITOR SETTINGS
+  //@
+  //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+  //
+  // 📁👇 GENERAL SETTINGS
+  //
+  "explorer.confirmDelete": false,
+  "explorer.confirmDragAndDrop": false,
+  "files.trimTrailingWhitespace": false,
+  "files.trimTrailingWhitespaceInRegexAndStrings": false,
+  "files.associations": {
+    "*.css": "tailwindcss",
+    "*.json": "jsonc",
+    "*.editorconfig": "editorconfig",
+    "*.psm1": "powershell",
+    "*.psd1": "powershell",
+    "*.ps1": "powershell"
+  },
+  // 🛑
+  //
+  // 📁👇 WORKBENCH & APPEARANCE
+  //
+  "workbench.colorTheme": "Theme Darker",
+  "workbench.iconTheme": "flow-deep",
+  "workbench.productIconTheme": "material-product-icons",
+  "workbench.panel.defaultLocation": "right",
+  // 🛑
+  //
+  // 📁👇 EDITOR CORE SETTINGS
+  //
+  "editor.fontFamily": "'JetBrainsMono NFM Regular'",
+  "editor.fontSize": 14,
+  "editor.lineHeight": 1.4,
+  "editor.fontLigatures": true,
+  "editor.smoothScrolling": true,
+  "editor.minimap.enabled": false,
+  "editor.inlineSuggest.enabled": true,
+  "editor.suggest.preview": true,
+  "editor.tabCompletion": "on",
+  "editor.showDeprecated": true,
+  "editor.autoIndent": "full",
+  "editor.wordWrap": "wordWrapColumn",
+  "editor.wordWrapColumn": 80,
+  "editor.semanticHighlighting.enabled": true,
+  "editor.semanticTokenColorCustomizations": {
+    "enabled": true
+  },
+  "editor.stickyScroll.enabled": true,
+  "editor.stickyScroll.defaultModel": "indentationModel",
+  "editor.cursorBlinking": "expand",
+  "editor.cursorSmoothCaretAnimation": "on",
+  "editor.guides.highlightActiveBracketPair": true,
+  "editor.bracketPairColorization.enabled": true,
+  "editor.bracketPairColorization.independentColorPoolPerBracketType": true,
+  "editor.guides.bracketPairs": "active",
+  "editor.guides.indentation": true,
+  "editor.codeActions.triggerOnFocusChange": true,
+  "editor.codeActionsOnSave": {
+    "source.format.oxc": "always",
+    "source.fixAll": "always",
+    "source.fixAll.oxc": "always",
+    "source.organizeImports": "explicit",
+    "source.addMissingImports": "explicit"
+  },
+  "editor.trimAutoWhitespace": false,
+  "editor.defaultFoldingRangeProvider": "maptz.regionfolder",
+  "editor.foldingStrategy": "indentation",
+  "editor.folding": true,
+  "editor.insertSpaces": true,
+  "editor.tabSize": 4,
+  "editor.detectIndentation": false,
+  "editor.defaultFormatter": "oxc.oxc-vscode",
+  "editor.formatOnSave": true,
+  "editor.formatOnSaveMode": "file",
+  "editor.formatOnType": false,
+  "editor.formatOnPaste": true,
+  "editor.glyphMargin": true,
+  "editor.quickSuggestions": {
+    "strings": true
+  },
+  "files.autoSave": "onFocusChange",
+  // 🛑
+  //
+  // 📁👇 TERMINAL SETTINGS
+  //
+  "terminal.integrated.fontFamily": "'JetBrainsMono NFM Regular'",
+  "terminal.integrated.fontSize": 14,
+  "terminal.integrated.lineHeight": 1,
+  "terminal.integrated.enablePersistentSessions": false,
+  "terminal.integrated.shellIntegration.enabled": false,
+  "terminal.integrated.suggest.enabled": true,
+  "terminal.integrated.profiles.linux": {
+    "fish-host": {
+      "path": "host-spawn",
+      "args": ["fish"],
+      "icon": "terminal-linux"
+    }
+  },
+  "terminal.integrated.defaultProfile.linux": "fish",
+  "terminal.integrated.minimumContrastRatio": 1,
+  // 🛑
+  //
+  //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+  //@
+  //@                   🛠️  LANGUAGE SPECIFIC SETTINGS
+  //@
+  //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+  //
+  // 📁👇 HTML/CSS/TAILWINDCSS SETTINGS
+  //
+  "css.styleSheets": ["node_modules/bulma/css/bulma.min.css", "src/**/*.css"],
+  "css.lint.unknownAtRules": "ignore",
+  "scss.lint.unknownAtRules": "ignore",
+  "less.lint.unknownAtRules": "ignore",
+  "[css]": {
+    "editor.defaultFormatter": "oxc.oxc-vscode",
+    "editor.formatOnSave": true
+  },
+  "[tailwindcss]": {
+    "editor.defaultFormatter": "oxc.oxc-vscode",
+    "editor.formatOnSave": true
+  },
+  "[html]": {
+    "editor.defaultFormatter": "oxc.oxc-vscode",
+    "editor.formatOnSave": true
+  },
+  "html.format.wrapAttributes": "force-expand-multiline",
+  // 🛑
+  //
+  // 📁👇 JAVASCRIPT/TYPESCRIPT SETTINGS
+  //
+  "extensions.experimental.affinity": {
+    "better-ts-errors.better-ts-errors": 1
+  },
+  "editor.experimental.preferTreeSitter.typescript": true,
+  // Language Formatters
+  "[javascript]": {
+    "editor.defaultFormatter": "oxc.oxc-vscode",
+    "editor.formatOnSave": true
+  },
+  "[javascriptreact]": {
+    "editor.defaultFormatter": "oxc.oxc-vscode",
+    "editor.formatOnSave": true
+  },
+  "[typescript]": {
+    "editor.defaultFormatter": "oxc.oxc-vscode",
+    "editor.formatOnSave": true
+  },
+  "[typescriptreact]": {
+    "editor.defaultFormatter": "oxc.oxc-vscode",
+    "editor.formatOnSave": true
+  },
+  //
+  //* Legacy Engine Settings (For Work)
+  //
+  // "javascript.inlayHints.parameterNames.enabled": "all",
+  // "javascript.inlayHints.variableTypes.enabled": true,
+  // "javascript.inlayHints.parameterTypes.enabled": true,
+  // "javascript.inlayHints.functionLikeReturnTypes.enabled": true,
+  // "javascript.format.semicolons": "insert",
+  // "javascript.preferences.quoteStyle": "single",
+  // "javascript.referencesCodeLens.enabled": true,
+  // "javascript.suggest.autoImports": true,
+  // "javascript.updateImportsOnPaste.enabled": true,
+  // "javascript.updateImportsOnFileMove.enabled": "always",
+  // "javascript.suggest.paths": false,
+  // "javascript.suggestionActions.enabled": true,
+  // "typescript.inlayHints.parameterNames.enabled": "all",
+  // "typescript.inlayHints.variableTypes.enabled": true,
+  // "typescript.inlayHints.parameterTypes.enabled": true,
+  // "typescript.inlayHints.functionLikeReturnTypes.enabled": true,
+  // "typescript.format.semicolons": "insert",
+  // "typescript.preferences.quoteStyle": "single",
+  // "typescript.referencesCodeLens.enabled": true,
+  // "typescript.suggest.autoImports": true,
+  // "typescript.updateImportsOnPaste.enabled": true,
+  // "typescript.updateImportsOnFileMove.enabled": "always",
+  // "typescript.suggest.paths": false,
+  // "typescript.suggestionActions.enabled": true,
+  // "typescript.tsserver.log": "off",
+  // "typescript.tsserver.useSyntaxServer": "never",
+  // // Performance Tweak: Safe across versions to stop file-switch delays
+  // "typescript.tsserver.experimental.enableProjectDiagnostics": true,
+  // //"typescript.tsserver.experimental.enableProjectDiagnostics": false,
+  // //"typescript.tsdk": "node_modules/typescript",
+  // "typescript.enablePromptUseWorkspaceTsdk": true,
+  // "typescript.experimental.useTsgo": true,
+  //
+  //* Modern Engine Settings (For Home)
+  //
+  // 📁 LANGUAGE SERVER & COMPILER (TS 7.0 / TSGO)
+  "js/ts.tsdk.path": "node_modules/typescript/lib",
+  "js/ts.tsdk.promptToUseWorkspaceVersion": true,
+  "js/ts.experimental.useTsgo": true,
+  //
+  // ⚡ PERFORMANCE & DIAGNOSTICS
+  "js/ts.tsserver.log": "off",
+  "js/ts.tsserver.useSyntaxServer": "never",
+  //
+  // Performance Tweak: Safe across versions to stop file-switch delays
+  "js/ts.tsserver.experimental.enableProjectDiagnostics": true,
+  //
+  // 📦 IMPORTS & AUTO-SUGGESTIONS
+  "js/ts.suggest.autoImports": true,
+  "js/ts.suggest.paths": false,
+  "js/ts.suggestionActions.enabled": true,
+  "js/ts.updateImportsOnPaste.enabled": true,
+  "js/ts.updateImportsOnFileMove.enabled": "always",
+  //
+  // 📝 FORMATTING & PREFERENCES
+  "js/ts.format.semicolons": "insert",
+  "js/ts.preferences.quoteStyle": "single",
+  //
+  // 💡 INLAY HINTS (INLINE TYPE VISUALS)
+  "js/ts.inlayHints.parameterNames.enabled": "all",
+  "js/ts.inlayHints.variableTypes.enabled": true,
+  "js/ts.inlayHints.parameterTypes.enabled": true,
+  "js/ts.inlayHints.functionLikeReturnTypes.enabled": true,
+  //
+  // 🔍 CODE LENS (REFERENCES COUNTER)
+  "js/ts.referencesCodeLens.enabled": true,
+  // 🛑
+  //
+  // 📁👇 MARKDOWN SETTINGS
+  //
+  "markdown.validate.enabled": true,
+  "[markdown]": {
+    "editor.defaultFormatter": "yzhang.markdown-all-in-one"
+  },
+  // 🛑
+  //
+  // 📁👇 JSON/JSONC SETTINGS
+  //
+  "json.schemaDownload.enable": false,
+  "[json]": {
+    "editor.defaultFormatter": "oxc.oxc-vscode",
+    "editor.formatOnSave": true
+  },
+  "[jsonc]": {
+    "editor.defaultFormatter": "oxc.oxc-vscode",
+    "editor.formatOnSave": true
+  },
+  // 🛑
+  //
+  // 📁👇 BUN SETTINGS
+  //
+  // HOME SETTINGS:
+  // The path to the `bun` executable.
+  "bun.runtime": "${env:HOME}/.bun/bin/bun",
+  // If support for Bun should be added to the default "JavaScript Debug Terminal".
+  "bun.debugTerminal.enabled": true,
+  // If the debugger should stop on the first line of the program.
+  "bun.debugTerminal.stopOnEntry": false,
+  // Glob pattern to find test files. Defaults to the value shown below.
+  "bun.test.filePattern": "**/*{.test.,.spec.,_test_,_spec_}{js,ts,tsx,jsx,mts,cts,cjs,mjs}",
+  // The custom script to call for testing instead of `bun test`
+  "bun.test.customScript": "bun test",
+  //
+  // WORK SETTINGS
+  //"bun.runtime": "C:\\Users\\dustin.r.dew.civ\\.bun\\bin\\bun.exe",
+  //"bun.debugTerminal.enabled": true,
+  //"bun.debugTerminal.stopOnEntry": false,
+  //"bun.test.filePattern": "**/*{.test.,.spec.,_test_,_spec_}{js,ts,tsx,jsx,mts,cts,cjs,mjs}",
+  //"bun.test.customScript": "bun test",
+  // 🛑
+  //
+  // 📁👇 GIT SETTINGS
+  //
+  "git.enableSmartCommit": true,
+  "git.autofetch": true,
+  "git.confirmSync": false,
+  "git.openRepositoryInParentFolders": "always",
+  // 🛑
+  //
+  // 📁👇 POWERSHELL SETTINGS
+  //
+  "[powershell]": {
+    "editor.defaultFormatter": "ms-vscode.powershell"
+  },
+  // 🛑
+  //
+  //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+  //@
+  //@                   🧩  EXTENSION-SPECIFIC SETTINGS
+  //@
+  //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+  //
+  // 📁👇 TOML AND EDITORCONFIG SETTINGS
+  //
+  "[toml]": {
+    "editor.defaultFormatter": "tamasfe.even-better-toml",
+    "editor.formatOnSave": true
+  },
+  "evenBetterToml.formatter.alignEntries": true,
+  "evenBetterToml.formatter.alignComments": true,
+  "evenBetterToml.formatter.allowedBlankLines": 2,
+  "[editorconfig]": {
+    "editor.defaultFormatter": "oxc.oxc-vscode"
+  },
+  // 🛑
+  //
+  // 📁👇 LINTING/FORMATTING SETTINGS
+  //
+  "oxc.enable": true,
+  "oxc.lint.run": "onType",
+  "oxc.requireConfig": true,
+  // 🛑
+  //
+  // 📁👇 REGION FOLDING SETTINGS
+  //
+  "maptz.regionfolder": {
+    "[json]": {
+      "foldEnd": "// 🛑",
+      "foldStart": "// 📁 [NAME]",
+      "foldDefinitions": [
+        {
+          // Matches: // 📁👇 My Section Name
+          "foldStartRegex": "//[\\s]*📁👇[\\s]*(.*)",
+          "foldEndRegex": "//[\\s]*🛑",
+          "isFoldedByDefault": true
+        },
+        {
+          // Matches: // 📁 My Section Name
+          "foldStartRegex": "//[\\s]*📁[\\s]*(.*)",
+          "foldEndRegex": "//[\\s]*🛑",
+          "isFoldedByDefault": false
+        }
+      ]
+    },
+    "[jsonc]": {
+      "foldEnd": "// 🛑",
+      "foldStart": "// 📁 [NAME]",
+      "foldDefinitions": [
+        {
+          "foldStartRegex": "//[\\s]*📁👇[\\s]*(.*)",
+          "foldEndRegex": "//[\\s]*🛑",
+          "isFoldedByDefault": true
+        },
+        {
+          "foldStartRegex": "//[\\s]*📁[\\s]*(.*)",
+          "foldEndRegex": "//[\\s]*🛑",
+          "isFoldedByDefault": false
+        }
+      ]
+    }
+  },
+  // 🛑
+  //
+  // 📁👇 BETTER COMMENTS SETTINGS
+  //
+  "better-comments.multilineComments": true,
+  "better-comments.highlightPlainText": false,
+  "better-comments.tags": [
+    {
+      "tag": "!",
+      "color": "#FF6E6E",
+      "strikethrough": false,
+      "underline": false,
+      "backgroundColor": "transparent",
+      "bold": true,
+      "italic": false
+    },
+    {
+      "tag": "?",
+      "color": "#8be9fd",
+      "strikethrough": false,
+      "underline": false,
+      "backgroundColor": "transparent",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "tag": "//",
+      "color": "#50fa7b",
+      "strikethrough": false,
+      "underline": false,
+      "backgroundColor": "transparent",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "tag": "///",
+      "color": "#50fa7b",
+      "strikethrough": true,
+      "underline": false,
+      "backgroundColor": "transparent",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "tag": "$",
+      "color": "#50fa7b",
+      "strikethrough": false,
+      "underline": false,
+      "backgroundColor": "transparent",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "tag": "@",
+      "color": "#ffb86c",
+      "strikethrough": false,
+      "underline": false,
+      "backgroundColor": "transparent",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "tag": "fixme",
+      "color": "#6272a4",
+      "strikethrough": false,
+      "underline": false,
+      "backgroundColor": "transparent",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "tag": "fixit",
+      "color": "#6272a4",
+      "strikethrough": false,
+      "underline": false,
+      "backgroundColor": "transparent",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "tag": "fix",
+      "color": "#6272a4",
+      "strikethrough": false,
+      "underline": false,
+      "backgroundColor": "transparent",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "tag": "#",
+      "color": "#ff5555",
+      "strikethrough": false,
+      "underline": false,
+      "backgroundColor": "transparent",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "tag": "*",
+      "color": "#ff79c6",
+      "strikethrough": false,
+      "underline": false,
+      "backgroundColor": "transparent",
+      "bold": true,
+      "italic": false
+    },
+    {
+      "tag": "&",
+      "color": "#D6ACFF",
+      "strikethrough": false,
+      "underline": false,
+      "backgroundColor": "transparent",
+      "bold": true,
+      "italic": true
+    },
+    {
+      "tag": "📁",
+      "color": "#BD93F9",
+      "strikethrough": false,
+      "underline": false,
+      "backgroundColor": "transparent",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "tag": "🛑",
+      "color": "#FF6E6E",
+      "strikethrough": false,
+      "underline": false,
+      "backgroundColor": "transparent",
+      "bold": false,
+      "italic": false
+    }
+  ],
+  // 🛑
+  //
+  // 📁👇 INDENT RAINBOW SETTINGS
+  //
+  "indentRainbow.excludedLanguages": ["plaintext", "log", "logfile"],
+  "indentRainbow.indicatorStyle": "classic",
+  "indentRainbow.lightIndicatorStyleLineWidth": 1,
+  "indentRainbow.colorOnWhiteSpaceOnly": true,
+  "indentRainbow.updateDelay": 100,
+  "indentRainbow.errorColor": "rgba(128,32,32,0.6)",
+  "indentRainbow.tabmixColor": "rgba(128,32,96,0.6)",
+  "indentRainbow.colors": [
+    "rgba(255,255,64,0.07)",
+    "rgba(127,255,127,0.07)",
+    "rgba(255,127,255,0.07)",
+    "rgba(79,236,236,0.07)"
+  ],
+  // 🛑
+  //
+  // 📁👇 COLORIZE SETTINGS
+  //
+  "colorize.decoration_type": "background",
+  "colorize.enable_search_variables": true,
+  "colorize.hide_current_line_decorations": true,
+  "colorize.colorized_colors": ["HEXA", "ARGB", "RGB", "HSL", "OKLAB", "OKLCH"],
+  "colorize.languages": [
+    "css",
+    "scss",
+    "sass",
+    "less",
+    "html",
+    "javascript",
+    "javascriptreact",
+    "typescript",
+    "typescriptreact",
+    "json",
+    "jsonc",
+    "toml",
+    "python",
+    "java",
+    "powershell",
+    "ps1",
+    "psd1",
+    "markdown",
+    "md",
+    "mdx"
+  ],
+  "colorize.include": [
+    "**/src/**",
+    "**/*.html",
+    "**/*.css",
+    "**/*.toml",
+    "**/*.json",
+    "**/*.jsonc"
+  ],
+  "colorize.exclude": ["**/node_modules/**", "**/ALL/**"],
+  "colorize.colorized_variables": ["LESS"],
+  // 🛑
+  //
+  // 📁👇 HIGHLIGHT SETTINGS
+  //
+  //
+  // Dracula Classic:
+  // Token        Hex        Usage
+  //
+  // Background    #282A36    Main background
+  // Current Line  #6272A4    Semantic current line highlight token
+  // Selection    #44475A    Text selection
+  // Foreground    #F8F8F2    Default text
+  // Comment      #6272A4    Comments, disabled code
+  // Red          #FF5555    Errors, warnings, deletion
+  // Orange        #FFB86C    Numbers, constants, booleans
+  // Yellow        #F1FA8C    Strings, text content
+  // Green        #50FA7B    Functions, methods, inherited classes
+  // Cyan          #8BE9FD    Classes, types, support, regex
+  // Purple        #BD93F9    Instance reserved words, constants
+  // Pink          #FF79C6    Keywords, storage types
+  //
+  //
+  "highlight.decorations": {},
+  "highlight.regexFlags": "g",
+  "highlight.regexes": {
+    //
+    //$ Highlight file paths in `//` comments with a specific format, e.g.:
+    "/(^|[ \\t]?(\/\/)\\s?(~?)\\s?(file-path)\\s{0}(:)\\s{1}(.*)[\\t]?)$/gim": {
+      "filterLanguageRegex": "(javascript|typescript|js|ts|jsx|tsx|json|jsonc|toml|yaml|yml|fish|ps1)",
+      "filterFilepaths": true,
+      "decorations": [
+        {
+          // Group 1
+          "overviewRulerColor": "#FFB86C",
+          "backgroundColor": "#44475A",
+          "borderRadius": "4px",
+          "border": "1px dotted #FFB86C",
+          "rangeBehavior": 1
+        },
+        {
+          // Group 2
+          "color": "#FFB86C"
+        },
+        {
+          // Group 3
+          "color": "#FFB86C"
+        },
+        {
+          // Group 4
+          "color": "#FF79C6"
+        },
+        {
+          // Group 5
+          "color": "#FFB86C"
+        },
+        {
+          // Group 6
+          "color": "#BD93F9",
+          "textDecoration": "none; padding: 0 8px 0 0;",
+          "after": {
+            "contentText": ""
+          }
+        }
+      ]
+    },
+    //
+    //$ Highlight file paths in `#` comments with a specific format, e.g.:
+    "/(^|[ \\t]?(#)\\s?(~?)\\s?(file-path)\\s{0}(:)\\s{1}(.*)[\\t]?)$/gim": {
+      "filterLanguageRegex": "(javascript|typescript|js|ts|jsx|tsx|json|jsonc|toml|yaml|yml|fish|ps1)",
+      "filterFilepaths": true,
+      "decorations": [
+        {
+          // Group 1
+          "overviewRulerColor": "#FFB86C",
+          "backgroundColor": "#44475A",
+          "borderRadius": "4px",
+          "border": "1px dotted #FFB86C",
+          "rangeBehavior": 1
+        },
+        {
+          // Group 2
+          "color": "#FFB86C"
+        },
+        {
+          // Group 3
+          "color": "#FFB86C"
+        },
+        {
+          // Group 4
+          "color": "#FF79C6"
+        },
+        {
+          // Group 5
+          "color": "#FFB86C"
+        },
+        {
+          // Group 6
+          "color": "#BD93F9",
+          "textDecoration": "none; padding: 0 8px 0 0;",
+          "after": {
+            "contentText": ""
+          }
+        }
+      ]
+    },
+    //
+    //$ Highlight web URLs in comments with a specific format, e.g.:
+    "/(\\s?([a-zA-Z0-9+.-]+:\\/\\/[a-zA-Z0-9@:%._\\+~#=\\-]{1,256}(?::\\d+)?(?:[-a-zA-Z0-9()@:%_\\+.~#?&\\/=]*))\\h?)/gim": {
+      "filterLanguageRegex": "(javascript|typescript|js|ts|jsx|tsx|json|jsonc|toml|yaml|yml)",
+      "decorations": [
+        {
+          "backgroundColor": "#44475A",
+          "borderRadius": "4px",
+          "border": "0.5px dashed #FFB86C",
+          "padding": "0 0 0 8px",
+          "before": {
+            "contentText": ""
+          }
+        },
+        {
+          "color": "#FFB86C",
+          "backgroundColor": "transparent",
+          "fontWeight": "normal",
+          "textDecoration": "none; padding: 0 8px 0 0;",
+          "after": {
+            "contentText": ""
+          }
+        }
+      ]
+    }
+  },
+  // 🛑
+  //
+  // 📁👇 SPLIT HTML ATTRIBUTES SETTINGS
+  //
+  "splitHTMLAttributes.tabSize": 2,
+  "splitHTMLAttributes.useSpacesForTabs": true,
+  "splitHTMLAttributes.closingBracketOnNewLine": true,
+  "splitHTMLAttributes.sortOrder": [
+    "^xmlns",
+    "^role",
+    "^viewBox",
+    "^key",
+    "^:",
+    "^id$",
+    "^class$",
+    "^x1?$",
+    "^y1?$",
+    "^x2$",
+    "^y2$",
+    "^cx$",
+    "^cy$",
+    "^r$",
+    "^width$",
+    "^height$",
+    "^fill",
+    "^stroke",
+    "^style",
+    "^d$",
+    "^points$",
+    "^.*=\""
+  ],
+  // 🛑
+  //
+  // 📁👇 HIDE PROJECT CONFIGURATION FILES FROM VIEW
+  //
+  "files.exclude": {
+    //"**/node_modules/**": true,
+    //"**/.editorconfig": true,
+    //"**/.gitignore": true,
+    //"**/.ox*.json": true,
+    //"**/tsconfig*": true
+  }
+  // 🛑
+}
+
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■-<  END  >-■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+// FILE NAME: : settings.json 
+// TYPE     : .JSON
+// PATH     : .vscode/settings.json
+// PROCESSED: 2026-09-06T20:42:17.446Z
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■-<  END  >-■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■-< START >-■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+// FILE NAME: : tsconfig.json 
+// TYPE     : .JSON
+// PATH     : packages/core/tsconfig.json
+// PROCESSED: 2026-09-06T20:42:17.446Z
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■-< START >-■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+{
+  "extends": "../../tsconfig.base.json",
+  "include": ["src/**/*", "tests/**/*", "config/**/*"]
+}
+
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■-<  END  >-■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+// FILE NAME: : tsconfig.json 
+// TYPE     : .JSON
+// PATH     : packages/core/tsconfig.json
+// PROCESSED: 2026-09-06T20:42:17.446Z
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■-<  END  >-■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■-< START >-■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+// FILE NAME: : package.json 
+// TYPE     : .JSON
+// PATH     : packages/core/package.json
+// PROCESSED: 2026-09-06T20:42:17.446Z
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■-< START >-■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+{
+  "name": "@pendex/core",
+  "version": "2.0.2",
+  "description": "Pendex turns an entire source tree into portable, plain-text archives — ideal for AI prompts, code reviews, backups, and sharing. Compile a project into banner-delimited `.txt` files grouped by job (source, web, style, terminal, configuration, documentation, testing, misc), then reconstruct the whole tree later with `px split`.",
+  "type": "module",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "lint:types": "oxlint --type-aware --type-check",
+    "typecheck": "bun run lint:types",
+    "test": "bun test",
+    "test:coverage": "bun test --coverage"
+  },
+  "dependencies": {
+    "@pendex/color": "workspace:*",
+    "@pendex/theme": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/bun": "^1.3.14",
+    "typescript": "^7.0.2"
+  }
+}
+
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■-<  END  >-■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+// FILE NAME: : package.json 
+// TYPE     : .JSON
+// PATH     : packages/core/package.json
+// PROCESSED: 2026-09-06T20:42:17.446Z
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■-<  END  >-■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■-< START >-■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+// FILE NAME: : tsconfig.json 
+// TYPE     : .JSON
+// PATH     : packages/theme/tsconfig.json
+// PROCESSED: 2026-09-06T20:42:17.446Z
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■-< START >-■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+{
+  "extends": "../../tsconfig.base.json",
+  "include": ["src/**/*", "tests/**/*", "themes/**/*"]
+}
+
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■-<  END  >-■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+// FILE NAME: : tsconfig.json 
+// TYPE     : .JSON
+// PATH     : packages/theme/tsconfig.json
+// PROCESSED: 2026-09-06T20:42:17.446Z
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■-<  END  >-■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■-< START >-■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+// FILE NAME: : package.json 
+// TYPE     : .JSON
+// PATH     : packages/theme/package.json
+// PROCESSED: 2026-09-06T20:42:17.446Z
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■-< START >-■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+{
+  "name": "@pendex/theme",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "lint:types": "oxlint --type-aware --type-check",
+    "typecheck": "bun run lint:types",
+    "test": "bun test",
+    "test:coverage": "bun test --coverage"
+  },
+  "dependencies": {
+    "@pendex/color": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/bun": "^1.3.14",
+    "typescript": "^7.0.2"
+  }
+}
+
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■-<  END  >-■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+// FILE NAME: : package.json 
+// TYPE     : .JSON
+// PATH     : packages/theme/package.json
+// PROCESSED: 2026-09-06T20:42:17.446Z
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■-<  END  >-■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■-< START >-■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+// FILE NAME: : tsconfig.json 
+// TYPE     : .JSON
+// PATH     : packages/compile/tsconfig.json
+// PROCESSED: 2026-09-06T20:42:17.446Z
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■-< START >-■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+{
+  "extends": "../../tsconfig.base.json",
+  "include": ["src/**/*", "tests/**/*"]
+}
+
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■-<  END  >-■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+// FILE NAME: : tsconfig.json 
+// TYPE     : .JSON
+// PATH     : packages/compile/tsconfig.json
+// PROCESSED: 2026-09-06T20:42:17.446Z
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■-<  END  >-■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■-< START >-■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+// FILE NAME: : package.json 
+// TYPE     : .JSON
+// PATH     : packages/compile/package.json
+// PROCESSED: 2026-09-06T20:42:17.446Z
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■-< START >-■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+{
+  "name": "@pendex/compile",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "lint:types": "oxlint --type-aware --type-check",
+    "typecheck": "bun run lint:types",
+    "test": "bun test",
+    "test:coverage": "bun test --coverage"
+  },
+  "dependencies": {
+    "@clack/prompts": "^1.7.0",
+    "@pendex/core": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/bun": "^1.3.14",
+    "typescript": "^7.0.2"
+  }
+}
+
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■-<  END  >-■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+// FILE NAME: : package.json 
+// TYPE     : .JSON
+// PATH     : packages/compile/package.json
+// PROCESSED: 2026-09-06T20:42:17.446Z
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■-<  END  >-■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■-< START >-■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+// FILE NAME: : tsconfig.json 
+// TYPE     : .JSON
+// PATH     : packages/exit/tsconfig.json
+// PROCESSED: 2026-09-06T20:42:17.446Z
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■-< START >-■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+{
+  "extends": "../../tsconfig.base.json",
+  "include": ["src/**/*", "tests/**/*"]
+}
+
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■-<  END  >-■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+// FILE NAME: : tsconfig.json 
+// TYPE     : .JSON
+// PATH     : packages/exit/tsconfig.json
+// PROCESSED: 2026-09-06T20:42:17.446Z
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■-<  END  >-■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■-< START >-■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+// FILE NAME: : package.json 
+// TYPE     : .JSON
+// PATH     : packages/exit/package.json
+// PROCESSED: 2026-09-06T20:42:17.446Z
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■-< START >-■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+{
+  "name": "@pendex/exit",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "lint:types": "oxlint --type-aware --type-check",
+    "typecheck": "bun run lint:types",
+    "test": "bun test",
+    "test:coverage": "bun test --coverage"
+  },
+  "dependencies": {
+    "@clack/prompts": "^1.7.0",
+    "@pendex/core": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/bun": "^1.3.14",
+    "typescript": "^7.0.2"
+  }
+}
+
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■-<  END  >-■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+// FILE NAME: : package.json 
+// TYPE     : .JSON
+// PATH     : packages/exit/package.json
+// PROCESSED: 2026-09-06T20:42:17.446Z
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■-<  END  >-■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■-< START >-■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+// FILE NAME: : tsconfig.json 
+// TYPE     : .JSON
+// PATH     : packages/color/tsconfig.json
+// PROCESSED: 2026-09-06T20:42:17.446Z
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■-< START >-■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+{
+  "extends": ["../../tsconfig.base.json"],
+  "include": ["src/**/*", "tests/**/*"]
+}
+
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■-<  END  >-■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+// FILE NAME: : tsconfig.json 
+// TYPE     : .JSON
+// PATH     : packages/color/tsconfig.json
+// PROCESSED: 2026-09-06T20:42:17.446Z
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■-<  END  >-■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■-< START >-■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+// FILE NAME: : package.json 
+// TYPE     : .JSON
+// PATH     : packages/color/package.json
+// PROCESSED: 2026-09-06T20:42:17.446Z
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■-< START >-■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+{
+  "name": "@pendex/color",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "lint:types": "oxlint --type-aware --type-check",
+    "typecheck": "bun run lint:types",
+    "test": "bun test",
+    "test:coverage": "bun test --coverage"
+  },
+  "devDependencies": {
+    "@types/bun": "^1.3.14",
+    "typescript": "^7.0.2"
+  }
+}
+
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■-<  END  >-■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+// FILE NAME: : package.json 
+// TYPE     : .JSON
+// PATH     : packages/color/package.json
+// PROCESSED: 2026-09-06T20:42:17.446Z
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■-<  END  >-■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■-< START >-■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+// FILE NAME: : tsconfig.json 
+// TYPE     : .JSON
+// PATH     : packages/split/tsconfig.json
+// PROCESSED: 2026-09-06T20:42:17.446Z
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■-< START >-■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+{
+  "extends": "../../tsconfig.base.json",
+  "include": ["src/**/*", "tests/**/*"]
+}
+
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■-<  END  >-■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+// FILE NAME: : tsconfig.json 
+// TYPE     : .JSON
+// PATH     : packages/split/tsconfig.json
+// PROCESSED: 2026-09-06T20:42:17.446Z
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■-<  END  >-■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■-< START >-■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+// FILE NAME: : package.json 
+// TYPE     : .JSON
+// PATH     : packages/split/package.json
+// PROCESSED: 2026-09-06T20:42:17.446Z
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■-< START >-■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+{
+  "name": "@pendex/split",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "lint:types": "oxlint --type-aware --type-check",
+    "typecheck": "bun run lint:types",
+    "test": "bun test",
+    "test:coverage": "bun test --coverage"
+  },
+  "dependencies": {
+    "@clack/prompts": "^1.7.0",
+    "@pendex/core": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/bun": "^1.3.14",
+    "typescript": "^7.0.2"
+  }
+}
+
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■-<  END  >-■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+// FILE NAME: : package.json 
+// TYPE     : .JSON
+// PATH     : packages/split/package.json
+// PROCESSED: 2026-09-06T20:42:17.446Z
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■-<  END  >-■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■-< START >-■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+// FILE NAME: : tsconfig.json 
+// TYPE     : .JSON
+// PATH     : packages/utils/tsconfig.json
+// PROCESSED: 2026-09-06T20:42:17.446Z
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■-< START >-■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+{
+  "extends": "../../tsconfig.base.json",
+  "include": ["src/**/*", "tests/**/*"]
+}
+
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■-<  END  >-■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+// FILE NAME: : tsconfig.json 
+// TYPE     : .JSON
+// PATH     : packages/utils/tsconfig.json
+// PROCESSED: 2026-09-06T20:42:17.446Z
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■-<  END  >-■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■-< START >-■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+// FILE NAME: : package.json 
+// TYPE     : .JSON
+// PATH     : packages/utils/package.json
+// PROCESSED: 2026-09-06T20:42:17.446Z
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■-< START >-■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+{
+  "name": "@pendex/utils",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "lint:types": "oxlint --type-aware --type-check",
+    "typecheck": "bun run lint:types",
+    "test": "bun test",
+    "test:coverage": "bun test --coverage"
+  },
+  "dependencies": {
+    "@clack/prompts": "^1.7.0",
+    "@pendex/core": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/bun": "^1.3.14",
+    "typescript": "^7.0.2"
+  }
+}
+
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■-<  END  >-■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+// FILE NAME: : package.json 
+// TYPE     : .JSON
+// PATH     : packages/utils/package.json
+// PROCESSED: 2026-09-06T20:42:17.446Z
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■-<  END  >-■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■-< START >-■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+// FILE NAME: : bunfig.toml 
+// TYPE     : .TOML
+// PATH     : bunfig.toml
+// PROCESSED: 2026-09-06T20:42:17.446Z
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■-< START >-■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+[run]
+silent = true
+
+[test]
+root = "."
+preload = ["./tests/preload.ts"]
+
+# Set timeout to 0 to disable it completely across all tests
+timeout = 0
+pathIgnorePatterns = [
+  "ALL/**",
+  "ALL_REBUILT/**",
+  "logs/**",
+  "dist/**",
+  "**/types/**",
+  "**/utils/**",
+]
+
+# Coverage configuration
+coverage = true
+coverageReporter = ["text"]
+coverageDir = "./coverage"
+coverageThreshold = { lines = 0.85, functions = 0.90 }
+coverageSkipTestFiles = true
+coverageIgnoreSourcemaps = false
+coveragePathIgnorePatterns = [
+  # Untestable command line entry points and export files
+  "**/*.bin.ts",
+  "**/index*",
+
+  # Test files and folders
+  "**/*.test.ts",
+  "**/*.spec.ts",
+  "**/*.e2e.ts",
+
+  # Configuration files
+  "*.config.js",
+  "*.config.ts",
+  "vite.config.*",
+
+  # Build output & Generated code
+  "dist/**",
+  "ALL/**",
+  "ALL_REBUILT/**",
+  "**/node_modules/**",
+
+  # Utilities that don't need testing
+  "**/types/**",
+  "**/utils/**",
+  "**/tests/preload.*",
+]
+
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■-<  END  >-■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+// FILE NAME: : bunfig.toml 
+// TYPE     : .TOML
+// PATH     : bunfig.toml
+// PROCESSED: 2026-09-06T20:42:17.446Z
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■-<  END  >-■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■-< START >-■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+// FILE NAME: : bunfig.toml 
+// TYPE     : .TOML
+// PATH     : packages/core/bunfig.toml
+// PROCESSED: 2026-09-06T20:42:17.446Z
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■-< START >-■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+# FILE-PATH: packages/core/bunfig.toml
+#
+[test]
+root = "."
+preload = ["./tests/preload.ts"]
+
+# Set timeout to 0 to disable it completely across all tests
+timeout = 0
+coveragePathIgnorePatterns = [
+  # Untestable command line entry points and export files
+  "\\.bin\\.ts$",
+  "**/index*",
+
+  # Test files and folders
+  "**/*.test.ts",
+  "**/*.spec.ts",
+  "**/*.e2e.ts",
+
+  # Configuration files
+  "*.config.js",
+  "*.config.ts",
+  "vite.config.*",
+
+  # Build output & Generated code
+  "dist/**",
+  "ALL/**",
+  "ALL_REBUILT/**",
+  "**/node_modules/**",
+
+  # Utilities that don't need testing
+  "**/types/**",
+  "**/utils/**",
+  "**/tests/preload.*",
+]
+
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■-<  END  >-■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+// FILE NAME: : bunfig.toml 
+// TYPE     : .TOML
+// PATH     : packages/core/bunfig.toml
+// PROCESSED: 2026-09-06T20:42:17.446Z
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■-<  END  >-■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■-< START >-■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+// FILE NAME: : config.toml 
+// TYPE     : .TOML
+// PATH     : packages/core/config/config.toml
+// PROCESSED: 2026-09-06T20:42:17.446Z
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■-< START >-■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+# FILE-PATH: src/config/config.toml
+#
+# DEFAULT THEME
+#
+theme = { name = "pendex", path = "packages/theme/themes/" }
+
+#
+# DEFAULT OUTPUT CONFIGURATION
+#
+http = true
+outputType = "txt" # "txt" or "pdf"
+outputDir = "ALL"
+rebuiltDir = "ALL_REBUILT"
+
+#
+# DEFAULT GLOBAL EXCLUDES
+#
+exclude = [
+  # General
+  "**/node_modules/**",
+  "**/.git/**",
+  "**/*.lockb",
+  "**/*.lock",
+  "**/package-lock.json",
+  "**/*.pnpm-lock.yaml",
+  "**/.env",
+
+  # Build
+  "**/dist/**",
+  "**/build/**",
+  "**/*.map",
+  "**/*.min.js",
+  "**/*.js.map",
+  "**/*.min.css",
+  "**/coverage/**",
+  "**/.stylelintrc*",
+  "**/stylelint.config.*",
+  "**/logs/**",
+
+  # Fonts
+  "**/*.ttf",
+  "**/*.otf",
+  "**/*.woff",
+  "**/*.woff2",
+  "**/*.eot",
+
+  # Docs
+  "**/*.pdf",
+  "**/*.doc",
+  "**/*.docx",
+  "**/*.ppt",
+  "**/*.pptx",
+  "**/*.xls",
+  "**/*.xlsx",
+
+  # Raster/Vector
+  "**/*.png",
+  "**/*.jpg",
+  "**/*.jpeg",
+  "**/*.gif",
+  "**/*.bmp",
+  "**/*.ico",
+  "**/*.webp",
+  "**/*.tiff",
+  "**/*.psd",
+  "**/*.heic",
+
+  # Audio/Video
+  "**/*.mp3",
+  "**/*.mp4",
+  "**/*.wav",
+  "**/*.mov",
+  "**/*.avi",
+  "**/*.webm",
+  "**/*.ogg",
+
+  # Archives/Binaries
+  "**/*.zip",
+  "**/*.tar",
+  "**/*.gz",
+  "**/*.7z",
+  "**/*.rar",
+  "**/*.exe",
+  "**/*.dll",
+  "**/*.so",
+  "**/*.dylib",
+  "**/*.wasm",
+  "**/*.class",
+  "**/*.jar",
+  "**/*.db",
+  "**/*.sqlite",
+
+  # Pendex Specific
+  "**/ALL/**",
+  "**/ALL_REBUILT/**",
+]
+
+#
+# DEFAULT INCLUDE JOBS
+#
+###############################################################################
+## SOURCE FILES
+###############################################################################
+[[jobs]]
+filename = "1_SOURCE_FILES.txt"
+category = "source"
+description = "Project source files (ts, js, etc.)"
+include = [
+  "**/*.js",
+  "**/*.jsx",
+  "**/*.mjs",
+  "**/*.cjs",
+  "**/*.ts",
+  "**/*.tsx",
+  "**/*.mts",
+  "**/*.cts",
+  "**/*.vue",
+  "**/*.svelte",
+  "**/*.astro",
+  "**/*.py",
+  "**/*.pyw",
+  "**/*.c",
+  "**/*.h",
+  "**/*.cpp",
+  "**/*.hpp",
+  "**/*.cc",
+  "**/*.hh",
+  "**/*.rs",
+  "**/*.zig",
+  "**/*.java",
+  "**/*.kt",
+  "**/*.kts",
+  "**/*.scala",
+  "**/*.groovy",
+  "**/*.cs",
+  "**/*.fs",
+  "**/*.vb",
+  "**/*.swift",
+  "**/*.m",
+  "**/*.mm",
+  "**/*.dart",
+  "**/*.go",
+  "**/*.rb",
+  "**/*.rbw",
+  "**/*.php",
+  "**/*.hs",
+  "**/*.ex",
+  "**/*.exs",
+  "**/*.erl",
+  "**/*.clj",
+  "**/*.sql",
+]
+exclude = [
+  "**/*.lock",
+  "**/*.json",
+  "**/*.md",
+  "**/*.toml",
+  "**/*.txt",
+  "**/*.config.*",
+  "**/config.*",
+  "**/*.test.*",
+  "**/*.spec.*",
+  "**/*_test.*",
+  "**/*_spec.*",
+  "**/__tests__/**/*",
+  "**/__snapshots__/**/*",
+  "**/__mocks__/**/*",
+  "**/tests/**/*",
+  "**/specs/**/*",
+  "**/test/**/*",
+  "**/*cspell*",
+]
+
+###############################################################################
+## WEB FILES
+###############################################################################
+[[jobs]]
+filename = "2_WEB_FILES.txt"
+category = "web"
+description = "Webpage files"
+include = [
+  "**/*.html",
+  "**/*.htm",
+  "**/*.xhtml",
+  "**/*.xht",
+  "**/*.mhtml",
+  "**/*.riot",
+  "**/*.ejs",
+  "**/*.pug",
+  "**/*.jade",
+  "**/*.handlebars",
+  "**/*.hbs",
+  "**/*.mustache",
+  "**/*.twig",
+  "**/*.nunjucks",
+  "**/*.njk",
+  "**/*.phtml",
+  "**/*.jsp",
+  "**/*.jspx",
+  "**/*.asp",
+  "**/*.aspx",
+  "**/*.cshtml",
+  "**/*.vbhtml",
+  "**/*.j2",
+  "**/*.jinja",
+  "**/*.jinja2",
+  "**/*.erb",
+  "**/*.webmanifest",
+]
+exclude = [
+  "**/*.lock",
+  "**/*.ts",
+  "**/*.ps1",
+  "**/*.json",
+  "**/*.md",
+  "**/*.toml",
+  "**/*.txt",
+  "**/__tests__/**/*",
+  "**/tests/**/*",
+  "**/*.test.*",
+  "**/*.spec.*",
+  "**/*.css",
+  "**/*.scss",
+  "**/*.sass",
+  "**/*.less",
+  "**/*.styl",
+  "**/*.pcss",
+  "**/*.sss",
+  "**/*.wxss",
+  "**/*.acss",
+  "**/*cspell*",
+]
+
+###############################################################################
+## STYLE FILES
+###############################################################################
+[[jobs]]
+filename = "3_STYLE_FILES.txt"
+category = "style"
+description = "Style files (css, scss, etc.)"
+include = [
+  "**/*.css",
+  "**/*.scss",
+  "**/*.sass",
+  "**/*.less",
+  "**/*.styl",
+  "**/*.pcss",
+  "**/*.sss",
+  "**/*.wxss",
+  "**/*.acss",
+]
+exclude = [
+  "**/*.lock",
+  "**/*.ts",
+  "**/*.ps1",
+  "**/*.json",
+  "**/*.md",
+  "**/*.toml",
+  "**/*.txt",
+  "**/.stylelintrc*",
+  "**/stylelint.config.*",
+  "**/*cspell*",
+]
+
+###############################################################################
+## TERMINAL FILES
+###############################################################################
+[[jobs]]
+filename = "4_TERMINAL_FILES.txt"
+category = "terminal"
+description = "Command line files"
+include = ["**/*.ps1", "**/*.bash", "**/*.sh", "**/*.fish", "**/*.zsh"]
+exclude = [
+  "**/*.lock",
+  "**/*.ts",
+  "**/*.json",
+  "**/*.md",
+  "**/*.toml",
+  "**/*.txt",
+  "**/*cspell*",
+]
+
+###############################################################################
+## CONFIGURATION FILES
+###############################################################################
+[[jobs]]
+filename = "5_CONFIG_FILES.txt"
+category = "configuration"
+description = "Configuration files"
+include = [
+  "**/*.json",
+  "**/*.jsonc",
+  "**/*.yaml",
+  "**/*.yml",
+  "**/*.toml",
+  "**/*.config.*",
+  "**/config.*",
+  "**/.editorconfig",
+  "**/.browserslistrc",
+  "**/browserslist",
+  "**/*ignore",
+  "**/.gitattributes",
+  "**/.gitmodules",
+  "**/.env*",
+  "**/Dockerfile*",
+  "**/docker-compose*.yml",
+  "**/.github/workflows/*.yml",
+  "**/package.json",
+  "**/package-lock.json",
+  "**/yarn.lock",
+  "**/pnpm-lock.yaml",
+  "**/bun.lockb",
+  "**/composer.json",
+  "**/composer.lock",
+  "**/Cargo.toml",
+  "**/Cargo.lock",
+  "**/Gemfile",
+  "**/Gemfile.lock",
+  "**/.eslintrc*",
+  "**/eslint.config.*",
+  "**/.prettierrc*",
+  "**/prettier.config.*",
+  "**/.stylelintrc*",
+  "**/stylelint.config.*",
+  "**/tsconfig*.json",
+  "**/.babelrc*",
+  "**/babel.config.*",
+  "**/webpack.config.*",
+  "**/vite.config.*",
+  "**/rollup.config.*",
+  "**/next.config.*",
+  "**/nuxt.config.*",
+  "**/gatsby-config.*",
+  "**/gulpfile.*",
+  "**/*/settings.json",
+  "**/.vscode/**/*.json",
+  "**/.idea/**/*.xml",
+]
+exclude = [
+  "**/*.lock",
+  "**/*.ts",
+  "**/*.ps1",
+  "**/*.md",
+  "**/*.txt",
+  "**/*cspell*",
+]
+
+###############################################################################
+## DOCUMENTATION FILES
+###############################################################################
+[[jobs]]
+filename = "6_DOC_FILES.txt"
+category = "documentation"
+description = "Documentation files"
+include = [
+  "**/README*",
+  "**/readme*",
+  "**/README.*",
+  "**/readme.*",
+  "**/LICENSE*",
+  "**/license*",
+  "**/LICENSE.*",
+  "**/license.*",
+  "**/COPYING*",
+  "**/NOTICE*",
+  "**/CHANGELOG*",
+  "**/changelog*",
+  "**/CHANGELOG.*",
+  "**/changelog.*",
+  "**/HISTORY*",
+  "**/RELEASES*",
+  "**/*.md",
+  "**/*.markdown",
+  "**/*.mdx",
+  "**/*.rst",
+  "**/*.adoc",
+  "**/*.asciidoc",
+  "**/*.txt",
+  "**/CONTRIBUTING*",
+  "**/contributing*",
+  "**/CODE_OF_CONDUCT*",
+  "**/code_of_conduct*",
+  "**/SECURITY*",
+  "**/SUPPORT*",
+  "**/docs/**/*",
+  "**/doc/**/*",
+  "**/.github/ISSUE_TEMPLATE/**/*",
+  "**/.github/PULL_REQUEST_TEMPLATE/**/*",
+]
+exclude = [
+  "**/*.lock",
+  "**/*.ts",
+  "**/*.ps1",
+  "**/*.json",
+  "**/*.toml",
+  "**/*cspell*",
+]
+
+###############################################################################
+## TEST FILES
+###############################################################################
+[[jobs]]
+filename = "7_TEST_FILES.txt"
+category = "testing"
+description = "Test files"
+include = [
+  "**/*.test.*",
+  "**/*.spec.*",
+  "**/*_test.*",
+  "**/*_spec.*",
+  "**/*-test.*",
+  "**/test-*.*",
+  "**/test.*",
+  "**/test/**/*.*",
+  "**/test_*.py",
+  "**/*Test.php",
+  "**/*Spec.scala",
+  "**/__tests__/**/*",
+  "**/__snapshots__/**/*",
+  "**/__mocks__/**/*",
+  "**/tests/**/*",
+  "**/specs/**/*",
+  "**/test/**/*",
+  "**/jest.config.*",
+  "**/vitest.config.*",
+  "**/playwright.config.*",
+  "**/cypress.config.*",
+  "**/karma.conf.*",
+  "**/setupTests.*",
+  "**/test-setup.*",
+  "**/test.setup.*",
+]
+exclude = ["**/*cspell*"]
+
+###############################################################################
+## CSPELL DICTIONARY AND CONFIGURATION FILES
+###############################################################################
+[[jobs]]
+filename = "8_CSPELL_FILES.txt"
+category = "cspell"
+description = "CSpell files"
+include = [
+  # Matches target files in the root directory AND all subdirectories
+  "**/*cspell*",
+]
+exclude = ["**/*cspell-dictionary-*"]
+
+###############################################################################
+## MISC. (I.E. EVERYTHING ELSE) FILES
+###############################################################################
+[[jobs]]
+filename = "9_MISC_FILES.txt"
+category = "misc"
+description = "All remaining project files"
+# Empty include = "remainder job": FileScanner.resolveJobFiles() treats an
+# empty include list as "everything not already claimed by an earlier
+# job", not "nothing". This job must stay LAST in this array — remainder
+# resolution depends on every prior job having already run. See
+# src/core/FileScanner.ts and src/core/CompileService.ts.
+include = []
+exclude = ["**/*cspell*", "**/*cspell-dictionary*.txt", "**/*.svg"]
+
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■-<  END  >-■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+// FILE NAME: : config.toml 
+// TYPE     : .TOML
+// PATH     : packages/core/config/config.toml
+// PROCESSED: 2026-09-06T20:42:17.446Z
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■-<  END  >-■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■-< START >-■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+// FILE NAME: : bunfig.toml 
+// TYPE     : .TOML
+// PATH     : packages/theme/bunfig.toml
+// PROCESSED: 2026-09-06T20:42:17.446Z
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■-< START >-■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+# FILE-PATH: packages/theme/bunfig.toml
+#
+[test]
+root = "."
+coveragePathIgnorePatterns = [
+  # Untestable command line entry points and export files
+  "\\.bin\\.ts$",
+  "**/index*",
+
+  # Test files and folders
+  "**/*.test.ts",
+  "**/*.spec.ts",
+  "**/*.e2e.ts",
+
+  # Configuration files
+  "*.config.js",
+  "*.config.ts",
+  "vite.config.*",
+
+  # Build output & Generated code
+  "dist/**",
+  "ALL/**",
+  "ALL_REBUILT/**",
+  "**/node_modules/**",
+
+  # Utilities that don't need testing
+  "**/types/**",
+  "**/utils/**",
+  "**/tests/preload.*",
+]
+
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■-<  END  >-■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+// FILE NAME: : bunfig.toml 
+// TYPE     : .TOML
+// PATH     : packages/theme/bunfig.toml
+// PROCESSED: 2026-09-06T20:42:17.446Z
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■-<  END  >-■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■-< START >-■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+// FILE NAME: : pendex.toml 
+// TYPE     : .TOML
+// PATH     : packages/theme/themes/pendex.toml
+// PROCESSED: 2026-09-06T20:42:17.446Z
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■-< START >-■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+# ============================================================================
+# Pendex Theme
+# "Portable Codex"
+#
+# THE CANONICAL THEME. Every other theme file mirrors this file's exact
+# section layout (see README's Themes section) — only the colors change.
+# Backgrounds are fixed at #1A1A1A / #262626 across every theme so no
+# theme reads worse than another on a real terminal; every color below
+# was checked against both and adjusted (hue preserved, only lightened)
+# wherever it fell under WCAG-AA (4.5:1) for text colors, or 3:1 for
+# intentionally de-emphasized ones (muted/comment/ignored/brightBlack).
+#
+# Inspired by:
+#   • Homebrew
+#   • Parchment & brass
+#   • Mathematical manuscripts
+#   • Borderlands-style bold outlines
+# ============================================================================
+
+name = "Pendex"
+author = "Dusty Dew"
+version = "1.1.0"
+description = "Warm parchment-inspired theme for Pendex."
+
+###############################################################################
+# ThemeColors interface
+###############################################################################
+# NOTE: Added "content" to match DaisyUI update. This is the default text color
+# unless a component explicitly uses foreground instead.
+
+primary = "#D6A448" # Brass
+secondary = "#6F92B0" # Blueprint
+success = "#799470" # Olive
+warning = "#D99C5A" # Copper
+error = "#C57967" # Brick
+info = "#6AAFB5" # Teal
+muted = "#7B746B" # Ash
+
+foreground = "#E9E0D2" # Parchment (used for bright text)
+content = "#1A1A1A" # Charcoal (new; semantic content color)
+background = "#1A1A1A" # Charcoal
+titleBg = "#262626" # Graphite
+
+###############################################################################
+# Extended Brand Palette
+###############################################################################
+
+[palette]
+parchment = "#E9E0D2"
+cream = "#F7F2E8"
+charcoal = "#1A1A1A"
+graphite = "#262626"
+surface = "#2F2F2F" # Soft charcoal
+surfaceAlt = "#3A352F" # Warm dark brown
+outline = "#000000"
+brass = "#D6A448"
+gold = "#E8C56A"
+copper = "#C78C5C"
+olive = "#799470"
+forest = "#5F7458"
+blueprint = "#6F92B0"
+inkBlue = "#3F5D78"
+teal = "#6AAFB5"
+plum = "#A183B2"
+brick = "#C57967"
+brickBright = "#D97763"
+ash = "#7B746B"
+
+###############################################################################
+# Website
+###############################################################################
+#
+# Shared across every theme — the Pendex site keeps one identity
+# regardless of which terminal accent theme is active.
+
+[website]
+heroBackground = "#F7F2E8" # Cream
+cardBackground = "#ECE3D4" # Light parchment
+border = "#000000"
+heading = "#2E2A27" # Deep brown
+body = "#443E39" # Soft brown
+link = "#3F5D78" # Ink blue
+linkHover = "#6AAFB5" # Teal
+buttonPrimary = "#D6A448" # Brass
+buttonHover = "#E8C56A" # Gold
+buttonText = "#1A1A1A" # Charcoal
+shadow = "#00000055"
+grid = "#DDD2C2" # Muted parchment
+math = "#8B5E3C" # Math brown
+
+###############################################################################
+# Terminal
+###############################################################################
+
+[terminal]
+cursor = "#D6A448" # Brass
+cursorText = "#1A1A1A" # Charcoal
+selection = "#3A352F" # Warm dark brown
+findHighlight = "#E8C56A" # Gold
+inactiveSelection = "#2C2C2C" # Dark graphite
+
+###############################################################################
+# ANSI
+###############################################################################
+
+[ansi]
+black = "#2C2C2C" # Graphite
+red = "#C57967" # Brick
+green = "#799470" # Olive
+yellow = "#D6A448" # Brass
+blue = "#6F92B0" # Blueprint
+magenta = "#A183B2" # Plum
+cyan = "#6AAFB5" # Teal
+white = "#E9E0D2" # Parchment
+
+brightBlack = "#717171" # Bright graphite
+brightRed = "#D97763" # Bright brick
+brightGreen = "#8FA97F" # Bright olive
+brightYellow = "#E8C56A" # Gold
+brightBlue = "#8AB0D6" # Bright blueprint
+brightMagenta = "#B495C8" # Bright plum
+brightCyan = "#87CDD4" # Bright teal
+brightWhite = "#F7F2E8" # Cream
+
+###############################################################################
+# Syntax Highlighting
+###############################################################################
+
+[syntax]
+keyword = "#C78C5C" # Copper
+type = "#8AB0D6" # Bright blueprint
+class = "#8AB0D6" # Bright blueprint
+interface = "#8AB0D6" # Bright blueprint
+function = "#E7C46B" # Warm gold
+string = "#95B184" # Soft green
+number = "#D99C5A" # Copper
+constant = "#D6A448" # Brass
+property = "#E9E0D2" # Parchment
+operator = "#E9E0D2" # Parchment
+comment = "#7B746B" # Ash
+regex = "#6AAFB5" # Teal
+attribute = "#D6A448" # Brass
+namespace = "#6F92B0" # Blueprint
+
+###############################################################################
+# Git
+###############################################################################
+
+[git]
+added = "#799470" # Olive
+modified = "#D6A448" # Brass
+deleted = "#C57967" # Brick
+renamed = "#6AAFB5" # Teal
+ignored = "#7B746B" # Ash
+
+###############################################################################
+# Diagnostics
+###############################################################################
+
+[diagnostics]
+hint = "#6AAFB5" # Teal
+info = "#6F92B0" # Blueprint
+warning = "#D6A448" # Brass
+error = "#C57967" # Brick
+
+###############################################################################
+# Diff
+###############################################################################
+
+[diff]
+addedBackground = "#2A3A2A" # Deep green wash
+removedBackground = "#402A2A" # Deep red wash
+modifiedBackground = "#4A4128" # Warm golden wash
+
+###############################################################################
+# Pendex Brand
+###############################################################################
+#
+# Keys under `source`/`web`/`style`/`terminal`/`configuration`/
+# `documentation`/`testing`/`misc` are looked up by the CLI to color a
+# compile/split job's title by its Category — they must match the
+# Category string exactly (e.g. `configuration`, not `config`) or that
+# job silently falls back to the theme's default styling instead.
+
+[brand]
+bookCover = "#24303A" # Midnight blue
+bookSpine = "#2F3B45" # Steel blue
+paper = "#F7F2E8" # Cream
+banner = "#F3E9D6" # Light parchment
+outline = "#000000" # Black
+math = "#8B5E3C" # Math brown
+folder = "#799470" # Olive
+manifest = "#6AAFB5" # Teal
+compile = "#D6A448" # Brass
+split = "#799470" # Olive
+scanner = "#6F92B0" # Blueprint
+source = "#799470" # Olive
+web = "#6F92B0" # Blueprint
+style = "#D99C5A" # Copper
+terminal = "#3A352F" # Warm dark brown
+configuration = "#C78C5C" # Copper
+documentation = "#6F92B0" # Blueprint
+testing = "#A183B2" # Plum
+misc = "#7B746B" # Ash
+
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■-<  END  >-■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+// FILE NAME: : pendex.toml 
+// TYPE     : .TOML
+// PATH     : packages/theme/themes/pendex.toml
+// PROCESSED: 2026-09-06T20:42:17.446Z
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■-<  END  >-■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■-< START >-■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+// FILE NAME: : tokyonight.toml 
+// TYPE     : .TOML
+// PATH     : packages/theme/themes/tokyonight.toml
+// PROCESSED: 2026-09-06T20:42:17.446Z
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■-< START >-■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+# ============================================================================
+# Tokyo Night Theme for Pendex (night variant)
+# https://github.com/folke/tokyonight.nvim
+#
+# Mirrors pendex.toml's layout exactly. Background/titleBg standardized
+# to #1A1A1A/#262626; comment/muted and brightBlack nudged brighter from
+# the upstream values (#565F89, #414868) to clear the 3:1 floor against
+# both backgrounds — everything else is Tokyo Night's own palette,
+# already dark-terminal-legible by design.
+# ============================================================================
+
+name = "Tokyo Night"
+author = "Folke Lemaitre & contributors"
+version = "1.1.0"
+description = "Tokyo Night (night variant), mirrored to Pendex's theme layout."
+
+###############################################################################
+# ThemeColors interface
+###############################################################################
+
+primary = "#7AA2F7"
+secondary = "#BB9AF7"
+success = "#9ECE6A"
+warning = "#E0AF68"
+error = "#F7768E"
+info = "#7DCFFF"
+muted = "#656F9E"
+foreground = "#C0CAF5"
+background = "#1A1A1A"
+titleBg = "#262626"
+
+###############################################################################
+# Extended Brand Palette
+###############################################################################
+
+[palette]
+
+background = "#1A1B26"
+surface = "#24283B"
+foreground = "#C0CAF5"
+comment = "#656F9E"
+blue = "#7AA2F7"
+purple = "#BB9AF7"
+green = "#9ECE6A"
+yellow = "#E0AF68"
+red = "#F7768E"
+cyan = "#7DCFFF"
+orange = "#FF9E64"
+teal = "#2AC3DE"
+
+###############################################################################
+# Website
+###############################################################################
+#
+# Shared across every theme — the Pendex site keeps one identity
+# regardless of which terminal accent theme is active.
+
+[website]
+
+heroBackground = "#F7F2E8"
+cardBackground = "#ECE3D4"
+border = "#000000"
+heading = "#2E2A27"
+body = "#443E39"
+link = "#3F5D78"
+linkHover = "#6AAFB5"
+buttonPrimary = "#D6A448"
+buttonHover = "#E8C56A"
+buttonText = "#1A1A1A"
+shadow = "#00000055"
+grid = "#DDD2C2"
+math = "#8B5E3C"
+
+###############################################################################
+# Terminal
+###############################################################################
+
+[terminal]
+
+cursor = "#7AA2F7"
+cursorText = "#1A1A1A"
+selection = "#33467C"
+findHighlight = "#E0AF68"
+inactiveSelection = "#2C2C2C"
+
+###############################################################################
+# ANSI
+###############################################################################
+
+[ansi]
+
+black = "#15161E"
+red = "#F7768E"
+green = "#9ECE6A"
+yellow = "#E0AF68"
+blue = "#7AA2F7"
+magenta = "#BB9AF7"
+cyan = "#7DCFFF"
+white = "#A9B1D6"
+brightBlack = "#636D9D"
+brightRed = "#F7768E"
+brightGreen = "#9ECE6A"
+brightYellow = "#E0AF68"
+brightBlue = "#7AA2F7"
+brightMagenta = "#BB9AF7"
+brightCyan = "#7DCFFF"
+brightWhite = "#C0CAF5"
+
+###############################################################################
+# Syntax Highlighting
+###############################################################################
+
+[syntax]
+
+keyword = "#BB9AF7"
+type = "#2AC3DE"
+class = "#2AC3DE"
+interface = "#2AC3DE"
+function = "#7AA2F7"
+string = "#9ECE6A"
+number = "#FF9E64"
+constant = "#FF9E64"
+property = "#C0CAF5"
+operator = "#89DDFF"
+comment = "#656F9E"
+regex = "#B4F9F8"
+attribute = "#7AA2F7"
+namespace = "#2AC3DE"
+
+###############################################################################
+# Git
+###############################################################################
+
+[git]
+
+added = "#9ECE6A"
+modified = "#E0AF68"
+deleted = "#F7768E"
+renamed = "#7DCFFF"
+ignored = "#656F9E"
+
+###############################################################################
+# Diagnostics
+###############################################################################
+
+[diagnostics]
+
+hint = "#7DCFFF"
+info = "#7AA2F7"
+warning = "#E0AF68"
+error = "#F7768E"
+
+###############################################################################
+# Diff
+###############################################################################
+
+[diff]
+
+addedBackground = "#1E332A"
+removedBackground = "#332028"
+modifiedBackground = "#332C1E"
+
+###############################################################################
+# Pendex Brand
+###############################################################################
+#
+# Keys under `source`/`web`/`style`/`terminal`/`configuration`/
+# `documentation`/`testing`/`misc` are looked up by the CLI to color a
+# compile/split job's title by its Category — they must match the
+# Category string exactly (e.g. `configuration`, not `config`) or that
+# job silently falls back to the theme's default styling instead.
+
+[brand]
+
+bookCover = "#24303A"
+bookSpine = "#2F3B45"
+paper = "#F7F2E8"
+banner = "#F3E9D6"
+outline = "#000000"
+math = "#8B5E3C"
+folder = "#9ECE6A"
+manifest = "#7DCFFF"
+compile = "#7AA2F7"
+split = "#9ECE6A"
+scanner = "#BB9AF7"
+source = "#9ECE6A"
+web = "#7DCFFF"
+style = "#E0AF68"
+terminal = "#414868"
+configuration = "#FF9E64"
+documentation = "#7DCFFF"
+testing = "#BB9AF7"
+misc = "#656F9E"
+
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■-<  END  >-■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+// FILE NAME: : tokyonight.toml 
+// TYPE     : .TOML
+// PATH     : packages/theme/themes/tokyonight.toml
+// PROCESSED: 2026-09-06T20:42:17.446Z
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■-<  END  >-■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■-< START >-■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+// FILE NAME: : monokaipro.toml 
+// TYPE     : .TOML
+// PATH     : packages/theme/themes/monokaipro.toml
+// PROCESSED: 2026-09-06T20:42:17.446Z
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■-< START >-■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+# ============================================================================
+# Monokai Pro Theme for Pendex
+# https://monokai.pro
+#
+# Mirrors pendex.toml's layout exactly. Background/titleBg standardized
+# to #1A1A1A/#262626; every other color is Monokai Pro's own published
+# "Classic" filter palette — already dark-terminal-legible by design,
+# verified against both backgrounds (WCAG-AA 4.5:1 for text, 3:1 for
+# the intentionally de-emphasized comment/muted color).
+# ============================================================================
+
+name = "Monokai Pro"
+author = "Monokai.pro & contributors"
+version = "1.1.0"
+description = "Monokai Pro (Classic filter), mirrored to Pendex's theme layout."
+
+###############################################################################
+# ThemeColors interface
+###############################################################################
+
+primary = "#FFD866"
+secondary = "#AB9DF2"
+success = "#A9DC76"
+warning = "#FC9867"
+error = "#FF6188"
+info = "#78DCE8"
+muted = "#727072"
+foreground = "#FCFCFA"
+background = "#1A1A1A"
+titleBg = "#262626"
+
+###############################################################################
+# Extended Brand Palette
+###############################################################################
+
+[palette]
+
+background = "#2D2A2E"
+surface = "#403E41"
+foreground = "#FCFCFA"
+comment = "#727072"
+yellow = "#FFD866"
+purple = "#AB9DF2"
+green = "#A9DC76"
+orange = "#FC9867"
+pink = "#FF6188"
+cyan = "#78DCE8"
+
+###############################################################################
+# Website
+###############################################################################
+#
+# Shared across every theme — the Pendex site keeps one identity
+# regardless of which terminal accent theme is active.
+
+[website]
+
+heroBackground = "#F7F2E8"
+cardBackground = "#ECE3D4"
+border = "#000000"
+heading = "#2E2A27"
+body = "#443E39"
+link = "#3F5D78"
+linkHover = "#6AAFB5"
+buttonPrimary = "#D6A448"
+buttonHover = "#E8C56A"
+buttonText = "#1A1A1A"
+shadow = "#00000055"
+grid = "#DDD2C2"
+math = "#8B5E3C"
+
+###############################################################################
+# Terminal
+###############################################################################
+
+[terminal]
+
+cursor = "#FFD866"
+cursorText = "#1A1A1A"
+selection = "#5B595C"
+findHighlight = "#FC9867"
+inactiveSelection = "#2C2C2C"
+
+###############################################################################
+# ANSI
+###############################################################################
+
+[ansi]
+
+black = "#403E41"
+red = "#FF6188"
+green = "#A9DC76"
+yellow = "#FFD866"
+blue = "#FC9867"
+magenta = "#AB9DF2"
+cyan = "#78DCE8"
+white = "#FCFCFA"
+brightBlack = "#727072"
+brightRed = "#FF6188"
+brightGreen = "#A9DC76"
+brightYellow = "#FFD866"
+brightBlue = "#FC9867"
+brightMagenta = "#AB9DF2"
+brightCyan = "#78DCE8"
+brightWhite = "#FCFCFA"
+
+###############################################################################
+# Syntax Highlighting
+###############################################################################
+
+[syntax]
+
+keyword = "#FF6188"
+type = "#78DCE8"
+class = "#78DCE8"
+interface = "#78DCE8"
+function = "#A9DC76"
+string = "#FFD866"
+number = "#AB9DF2"
+constant = "#AB9DF2"
+property = "#FCFCFA"
+operator = "#FF6188"
+comment = "#727072"
+regex = "#FC9867"
+attribute = "#A9DC76"
+namespace = "#78DCE8"
+
+###############################################################################
+# Git
+###############################################################################
+
+[git]
+
+added = "#A9DC76"
+modified = "#FFD866"
+deleted = "#FF6188"
+renamed = "#78DCE8"
+ignored = "#727072"
+
+###############################################################################
+# Diagnostics
+###############################################################################
+
+[diagnostics]
+
+hint = "#78DCE8"
+info = "#AB9DF2"
+warning = "#FC9867"
+error = "#FF6188"
+
+###############################################################################
+# Diff
+###############################################################################
+
+[diff]
+
+addedBackground = "#28331E"
+removedBackground = "#33202A"
+modifiedBackground = "#332E1E"
+
+###############################################################################
+# Pendex Brand
+###############################################################################
+#
+# Keys under `source`/`web`/`style`/`terminal`/`configuration`/
+# `documentation`/`testing`/`misc` are looked up by the CLI to color a
+# compile/split job's title by its Category — they must match the
+# Category string exactly (e.g. `configuration`, not `config`) or that
+# job silently falls back to the theme's default styling instead.
+
+[brand]
+
+bookCover = "#24303A"
+bookSpine = "#2F3B45"
+paper = "#F7F2E8"
+banner = "#F3E9D6"
+outline = "#000000"
+math = "#8B5E3C"
+folder = "#A9DC76"
+manifest = "#78DCE8"
+compile = "#FFD866"
+split = "#A9DC76"
+scanner = "#AB9DF2"
+source = "#A9DC76"
+web = "#78DCE8"
+style = "#FC9867"
+terminal = "#403E41"
+configuration = "#FC9867"
+documentation = "#78DCE8"
+testing = "#AB9DF2"
+misc = "#727072"
+
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■-<  END  >-■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+// FILE NAME: : monokaipro.toml 
+// TYPE     : .TOML
+// PATH     : packages/theme/themes/monokaipro.toml
+// PROCESSED: 2026-09-06T20:42:17.446Z
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■-<  END  >-■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■-< START >-■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+// FILE NAME: : dracula.toml 
+// TYPE     : .TOML
+// PATH     : packages/theme/themes/dracula.toml
+// PROCESSED: 2026-09-06T20:42:17.446Z
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■-< START >-■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+# ============================================================================
+# Dracula Theme for Pendex
+# https://draculatheme.com
+#
+# Mirrors pendex.toml's layout exactly. Background/titleBg standardized
+# to #1A1A1A/#262626 like every Pendex theme; every other color is
+# Dracula's own published palette — already dark-terminal-legible by
+# design, verified against both backgrounds (WCAG-AA 4.5:1 for text,
+# 3:1 for the intentionally de-emphasized comment/muted color).
+# ============================================================================
+
+name = "Dracula"
+author = "Zeno Rocha & contributors"
+version = "1.1.0"
+description = "Official Dracula palette, mirrored to Pendex's theme layout."
+
+###############################################################################
+# ThemeColors interface
+###############################################################################
+
+primary = "#BD93F9"
+secondary = "#FF79C6"
+success = "#50FA7B"
+warning = "#FFB86C"
+error = "#FF5555"
+info = "#8BE9FD"
+muted = "#6272A4"
+foreground = "#F8F8F2"
+background = "#1A1A1A"
+titleBg = "#262626"
+
+###############################################################################
+# Extended Brand Palette
+###############################################################################
+
+[palette]
+
+background = "#282A36"
+currentLine = "#44475A"
+foreground = "#F8F8F2"
+comment = "#6272A4"
+cyan = "#8BE9FD"
+green = "#50FA7B"
+orange = "#FFB86C"
+pink = "#FF79C6"
+purple = "#BD93F9"
+red = "#FF5555"
+yellow = "#F1FA8C"
+
+###############################################################################
+# Website
+###############################################################################
+#
+# Shared across every theme — the Pendex site keeps one identity
+# regardless of which terminal accent theme is active.
+
+[website]
+
+heroBackground = "#F7F2E8"
+cardBackground = "#ECE3D4"
+border = "#000000"
+heading = "#2E2A27"
+body = "#443E39"
+link = "#3F5D78"
+linkHover = "#6AAFB5"
+buttonPrimary = "#D6A448"
+buttonHover = "#E8C56A"
+buttonText = "#1A1A1A"
+shadow = "#00000055"
+grid = "#DDD2C2"
+math = "#8B5E3C"
+
+###############################################################################
+# Terminal
+###############################################################################
+
+[terminal]
+
+cursor = "#BD93F9"
+cursorText = "#1A1A1A"
+selection = "#44475A"
+findHighlight = "#F1FA8C"
+inactiveSelection = "#2C2C2C"
+
+###############################################################################
+# ANSI
+###############################################################################
+
+[ansi]
+
+black = "#21222C"
+red = "#FF5555"
+green = "#50FA7B"
+yellow = "#F1FA8C"
+blue = "#BD93F9"
+magenta = "#FF79C6"
+cyan = "#8BE9FD"
+white = "#F8F8F2"
+brightBlack = "#6272A4"
+brightRed = "#FF6E6E"
+brightGreen = "#69FF94"
+brightYellow = "#FFFFA5"
+brightBlue = "#D6ACFF"
+brightMagenta = "#FF92DF"
+brightCyan = "#A4FFFF"
+brightWhite = "#FFFFFF"
+
+###############################################################################
+# Syntax Highlighting
+###############################################################################
+
+[syntax]
+
+keyword = "#FF79C6"
+type = "#8BE9FD"
+class = "#8BE9FD"
+interface = "#8BE9FD"
+function = "#50FA7B"
+string = "#F1FA8C"
+number = "#BD93F9"
+constant = "#BD93F9"
+property = "#F8F8F2"
+operator = "#FF79C6"
+comment = "#6272A4"
+regex = "#FF5555"
+attribute = "#50FA7B"
+namespace = "#8BE9FD"
+
+###############################################################################
+# Git
+###############################################################################
+
+[git]
+
+added = "#50FA7B"
+modified = "#FFB86C"
+deleted = "#FF5555"
+renamed = "#8BE9FD"
+ignored = "#6272A4"
+
+###############################################################################
+# Diagnostics
+###############################################################################
+
+[diagnostics]
+
+hint = "#8BE9FD"
+info = "#BD93F9"
+warning = "#FFB86C"
+error = "#FF5555"
+
+###############################################################################
+# Diff
+###############################################################################
+
+[diff]
+
+addedBackground = "#1E3A2A"
+removedBackground = "#3A1E28"
+modifiedBackground = "#3A3320"
+
+###############################################################################
+# Pendex Brand
+###############################################################################
+#
+# Keys under `source`/`web`/`style`/`terminal`/`configuration`/
+# `documentation`/`testing`/`misc` are looked up by the CLI to color a
+# compile/split job's title by its Category — they must match the
+# Category string exactly (e.g. `configuration`, not `config`) or that
+# job silently falls back to the theme's default styling instead.
+
+[brand]
+
+bookCover = "#24303A"
+bookSpine = "#2F3B45"
+paper = "#F7F2E8"
+banner = "#F3E9D6"
+outline = "#000000"
+math = "#8B5E3C"
+folder = "#50FA7B"
+manifest = "#8BE9FD"
+compile = "#BD93F9"
+split = "#50FA7B"
+scanner = "#FF79C6"
+source = "#50FA7B"
+web = "#8BE9FD"
+style = "#FFB86C"
+terminal = "#44475A"
+configuration = "#F1FA8C"
+documentation = "#8BE9FD"
+testing = "#FF79C6"
+misc = "#6272A4"
+
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■-<  END  >-■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+// FILE NAME: : dracula.toml 
+// TYPE     : .TOML
+// PATH     : packages/theme/themes/dracula.toml
+// PROCESSED: 2026-09-06T20:42:17.446Z
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■-<  END  >-■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■-< START >-■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+// FILE NAME: : onedark.toml 
+// TYPE     : .TOML
+// PATH     : packages/theme/themes/onedark.toml
+// PROCESSED: 2026-09-06T20:42:17.446Z
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■-< START >-■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+# ============================================================================
+# One Dark Theme for Pendex
+# https://github.com/atom/one-dark-syntax
+#
+# Mirrors pendex.toml's layout exactly. Background/titleBg standardized
+# to #1A1A1A/#262626; comment/muted and brightBlack nudged brighter from
+# the upstream value (#5C6370) to clear the 3:1 floor against both
+# backgrounds — everything else is One Dark's own palette, already
+# dark-terminal-legible by design.
+# ============================================================================
+
+name = "One Dark"
+author = "Atom & contributors"
+version = "1.1.0"
+description = "Atom One Dark, mirrored to Pendex's theme layout."
+
+###############################################################################
+# ThemeColors interface
+###############################################################################
+
+primary = "#61AFEF"
+secondary = "#C678DD"
+success = "#98C379"
+warning = "#E5C07B"
+error = "#E06C75"
+info = "#56B6C2"
+muted = "#686F7E"
+foreground = "#ABB2BF"
+background = "#1A1A1A"
+titleBg = "#262626"
+
+###############################################################################
+# Extended Brand Palette
+###############################################################################
+
+[palette]
+
+background = "#282C34"
+gutter = "#2C323C"
+foreground = "#ABB2BF"
+comment = "#686F7E"
+blue = "#61AFEF"
+purple = "#C678DD"
+green = "#98C379"
+yellow = "#E5C07B"
+red = "#E06C75"
+cyan = "#56B6C2"
+orange = "#D19A66"
+
+###############################################################################
+# Website
+###############################################################################
+#
+# Shared across every theme — the Pendex site keeps one identity
+# regardless of which terminal accent theme is active.
+
+[website]
+
+heroBackground = "#F7F2E8"
+cardBackground = "#ECE3D4"
+border = "#000000"
+heading = "#2E2A27"
+body = "#443E39"
+link = "#3F5D78"
+linkHover = "#6AAFB5"
+buttonPrimary = "#D6A448"
+buttonHover = "#E8C56A"
+buttonText = "#1A1A1A"
+shadow = "#00000055"
+grid = "#DDD2C2"
+math = "#8B5E3C"
+
+###############################################################################
+# Terminal
+###############################################################################
+
+[terminal]
+
+cursor = "#61AFEF"
+cursorText = "#1A1A1A"
+selection = "#3E4451"
+findHighlight = "#E5C07B"
+inactiveSelection = "#2C2C2C"
+
+###############################################################################
+# ANSI
+###############################################################################
+
+[ansi]
+
+black = "#282C34"
+red = "#E06C75"
+green = "#98C379"
+yellow = "#E5C07B"
+blue = "#61AFEF"
+magenta = "#C678DD"
+cyan = "#56B6C2"
+white = "#ABB2BF"
+brightBlack = "#686F7E"
+brightRed = "#E06C75"
+brightGreen = "#98C379"
+brightYellow = "#E5C07B"
+brightBlue = "#61AFEF"
+brightMagenta = "#C678DD"
+brightCyan = "#56B6C2"
+brightWhite = "#FFFFFF"
+
+###############################################################################
+# Syntax Highlighting
+###############################################################################
+
+[syntax]
+
+keyword = "#C678DD"
+type = "#E5C07B"
+class = "#E5C07B"
+interface = "#E5C07B"
+function = "#61AFEF"
+string = "#98C379"
+number = "#D19A66"
+constant = "#D19A66"
+property = "#E06C75"
+operator = "#56B6C2"
+comment = "#686F7E"
+regex = "#56B6C2"
+attribute = "#E5C07B"
+namespace = "#E5C07B"
+
+###############################################################################
+# Git
+###############################################################################
+
+[git]
+
+added = "#98C379"
+modified = "#E5C07B"
+deleted = "#E06C75"
+renamed = "#56B6C2"
+ignored = "#686F7E"
+
+###############################################################################
+# Diagnostics
+###############################################################################
+
+[diagnostics]
+
+hint = "#56B6C2"
+info = "#61AFEF"
+warning = "#E5C07B"
+error = "#E06C75"
+
+###############################################################################
+# Diff
+###############################################################################
+
+[diff]
+
+addedBackground = "#1E3327"
+removedBackground = "#332024"
+modifiedBackground = "#332C1E"
+
+###############################################################################
+# Pendex Brand
+###############################################################################
+#
+# Keys under `source`/`web`/`style`/`terminal`/`configuration`/
+# `documentation`/`testing`/`misc` are looked up by the CLI to color a
+# compile/split job's title by its Category — they must match the
+# Category string exactly (e.g. `configuration`, not `config`) or that
+# job silently falls back to the theme's default styling instead.
+
+[brand]
+
+bookCover = "#24303A"
+bookSpine = "#2F3B45"
+paper = "#F7F2E8"
+banner = "#F3E9D6"
+outline = "#000000"
+math = "#8B5E3C"
+folder = "#98C379"
+manifest = "#56B6C2"
+compile = "#61AFEF"
+split = "#98C379"
+scanner = "#C678DD"
+source = "#98C379"
+web = "#56B6C2"
+style = "#E5C07B"
+terminal = "#3E4451"
+configuration = "#D19A66"
+documentation = "#56B6C2"
+testing = "#C678DD"
+misc = "#686F7E"
+
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■-<  END  >-■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+// FILE NAME: : onedark.toml 
+// TYPE     : .TOML
+// PATH     : packages/theme/themes/onedark.toml
+// PROCESSED: 2026-09-06T20:42:17.446Z
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■-<  END  >-■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■-< START >-■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+// FILE NAME: : bunfig.toml 
+// TYPE     : .TOML
+// PATH     : packages/compile/bunfig.toml
+// PROCESSED: 2026-09-06T20:42:17.446Z
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■-< START >-■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+[test]
+root = "."
+preload = ["./tests/preload.ts"]
+
+coveragePathIgnorePatterns = [
+  # Untestable command line entry points and export files
+  "\\.bin\\.ts$",
+  "**/index*",
+
+  # Test files and folders
+  "**/*.test.ts",
+  "**/*.spec.ts",
+  "**/*.e2e.ts",
+
+  # Configuration files
+  "*.config.js",
+  "*.config.ts",
+  "vite.config.*",
+
+  # Build output & Generated code
+  "dist/**",
+  "ALL/**",
+  "ALL_REBUILT/**",
+  "**/node_modules/**",
+
+  # Utilities that don't need testing
+  "**/types/**",
+  "**/utils/**",
+  "**/tests/preload.*",
+]
+
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■-<  END  >-■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+// FILE NAME: : bunfig.toml 
+// TYPE     : .TOML
+// PATH     : packages/compile/bunfig.toml
+// PROCESSED: 2026-09-06T20:42:17.446Z
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■-<  END  >-■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■-< START >-■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+// FILE NAME: : bunfig.toml 
+// TYPE     : .TOML
+// PATH     : packages/exit/bunfig.toml
+// PROCESSED: 2026-09-06T20:42:17.446Z
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■-< START >-■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+[test]
+root = "."
+preload = ["./tests/preload.ts"]
+
+coveragePathIgnorePatterns = [
+  # Untestable command line entry points and export files
+  "\\.bin\\.ts$",
+  "**/index*",
+
+  # Test files and folders
+  "**/*.test.ts",
+  "**/*.spec.ts",
+  "**/*.e2e.ts",
+
+  # Configuration files
+  "*.config.js",
+  "*.config.ts",
+  "vite.config.*",
+
+  # Build output & Generated code
+  "dist/**",
+  "ALL/**",
+  "ALL_REBUILT/**",
+  "**/node_modules/**",
+
+  # Utilities that don't need testing
+  "**/types/**",
+  "**/utils/**",
+  "**/tests/preload.*",
+]
+
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■-<  END  >-■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+// FILE NAME: : bunfig.toml 
+// TYPE     : .TOML
+// PATH     : packages/exit/bunfig.toml
+// PROCESSED: 2026-09-06T20:42:17.446Z
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■-<  END  >-■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■-< START >-■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+// FILE NAME: : bunfig.toml 
+// TYPE     : .TOML
+// PATH     : packages/color/bunfig.toml
+// PROCESSED: 2026-09-06T20:42:17.446Z
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■-< START >-■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+[test]
+root = "."
+
+coveragePathIgnorePatterns = [
+  # Untestable command line entry points and export files
+  "\\.bin\\.ts$",
+  "**/index*",
+
+  # Test files and folders
+  "**/*.test.ts",
+  "**/*.spec.ts",
+  "**/*.e2e.ts",
+
+  # Configuration files
+  "*.config.js",
+  "*.config.ts",
+  "vite.config.*",
+
+  # Build output & Generated code
+  "dist/**",
+  "ALL/**",
+  "ALL_REBUILT/**",
+  "**/node_modules/**",
+
+  # Utilities that don't need testing
+  "**/types/**",
+  "**/utils/**",
+  "**/tests/preload.*",
+]
+
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■-<  END  >-■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+// FILE NAME: : bunfig.toml 
+// TYPE     : .TOML
+// PATH     : packages/color/bunfig.toml
+// PROCESSED: 2026-09-06T20:42:17.446Z
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■-<  END  >-■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■-< START >-■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+// FILE NAME: : bunfig.toml 
+// TYPE     : .TOML
+// PATH     : packages/split/bunfig.toml
+// PROCESSED: 2026-09-06T20:42:17.446Z
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■-< START >-■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+[test]
+root = "."
+preload = ["./tests/preload.ts"]
+
+coveragePathIgnorePatterns = [
+  # Untestable command line entry points and export files
+  "\\.bin\\.ts$",
+  "**/index*",
+
+  # Test files and folders
+  "**/*.test.ts",
+  "**/*.spec.ts",
+  "**/*.e2e.ts",
+
+  # Configuration files
+  "*.config.js",
+  "*.config.ts",
+  "vite.config.*",
+
+  # Build output & Generated code
+  "dist/**",
+  "ALL/**",
+  "ALL_REBUILT/**",
+  "**/node_modules/**",
+
+  # Utilities that don't need testing
+  "**/types/**",
+  "**/utils/**",
+  "**/tests/preload.*",
+]
+
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■-<  END  >-■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+// FILE NAME: : bunfig.toml 
+// TYPE     : .TOML
+// PATH     : packages/split/bunfig.toml
+// PROCESSED: 2026-09-06T20:42:17.446Z
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■-<  END  >-■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■-< START >-■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+// FILE NAME: : bunfig.toml 
+// TYPE     : .TOML
+// PATH     : packages/utils/bunfig.toml
+// PROCESSED: 2026-09-06T20:42:17.446Z
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■-< START >-■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+[test]
+root = "."
+
+coveragePathIgnorePatterns = [
+  # Untestable command line entry points and export files
+  "\\.bin\\.ts$",
+  "**/index*",
+
+  # Test files and folders
+  "**/*.test.ts",
+  "**/*.spec.ts",
+  "**/*.e2e.ts",
+
+  # Configuration files
+  "*.config.js",
+  "*.config.ts",
+  "vite.config.*",
+
+  # Build output & Generated code
+  "dist/**",
+  "ALL/**",
+  "ALL_REBUILT/**",
+  "**/node_modules/**",
+
+  # Utilities that don't need testing
+  "**/types/**",
+  "**/utils/**",
+  "**/tests/preload.*",
+]
+
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■-<  END  >-■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+// FILE NAME: : bunfig.toml 
+// TYPE     : .TOML
+// PATH     : packages/utils/bunfig.toml
+// PROCESSED: 2026-09-06T20:42:17.446Z
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■-<  END  >-■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■-< START >-■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+// FILE NAME: : .editorconfig 
+// TYPE     : .TXT
+// PATH     : .editorconfig
+// PROCESSED: 2026-09-06T20:42:17.446Z
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■-< START >-■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+# EditorConfig is awesome: https://editorconfig.org
+root = true
+
+# All Files
+[*]
+charset = utf-8
+indent_style = space
+indent_size = 4
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
+max_line_length = 80
+
+# TypeScript
+[*.{ts,tsx}]
+
+# JavaScript
+[*.{js,jsx}]
+
+# HTML
+[*.{html}]
+
+# Style Sheets
+[*.css]
+
+# Mermaid
+[*.{mermaid}]
+
+# JSON and JSONC
+[*.{json,jsonc,lock}]
+indent_size = 2
+
+# TOML
+[*.{toml}]
+
+# Markdown
+[*.md]
+indent_size = 2
+
+# Markdown uses trailing double-spaces for soft line breaks
+trim_trailing_whitespace = false
+
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■-<  END  >-■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+// FILE NAME: : .editorconfig 
+// TYPE     : .TXT
+// PATH     : .editorconfig
+// PROCESSED: 2026-09-06T20:42:17.446Z
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■-<  END  >-■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■-< START >-■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+// FILE NAME: : .gitignore 
+// TYPE     : .TXT
+// PATH     : .gitignore
+// PROCESSED: 2026-09-06T20:42:17.446Z
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■-< START >-■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+# dependencies (bun install)
+node_modules
+*/node_modules
+
+# output
+out
+dist
+*.tgz
+
+# code coverage
+coverage
+*.lcov
+
+# logs
+logs
+_.log
+report.[0-9]_.[0-9]_.[0-9]_.[0-9]_.json
+
+# dotenv environment variable files
+.env
+.env.development.local
+.env.test.local
+.env.production.local
+.env.local
+
+# caches
+.eslintcache
+.cache
+*.tsbuildinfo
+
+# IntelliJ based IDEs
+.idea
+
+# Finder (MacOS) folder config
+.DS_Store
+
+# Monorepo Specific
+ALL
+ALL_REBUILT
+dist/
+coverage/
+
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■-<  END  >-■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+// FILE NAME: : .gitignore 
+// TYPE     : .TXT
+// PATH     : .gitignore
+// PROCESSED: 2026-09-06T20:42:17.446Z
+//■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■-<  END  >-■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
