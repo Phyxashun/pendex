@@ -1,3 +1,5 @@
+// FILE-PATH: packages/exit/src/Exit.ts
+//
 /**
  * @module Exit
  *
@@ -8,31 +10,30 @@
  * per-command sessions close themselves inside their views.
  */
 
-import { outro } from '@clack/prompts';
-import type { Command, ExitState, Theme } from '@pendex/core';
-import { View } from '@pendex/core';
+import type { Command, ExitState } from '@pendex/core';
+import { ExitView } from './ExitView';
 
 /**
  * The "Exit Program" command: prints a goodbye message and terminates
  * the process.
  */
-export class Exit extends View implements Command {
-    readonly key: string;
-    readonly label: string;
-    readonly hint: string;
+export class Exit implements Command {
+    private readonly state: ExitState;
+    private readonly view: ExitView;
 
-    public override readonly state: ExitState;
+    public readonly key: string;
+    public readonly label: string;
+    public readonly hint: string;
 
     private readonly STRINGS = {
         key: 'exit',
         label: 'Exit program',
         hint: 'Terminate system process',
-        goodbye: '👋 Exiting @pendex. System process ended.'
     } as const;
 
     constructor(state: ExitState) {
-        super(state);
         this.state = state;
+        this.view = new ExitView(this.state);
 
         this.key = this.STRINGS.key;
         this.label = `${this.state.theme.secondary(this.STRINGS.label)}`;
@@ -44,13 +45,14 @@ export class Exit extends View implements Command {
      * `state.exit` (or `process.exit` as a fallback).
      */
     public async execute(): Promise<void> {
-        await this.render();
-        (this.state.exit ?? process.exit)(0);
-    }
+        await this.view.render();
 
-    public override async render(): Promise<void> {
-        const theme: Theme = this.state.theme;
-        const goodbye: string = theme.primary.muted(this.STRINGS.goodbye);
-        outro(goodbye);
+        const code: number = this.state.exitCode;
+
+        if (this.state.exit) {
+            this.state.exit(code);
+        } else {
+            process.exit(code);
+        }
     }
 }

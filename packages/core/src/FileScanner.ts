@@ -1,3 +1,5 @@
+// FILE-PATH: packages/core/src/FileScanner.ts
+//
 /**
  * @module FileScanner
  *
@@ -20,7 +22,7 @@ const GLOB_OPTIONS: Bun.GlobScanOptions = {
     cwd: '',
     followSymlinks: false,
     dot: true,
-    absolute: false
+    absolute: false,
 };
 
 /**
@@ -36,12 +38,14 @@ export async function loadIgnorePatterns(filePath: string): Promise<string[]> {
 
     const content = await file.text();
 
-    return content
-        .split(/\r?\n/)
-        // Trim whitespace from both ends
-        .map(line => line.trim())
-        // Remove empty lines and comments
-        .filter(line => line.trim() && !line.startsWith('#'));
+    return (
+        content
+            .split(/\r?\n/)
+            // Trim whitespace from both ends
+            .map(line => line.trim())
+            // Remove empty lines and comments
+            .filter(line => line.trim() && !line.startsWith('#'))
+    );
 }
 
 /**
@@ -69,7 +73,7 @@ export async function resolveJobFiles(
     job: Job,
     excludes: string[],
     claimedPaths: ReadonlySet<string>,
-    cwd: string = '.'
+    cwd: string = '.',
 ): Promise<string[]> {
     const excludeGlobs = excludes.map(pattern => new Bun.Glob(pattern));
     const matches = new Set<string>();
@@ -78,7 +82,7 @@ export async function resolveJobFiles(
     // Safely combine global options with the local cwd for this specific run
     const scanOptions: Bun.GlobScanOptions = {
         ...GLOB_OPTIONS,
-        cwd
+        cwd,
     };
 
     if (isRemainderJob) {
@@ -98,7 +102,11 @@ export async function resolveJobFiles(
         for await (const file of files) {
             const posixFile = toPosixPath(file);
 
-            if (!excludeGlobs.some(exclude => exclude.match(toPosixPath(posixFile)))) {
+            if (
+                !excludeGlobs.some(exclude =>
+                    exclude.match(toPosixPath(posixFile)),
+                )
+            ) {
                 matches.add(file);
             }
         }
@@ -114,7 +122,9 @@ export async function resolveJobFiles(
  * depending on which style the caller used.
  */
 const isExcludedDir = (excludeGlobs: string[], posixDir: string): boolean => {
-    return excludeGlobs.some(glob => glob.match(posixDir) || glob.match(`${posixDir}/`));
+    return excludeGlobs.some(
+        glob => glob.match(posixDir) ?? glob.match(`${posixDir}/`),
+    );
 };
 
 /**
@@ -125,17 +135,25 @@ const isExcludedDir = (excludeGlobs: string[], posixDir: string): boolean => {
  * @param excludes - Glob patterns for directories to skip.
  * @returns Paths of directories with an entirely empty subtree.
  */
-export async function findEmptyDirectories(cwd: string, excludes: string[]): Promise<string[]> {
-    const excludeGlobs = excludes.map(pattern => new Bun.Glob(pattern));
+export async function findEmptyDirectories(
+    cwd: string,
+    excludes: string[],
+): Promise<string[]> {
+    const excludeGlobs: string[] = excludes.map(
+        pattern => new Bun.Glob(pattern) as unknown as string,
+    );
 
     const scanOptions: Bun.GlobScanOptions = {
         ...GLOB_OPTIONS,
-        cwd
+        cwd,
     };
 
     const allEntries = new Set<string>();
 
-    const dirGlobs = new Bun.Glob('**/*').scan({ ...scanOptions, onlyFiles: false });
+    const dirGlobs = new Bun.Glob('**/*').scan({
+        ...scanOptions,
+        onlyFiles: false,
+    });
     for await (const entry of dirGlobs) {
         allEntries.add(toPosixPath(entry));
     }
@@ -143,7 +161,10 @@ export async function findEmptyDirectories(cwd: string, excludes: string[]): Pro
     const allFiles = new Set<string>();
     const nonEmptyDirs = new Set<string>();
 
-    const fileGlobs = new Bun.Glob('**/*').scan({ ...scanOptions, onlyFiles: true });
+    const fileGlobs = new Bun.Glob('**/*').scan({
+        ...scanOptions,
+        onlyFiles: true,
+    });
     for await (const file of fileGlobs) {
         const posixFile = toPosixPath(file);
         allFiles.add(posixFile);

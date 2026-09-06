@@ -12,7 +12,6 @@
  */
 
 import type { Command, State } from '@pendex/core';
-import { Exit } from '@pendex/exit';
 import { CompileView } from './CompileView';
 
 /**
@@ -20,16 +19,26 @@ import { CompileView } from './CompileView';
  * consolidates project files per the active config's jobs.
  */
 export class Compile implements Command {
-    readonly key = 'compile';
-    readonly label = 'Compile project';
-    readonly hint = 'Consolidates project files';
-
     private readonly state: State;
     private readonly view: CompileView;
+
+    readonly key: string;
+    readonly label: string;
+    readonly hint: string;
+
+    private readonly STRINGS = {
+        key: 'compile',
+        label: 'Compile project',
+        hint: 'Consolidates project files',
+    } as const;
 
     constructor(state: State) {
         this.state = state;
         this.view = new CompileView(this.state);
+
+        this.key = this.STRINGS.key;
+        this.label = `${this.state.theme.secondary(this.STRINGS.label)}`;
+        this.hint = `${this.state.theme.secondary(this.STRINGS.hint)}`;
     }
 
     /**
@@ -39,23 +48,3 @@ export class Compile implements Command {
         await this.view.render();
     }
 }
-
-/**
- * STANDALONE EXECUTION ENTRY POINT
- * `bun run src/commands/Compile.ts` — only pulls a Config, no
- * App/State required.
- */
-// c8 ignore start
-if (import.meta.main) {
-    console.log();
-
-    const { resolveRunnerDeps } = await import('@pendex/core');
-    const state: State = await resolveRunnerDeps();
-
-    const compile = await new Compile(state);
-    await compile.execute();
-
-    const exit: Exit = await new Exit({ ...state, exit: process.exit });
-    await exit.execute();
-}
-// c8 ignore stop

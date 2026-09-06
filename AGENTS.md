@@ -19,9 +19,11 @@ usage; this file is about _working on_ the codebase, not using it.
 
 Bun workspaces, strictly acyclic package graph:
 
-```
-@pendex/color → @pendex/theme → @pendex/core → @pendex/compile + @pendex/split → root pendex CLI (src/)
-                                                                  @pendex/home (website, depends on nothing above)
+```mermaid
+@pendex/color → @pendex/theme → @pendex/core → @pendex/compile +
+@pendex/split → root pendex CLI (src/)
+
+@pendex/home (website, depends on nothing above)
 ```
 
 - `@pendex/core` holds shared contracts: types, `ArchiveFormat`,
@@ -34,7 +36,8 @@ Bun workspaces, strictly acyclic package graph:
   user guide + generated API reference, merged into one package — see
   "The website" below). It has no relationship to the CLI packages
   other than living in the same workspace.
-- Cross-package round-trip tests live at the repo root (`tests/integration.test.ts`).
+- Cross-package round-trip tests live at the repo root
+(`tests/integration.test.ts`).
 - Root `src/` is the CLI shell: `App.ts` (menu orchestrator), `commands/`
   (thin containers), `components/`, `utils/`.
 
@@ -87,7 +90,8 @@ byte-fidelity is the entire point of the format.
   in `packages/theme/themes/`.** It was `"default"` for a long time
   with no `default.toml` on disk, which silently degraded every fresh
   install to the fallback palette instead of loading `pendex.toml` —
-  caught only because a test asserted on it (`packages/core/tests/bootstrap.test.ts`).
+  caught only because a test asserted on it
+(`packages/core/tests/bootstrap.test.ts`).
   Don't reintroduce a theme name that doesn't correspond to a file.
 - `[brand]` table's Category-named keys (`source`, `web`, `style`,
   `terminal`, `configuration`, `documentation`, `testing`, `misc`) drive
@@ -149,7 +153,7 @@ after a build, something regressed this setting.
 
 ## Tooling
 
-- **Package manager / runtime: Bun only.** Bun-native APIs in `src/`
+- **Package manager / runtime: Bun only.** Built-in Bun APIs in `src/`
   (`Bun.file`, `Bun.write`, `Bun.$`, `Bun.TOML.parse`), no Node-only
   APIs. `devEngines` in the root `package.json` enforces this.
 - **TypeScript strict mode, no `any`** — enforced everywhere except two
@@ -173,13 +177,17 @@ after a build, something regressed this setting.
 
 ```sh
 bun install                 # from repo root
-bun run typecheck           # tsc --noEmit at root + every package's own typecheck
-bun run test                # bun test at root (CLI shell) + every package's own tests
+bun run typecheck           # tsc --noEmit at root + every package's
+own typecheck
+bun run test                # bun test at root (CLI shell) + every
+package's own tests
 bun run lint                 # oxlint --fix . ; oxfmt .
-bun run build                # builds the website (packages/home) — home page + docs + API reference
+bun run build                # builds the website (packages/home) —
+home page + docs + API reference
 bun run build:pendex         # typecheck, then compile the CLI to ./dist/px
 bun run dev                  # website dev server (both / and /docs)
-bun run clean                 # removes build output (dist, coverage, generated API docs, etc.)
+bun run clean                 # removes build output (dist, coverage,
+generated API docs, etc.)
 bun run start                 # run the interactive CLI shell directly
 ```
 

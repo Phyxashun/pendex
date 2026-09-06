@@ -29,10 +29,10 @@ import {
     joinPath,
     loadIgnorePatterns,
     resolveJobFiles,
-    toPosixPath
 } from '@pendex/core';
 import type { BunFile } from 'bun';
-import { mkdir, rm } from "node:fs/promises";
+import { mkdir, rm } from 'node:fs/promises';
+import TxtToPdf, { TxtToPdfConverter } from '../../../utils/TxtToPdf';
 
 /**
  * Accumulators shared across every job in a compile run, before
@@ -95,10 +95,16 @@ export interface CompileSummary {
 export interface CompileHooks {
     // Called once, before any job runs, with the resolved global excludes.
     onCompileStart?: (excludes: string[]) => void | Promise<void>;
+
     // Called before a job starts compiling.
     onJobStart?: (job: Job) => void | Promise<void>;
+
     // Called after a job finishes compiling successfully.
-    onJobSuccess?: (job: Job, outcome: CompileJobResult) => void | Promise<void>;
+    onJobSuccess?: (
+        job: Job,
+        outcome: CompileJobResult,
+    ) => void | Promise<void>;
+
     // Called once, after every job has run, with the total file count.
     onCompileSuccess?: (totalFiles: number) => void | Promise<void>;
 }
@@ -112,16 +118,15 @@ export interface CompileHooks {
  * @returns A promise resolving to an array of consolidated exclude
  *  glob strings.
  */
-export const resolveExcludes = async (
-    config: Config,
-    cwd: string = process.cwd()
-): Promise<string[]> => {
+export const resolveExcludes = async (config: Config): Promise<string[]> => {
     const excludes: string[] = [...config.exclude];
     const gitignoreFile: BunFile = Bun.file(Constants.GITIGNORE_PATH);
 
     // Bun's blazing fast file checking
     if (await gitignoreFile.exists()) {
-        const gitignorePatterns: string[] = await loadIgnorePatterns(Constants.GITIGNORE_PATH);
+        const gitignorePatterns: string[] = await loadIgnorePatterns(
+            Constants.GITIGNORE_PATH,
+        );
         excludes.push(...gitignorePatterns);
     }
 
@@ -145,40 +150,78 @@ export const prepareOutputDirectory = async (dir: string): Promise<void> => {
  * @param currentJob - The job plus the shared per-run accumulators.
  * @returns The job and how many files it archived.
  */
-export const compileJob = async (currentJob: CompileJob): Promise<CompileJobResult> => {
-    const { job, outputDir, excludes, manifest, claimedPaths, cwd }: CompileJob = currentJob;
+export const compileJob = async (
+    currentJob: CompileJob,
+): Promise<CompileJobResult> => {
+    const {
+        job,
+        excludes,
+        outputDir,
+        manifest,
+        claimedPaths,
+        config,
+    }: CompileJob = currentJob;
 
-    const combinedExcludes: string[] = [...new Set([...excludes, ...job.exclude])];
-    const files: string[] = await resolveJobFiles(job, combinedExcludes, claimedPaths, cwd);
+    const combinedExcludes = [
+        ...new Set([...excludes, ...job.exclude]),
+    ] as string[];
+    const files: string[] = await resolveJobFiles(
+        job,
+        combinedExcludes,
+        claimedPaths,
+    );
 
     if (files.length === 0) return { job, fileCount: 0 };
 
-    const posixPaths: string[] = files.map((value: string): string => toPosixPath(value));
-
-    manifest.files[job.filename] = posixPaths;
+    manifest.files[job.filename] = files.map(f => f.replace(/\\/g, '/'));
     manifest.categories ??= {};
     manifest.categories[job.filename] = job.category;
-    posixPaths.forEach((value: string): void => claimedPaths.add(value));
+    files.forEach(f => claimedPaths.add(f.replace(/\\/g, '/')));
 
-    const entries: string[] = [];
-    const BATCH_SIZE = 16;
+    const entries = await Promise.all(
+        files.map(async filePath => {
+            const content = await Bun.file(filePath).text();
+            return buildArchiveEntry(filePath, content);
+        }),
+    );
 
-    for (let i = 0; i < files.length; i += BATCH_SIZE) {
-        const batch: string[] = files.slice(i, i + BATCH_SIZE);
-        const batchEntries: string[] = await Promise.all(
-            batch.map(async (filePath: string): string => {
-                const content: string = await Bun.file(filePath).text();
-                return buildArchiveEntry(filePath, content);
-            })
-        );
-        entries.push(...batchEntries);
+    const txtPath = archivePathFor(outputDir, job.filename);
+    const archiveContent = joinArchiveEntries(entries);
+
+    // If PDF output type is specified in config, convert .txt to .pdf
+    if (config?.outputType === 'pdf') {
+        const tempTxtPath = `${txtPath}.tmp`;
+        const pdfFilename: string = job.filename.replace(/\.txt$/i, '.pdf');
+        const pdfPath: string = archivePathFor(outputDir, pdfFilename);
+
+        // Write temp text archive
+        await Bun.write(tempTxtPath, archiveContent);
+
+        // Convert text archive to PDF using TxtToPdf utility
+        const converter: TxtToPdfConverter = TxtToPdf.create({
+            fontSize: 8,
+            lineHeight: 12,
+            oneLongPage: true,
+            syntaxHighlighting: true,
+        });
+        await converter.convertTxtToPdf(tempTxtPath, pdfPath);
+
+        // Remove temporary text file via Bun Shell
+        await Bun.$`rm -f ${tempTxtPath}`;
+
+        // Update manifest mapping to reflect PDF archive filename
+        manifest.files[pdfFilename] = manifest.files[job.filename] as string[];
+        delete manifest.files[job.filename];
+        manifest.categories[pdfFilename] = job.category;
+        delete manifest.categories[job.filename];
+    } else {
+        // Default plain-text output
+        await Bun.write(txtPath, archiveContent);
     }
-
-    await Bun.write(archivePathFor(outputDir, job.filename), joinArchiveEntries(entries));
 
     return {
         job,
-        fileCount: files.length
+        fileCount: files.length,
     };
 };
 
@@ -188,10 +231,13 @@ export const compileJob = async (currentJob: CompileJob): Promise<CompileJobResu
  * @param outputDir - Directory to write `manifest.json` into.
  * @param manifest - The manifest data to serialize.
  */
-export const writeManifest = async (outputDir: string, manifest: Manifest): Promise<void> => {
+export const writeManifest = async (
+    outputDir: string,
+    manifest: Manifest,
+): Promise<void> => {
     await Bun.write(
         joinPath(outputDir, 'manifest.json'),
-        JSON.stringify(manifest, null, 2)
+        JSON.stringify(manifest, null, 2),
     );
 };
 
@@ -202,13 +248,22 @@ export const writeManifest = async (outputDir: string, manifest: Manifest): Prom
  * @param hooks - Optional progress callbacks.
  * @returns The full {@link CompileSummary} for this run.
  */
-export const runCompile = async (config: Config, hooks?: CompileHooks): Promise<CompileSummary> => {
+export const runCompile = async (
+    config: Config,
+    hooks?: CompileHooks,
+): Promise<CompileSummary> => {
     await prepareOutputDirectory(config.outputDir);
 
     const cwd: string = Constants.BASE_DIR;
-    const excludes: string[] = await resolveExcludes(config, cwd);
-    const emptyDirectories: string[] = await findEmptyDirectories(cwd, excludes);
-    const manifest: Manifest = { files: {}, emptyDirectories };
+    const excludes: string[] = await resolveExcludes(config);
+    const emptyDirectories: string[] = await findEmptyDirectories(
+        cwd,
+        excludes,
+    );
+    const manifest: Manifest = {
+        files: {},
+        emptyDirectories,
+    };
     const claimedPaths: Set<string> = new Set<string>();
 
     const result: CompileSummary = {
@@ -222,7 +277,7 @@ export const runCompile = async (config: Config, hooks?: CompileHooks): Promise<
         await hooks.onCompileStart(excludes);
     }
 
-    for (const job of (config.jobs as Job[])) {
+    for (const job of config.jobs as Job[]) {
         if (hooks?.onJobStart) {
             await hooks.onJobStart(job);
         }
@@ -235,7 +290,7 @@ export const runCompile = async (config: Config, hooks?: CompileHooks): Promise<
             manifest,
             claimedPaths,
             hooks: hooks ?? {},
-            cwd
+            cwd,
         };
 
         const outcome: CompileJobResult = await compileJob(currentCompileJob);
@@ -269,9 +324,9 @@ export const runCompile = async (config: Config, hooks?: CompileHooks): Promise<
 export const initializeCompile = async (
     config: Config,
     hooks?: CompileHooks,
-    cwd: string = Constants.BASE_DIR
+    cwd: string = Constants.BASE_DIR,
 ): Promise<CompileJobContext> => {
-    const excludes: string[] = await resolveExcludes(config, cwd);
+    const excludes: string[] = await resolveExcludes(config);
     const claimedPaths: Set<string> = new Set<string>();
 
     const manifest: Manifest = {
@@ -300,12 +355,16 @@ export const initializeCompile = async (
  */
 export const compileSingleJob = async (
     job: Job,
-    ctx: CompileJobContext
+    ctx: CompileJobContext,
 ): Promise<CompileJobResult> => {
     return await compileJob({
         ...ctx,
         job,
-        outputDir: ctx.config.outputDir
+        excludes: ctx.excludes,
+        outputDir: ctx.config.outputDir,
+        manifest: ctx.manifest,
+        claimedPaths: ctx.claimedPaths,
+        config: ctx.config,
     });
 };
 
@@ -320,15 +379,18 @@ export const compileSingleJob = async (
  */
 export const finalizeCompile = async (
     config: Config,
-    ctx: CompileJobContext
+    ctx: CompileJobContext,
 ): Promise<CompileSummary> => {
-    ctx.manifest.emptyDirectories = await findEmptyDirectories(ctx.cwd, ctx.excludes);
+    ctx.manifest.emptyDirectories = await findEmptyDirectories(
+        ctx.cwd,
+        ctx.excludes,
+    );
     await writeManifest(config.outputDir, ctx.manifest);
 
     return {
         excludes: ctx.excludes,
         jobOutcomes: [],
         totalFiles: 0,
-        emptyDirectories: ctx.manifest.emptyDirectories
+        emptyDirectories: ctx.manifest.emptyDirectories,
     };
 };

@@ -1,3 +1,5 @@
+// FILE-PATH: packages/core/src/ArchiveFormat.ts
+//
 /**
  * @module ArchiveFormat
  *
@@ -59,7 +61,10 @@ export interface ArchivedFile {
  * @returns The banner text, exactly {@link BANNER_LINE_COUNT} lines
  *  joined with `\n`.
  */
-function buildBanner(filePath: string, tag: typeof START_TAG | typeof END_TAG): string {
+function buildBanner(
+    filePath: string,
+    tag: typeof START_TAG | typeof END_TAG,
+): string {
     const spacer = CUBE.repeat(WIDTH);
     const extension = extName(filePath).toUpperCase().replace('.', '') || 'TXT';
 
@@ -116,8 +121,10 @@ function extractPath(line: string | undefined): string | null {
  *  end banner).
  */
 export function buildArchiveEntry(filePath: string, content: string): string {
-    return `${buildBanner(filePath,
-START_TAG)}\n${content}\n${buildBanner(filePath, END_TAG)}`;
+    return `${buildBanner(
+        filePath,
+        START_TAG,
+    )}\n${content}\n${buildBanner(filePath, END_TAG)}`;
 }
 
 /**
@@ -157,7 +164,10 @@ export function parseArchive(rawText: string): ArchivedFile[] {
                 let j = i + BANNER_LINE_COUNT;
                 let endIndex = -1;
                 while (j <= lines.length - BANNER_LINE_COUNT) {
-                    if (isFrame(lines, j, END_TAG) && extractPath(lines[j + PATH_LINE_INDEX]) === path) {
+                    if (
+                        isFrame(lines, j, END_TAG) &&
+                        extractPath(lines[j + PATH_LINE_INDEX]) === path
+                    ) {
                         endIndex = j;
                         break;
                     }
@@ -167,7 +177,9 @@ export function parseArchive(rawText: string): ArchivedFile[] {
                 if (endIndex !== -1) {
                     results.push({
                         originalPath: path,
-                        content: lines.slice(i + BANNER_LINE_COUNT, endIndex).join('\n'),
+                        content: lines
+                            .slice(i + BANNER_LINE_COUNT, endIndex)
+                            .join('\n'),
                     });
                     i = endIndex + BANNER_LINE_COUNT;
                     continue;

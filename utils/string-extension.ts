@@ -35,7 +35,7 @@ String.prototype.toPosixPath = function (this: string): string {
  *
  * @param this - Path to convert.
  * @returns `this` with all double forward slashes replaced by single
-forward slashes.
+ *  forward slashes.
  */
 String.prototype.normalizePath = function (this: string): string {
     return this.toPosixPath().replace(CONSECUTIVE_SLASH_REGEX, SEPARATOR);
@@ -71,5 +71,3 @@ String.prototype.red = function (this: string): string {
 String.prototype.green = function (this: string): string {
     return Colors.green(this);
 };
-
-export { };

@@ -21,25 +21,11 @@ import { Colors } from '@pendex/color';
 import type { Config, Job, State, StyleFunction, Theme } from '@pendex/core';
 import { View } from '@pendex/core';
 import type { CompileJobContext, CompileJobResult } from './CompileService';
-import { compileSingleJob, finalizeCompile, initializeCompile } from './CompileService';
-
-export const STRINGS = {
-    title: "  RUNNING PENDEX COMPILATION ",
-    excludedTitle: "Excluded Patterns",
-    presentAction: "Compiling",
-    pastAction: "compiled",
-
-    resultTitle: "Compilation Results",
-    resultDir: "Files created in",
-    resultTotal: "Total files compiled",
-    resultJobs: "Total jobs compiled",
-
-    error: "Failed to compile project files.",
-    outroSuccess: "Compilation complete",
-    outroFailure: "Compilation failed — see errors above",
-} as const;
-
-export type StringsType = typeof STRINGS;
+import {
+    compileSingleJob,
+    finalizeCompile,
+    initializeCompile,
+} from './CompileService';
 
 export interface ResultSummary {
     outputDir: string;
@@ -52,9 +38,23 @@ export interface ResultSummary {
  * summary, and outro.
  */
 export class CompileView extends View {
-
     // User-facing strings for this view.
-    private readonly STRINGS: StringsType = STRINGS as const;
+    private readonly STRINGS = {
+        title: '  RUNNING PENDEX COMPILATION ',
+        excludedTitle: 'Excluded Patterns',
+        presentAction: 'Compiling',
+        pastAction: 'compiled',
+
+        resultTitle: 'Compilation Results',
+        resultDir: 'Files created in',
+        resultTotal: 'Total files compiled',
+        resultJobs: 'Total jobs compiled',
+
+        error: 'Failed to compile project files.',
+        outroSuccess: 'Compilation complete',
+        outroFailure: 'Compilation failed — see errors above',
+    } as const;
+
     private totalFiles: number = 0;
 
     constructor(state: State) {
@@ -76,8 +76,8 @@ export class CompileView extends View {
 
             this.renderExcludes(ctx.excludes.join(', '));
 
-            // Build tasks that execute live service methods
-            // inside Clack's runner
+            // Build tasks that execute live service methods inside
+Clack's runner
             const jobTasks: Task[] = await this.buildJobTasks(ctx);
 
             // Clack runs tasks one-by-one, showing live spinner progress
@@ -89,9 +89,9 @@ export class CompileView extends View {
             // Render final summary block
             this.renderSummary(this.totalFiles);
 
-            const success: string = `${this.STRINGS.outroSuccess.toUpperCase()}`;
+            const success: string =
+`${this.STRINGS.outroSuccess.toUpperCase()}`;
             log.success(Colors.bgGreen(Colors.black(success)));
-
         } catch (err: unknown) {
             log.error(`${theme.error(this.STRINGS.error)}`);
             if (err instanceof Error) log.error(`${theme.error(err.message)}`);
@@ -99,31 +99,48 @@ export class CompileView extends View {
         }
     };
 
-    private buildJobTasks = async (ctx: CompileJobContext): Promise<BuildTasks> => {
+    private buildJobTasks = async (ctx: CompileJobContext): Promise<Task[]> => {
         const theme: Theme = this.state.theme;
         const config: Config = this.state.config;
 
         return config.jobs.map((job: Job): Task => {
             const rawDesc: string = job.description || job.filename;
-            const titleStyle: StyleFunction = this.categoryStyle(job.category, theme.bold);
-            const resultStyle: StyleFunction = this.categoryStyle(job.category, theme.primary);
+            const titleStyle: StyleFunction = this.categoryStyle(
+                job.category,
+                theme.bold,
+            );
+            const resultStyle: StyleFunction = this.categoryStyle(
+                job.category,
+                theme.primary,
+            );
 
             return {
                 title: `${this.STRINGS.presentAction} ${titleStyle(rawDesc)}`,
                 task: async (): Promise<string> => {
-                    const outcome: CompileJobResult = await compileSingleJob(job, { config, ...ctx });
+                    const outcome: CompileJobResult = await compileSingleJob(
+                        job,
+                        {
+                            ...config,
+                            ...ctx,
+                        },
+                    );
 
-                    const warningCount: string = `${theme.warning(`${outcome.fileCount}`)}`;
+                    const warningCount: string =
+`${theme.warning(`${outcome.fileCount}`)}`;
                     const styledCount: string = `${theme.bold(warningCount)}`;
 
-                    const rawDesc1: string = `${rawDesc.charAt(0).toUpperCase()}`;
-                    const rawDesc2: string = `${rawDesc.slice(1).toLowerCase()}`;
-                    const combinedDesc: string = `${rawDesc1}${rawDesc2} ${this.STRINGS.pastAction}`;
-                    const formattedDesc: string = `${resultStyle(combinedDesc)}`;
+                    const rawDesc1: string =
+`${rawDesc.charAt(0).toUpperCase()}`;
+                    const rawDesc2: string =
+`${rawDesc.slice(1).toLowerCase()}`;
+                    const combinedDesc: string =
+`${rawDesc1}${rawDesc2} ${this.STRINGS.pastAction}`;
+                    const formattedDesc: string =
+`${resultStyle(combinedDesc)}`;
 
                     this.totalFiles += outcome.fileCount;
                     return `${styledCount} ${formattedDesc}`;
-                }
+                },
             };
         });
     };
@@ -131,7 +148,9 @@ export class CompileView extends View {
     private renderExcludes = (excludes: string): void => {
         const message: string = excludes;
         const title: string = this.STRINGS.excludedTitle;
-        const options: NoteOptions = { format: this.mutedFormatter };
+        const options: NoteOptions = {
+            format: this.mutedFormatter,
+        };
 
         note(message, title, options);
     };
@@ -143,13 +162,12 @@ export class CompileView extends View {
      * @param fileCount - Total files compiled across all jobs.
      */
     private renderSummary = (fileCount: number): void => {
-        const theme: Theme = this.state.theme;
         const config: Config = this.state.config;
 
         const rawResult: ResultSummary = {
             outputDir: this.directoryFormatter(config.outputDir),
             fileCount: this.numberFormatter(fileCount),
-            jobCount: this.numberFormatter(config.jobs.length)
+            jobCount: this.numberFormatter(config.jobs.length),
         };
 
         const result: ResultSummary = {
@@ -158,9 +176,12 @@ export class CompileView extends View {
             jobCount: `${this.STRINGS.resultJobs}: ${rawResult.jobCount}`,
         };
 
-        const message: string = `${result.outputDir}\n${result.fileCount}\n${result.jobCount}`;
+        const message: string =
+`${result.outputDir}\n${result.fileCount}\n${result.jobCount}`;
         const title: string = `${this.STRINGS.resultTitle}`;
-        const options: NoteOptions = { format: this.successFormatter };
+        const options: NoteOptions = {
+            format: this.successFormatter,
+        };
 
         note(message, title, options);
     };

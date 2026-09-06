@@ -1,3 +1,5 @@
+// FILE-PATH: packages/core/src/Config.ts
+//
 /**
  * @module Config
  *
@@ -8,8 +10,15 @@
  * the {@link ConfigManager} singleton.
  */
 
+import type { BunFile } from 'bun';
 import { Constants, normalizePath } from './Constants';
-import type { Config, Job } from './types';
+import type {
+    Category,
+    Config,
+    DeepPartial,
+    Job,
+    RawDiskConfig,
+} from './types';
 
 /**
  * BUN PROPERTIES
@@ -51,22 +60,20 @@ const BASE = {
     // An alias to process.env.
     //ENV: import.meta.env,
     CONFIG_PATH: `${normalizePath(import.meta.dir)}/../config/config.toml`,
-    CONFIG_KEYS: ['theme', 'outputDir', 'rebuiltDir', 'exclude', 'jobs'],
+    CONFIG_KEYS: [
+        'theme',
+        'http',
+        'outputType',
+        'outputDir',
+        'rebuiltDir',
+        'exclude',
+        'jobs',
+    ],
     THEMES_PATH: `${normalizePath(import.meta.dir)}/../../../theme`,
 } as const;
 
-// DEBUG START
-//console.warn('BUN PROPERTIES:\n', JSON.stringify(BASE, null, 2));
-// DEBUG END
-
 // Absolute path to the shipped default config TOML (`packages/core/config/`).
-const BASE_CONFIG_PATH = BASE.CONFIG_PATH;
-
-//Directory containing `<name>.toml` theme files (`packages/theme/themes/`).
-const BASE_THEMES_PATH = BASE.THEMES_PATH;
-
-// The Config keys that a runtime.config.json override may selectively supply.
-const CONFIG_KEYS = BASE.CONFIG_KEYS;
+const BASE_CONFIG_PATH: string = BASE.CONFIG_PATH;
 
 /**
  * Copies `source[key]` onto `target[key]` only if it's defined —
@@ -77,12 +84,32 @@ const CONFIG_KEYS = BASE.CONFIG_KEYS;
  * @param source - Partial object that may or may not define `key`.
  * @param key - The key to conditionally copy.
  */
-export function assignKey<T, K extends keyof T>(target: T, source: Partial<T>, key: K) {
-    const value = source[key];
+export function assignKey<T, K extends keyof T>(
+    target: T,
+    source: Partial<T>,
+    key: K,
+): void {
+    const value: Partial<T>[K] = source[key];
     if (value !== undefined) {
         target[key] = value;
     }
 }
+
+/**
+ * Safe Defaults
+ */
+const SAFE_DEFAULTS: Config = {
+    theme: {
+        name: 'pendex',
+        path: BASE.THEMES_PATH,
+    },
+    http: true,
+    outputType: 'txt',
+    outputDir: './ALL',
+    rebuiltDir: './ALL_REBUILT',
+    exclude: [],
+    jobs: [],
+} as const;
 
 /**
  * Singleton owner of the app's runtime Config.
@@ -113,22 +140,39 @@ export class ConfigManager {
      *  preserved and the runtime-config path always excluded.
      */
     private static async readTomlDefaults(): Promise<Config> {
-        const tomlText = await Bun.file(BASE_CONFIG_PATH).text();
-        const parsed = Bun.TOML.parse(tomlText) as unknown as Config;
+        const tomlText: string = await Bun.file(BASE_CONFIG_PATH).text();
+        const parsed = Bun.TOML.parse(tomlText) as unknown as RawDiskConfig;
 
         // Preserve job-specific excludes without flattening them globally
-        const jobs = parsed.jobs.map((job) => ({
-            ...job,
-            exclude: job.exclude ?? [],
-        })) as Job[];
+        const parsedJobs: Array<DeepPartial<Job>> =
+            parsed.jobs ?? SAFE_DEFAULTS.jobs;
+        const jobs: Job[] = parsedJobs.map((job: DeepPartial<Job>): Job => {
+            return {
+                filename: job?.filename ?? '',
+                category: (job?.category as Category) ?? 'misc',
+                description: job?.description ?? '',
+                include: job?.include ?? [],
+                exclude: job?.exclude ?? [],
+            };
+        });
 
-        return {
-            theme: { name: parsed.theme || 'pendex', path: BASE_THEMES_PATH },
-            outputDir: parsed.outputDir,
-            rebuiltDir: parsed.rebuiltDir,
-            exclude: [...parsed.exclude, Constants.RUNTIME_CONFIG_PATH],
+        const result: Config = {
+            theme: {
+                name: parsed.theme?.name ?? SAFE_DEFAULTS.theme.name,
+                path: SAFE_DEFAULTS.theme.path,
+            },
+            http: parsed.http ?? SAFE_DEFAULTS.http,
+            outputType: parsed.outputType ?? SAFE_DEFAULTS.outputType,
+            outputDir: parsed.outputDir ?? SAFE_DEFAULTS.outputDir,
+            rebuiltDir: parsed.rebuiltDir ?? SAFE_DEFAULTS.rebuiltDir,
+            exclude: [
+                ...(parsed.exclude ?? SAFE_DEFAULTS.exclude),
+                Constants.RUNTIME_CONFIG_PATH,
+            ],
             jobs,
         };
+
+        return result;
     }
 
     /**
@@ -140,13 +184,56 @@ export class ConfigManager {
      *  `base` unchanged if the file is missing or invalid.
      */
     private static async withDiskOverrides(base: Config): Promise<Config> {
-        const overrideFile = Bun.file(Constants.RUNTIME_CONFIG_PATH);
+        const overrideFile: BunFile = Bun.file(Constants.RUNTIME_CONFIG_PATH);
+
         if (!(await overrideFile.exists())) return base;
 
         try {
-            const merged: Config = { ...base };
-            const parsed = (await overrideFile.json()) as Config;
-            CONFIG_KEYS.forEach((key) => assignKey(merged, parsed, key));
+            const merged: Config = structuredClone(base);
+            // Type safely as raw incoming data
+            const parsed = (await overrideFile.json()) as RawDiskConfig;
+
+            if (parsed.theme) {
+                merged.theme.name = parsed.theme.name ?? merged.theme.name;
+            }
+
+            merged.http = parsed.http ?? merged.http;
+            merged.outputType = parsed.outputType ?? merged.outputType;
+            merged.outputDir = parsed.outputDir ?? merged.outputDir;
+            merged.rebuiltDir = parsed.rebuiltDir ?? merged.rebuiltDir;
+
+            if (parsed.exclude) {
+                merged.exclude = Array.from(
+                    // Safely falls back to an empty array if
+parsed.exclude is malformed
+                    new Set([
+                        ...(parsed.exclude ?? []),
+                        Constants.RUNTIME_CONFIG_PATH,
+                    ]),
+                );
+            }
+
+            if (parsed.jobs) {
+                // Re-mapping incoming partial jobs ensures strict Job
+compliance
+                merged.jobs = parsed.jobs.map(
+                    (job: DeepPartial<Job>, index: number): Job => {
+                        const baseJob: Job | undefined = merged.jobs[index];
+                        return {
+                            filename: job?.filename ?? baseJob?.filename ?? '',
+                            category:
+                                (job?.category as Category) ??
+                                baseJob?.category ??
+                                'misc',
+                            description:
+                                job?.description ?? baseJob?.description ?? '',
+                            include: job?.include ?? baseJob?.include ?? [],
+                            exclude: job?.exclude ?? baseJob?.exclude ?? [],
+                        };
+                    },
+                );
+            }
+
             return merged;
         } catch {
             return base;
@@ -160,7 +247,7 @@ export class ConfigManager {
      */
     public static async getInstance(): Promise<ConfigManager> {
         if (!this.instance) {
-            const defaults = await this.readTomlDefaults();
+            const defaults: Config = await this.readTomlDefaults();
             const config = await this.withDiskOverrides(defaults);
             this.instance = new ConfigManager(config);
         }
@@ -210,6 +297,9 @@ export class ConfigManager {
      * Persists the current in-memory config to runtime.config.json.
      */
     public async save(): Promise<void> {
-        await Bun.write(Constants.RUNTIME_CONFIG_PATH, JSON.stringify(this.config, null, 2));
+        await Bun.write(
+            Constants.RUNTIME_CONFIG_PATH,
+            JSON.stringify(this.config, null, 2),
+        );
     }
 }

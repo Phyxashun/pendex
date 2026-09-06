@@ -1,3 +1,5 @@
+// FILE-PATH: packages/utils/src/components/App.ts
+//
 /**
  * @module App
  *
@@ -15,10 +17,18 @@
 import { confirm, intro, isCancel, select } from '@clack/prompts';
 import { Compile } from '@pendex/compile';
 import type { Command, MainMenuOptions, State } from '@pendex/core';
-import { resolveRunnerDeps } from '@pendex/core';
+import { resolveRunnerDeps, type ExitFn } from '@pendex/core';
 import { Exit } from '@pendex/exit';
 import { Split } from '@pendex/split';
 
+/**
+ * Clear the console before displaying the menu
+ * Insert a blank line before displaying the menu
+ */
+const clear: () => void = (): void => {
+    console.clear();
+    console.log();
+};
 
 /**
  * Process-wide singleton that owns the interactive CLI shell: the
@@ -29,7 +39,7 @@ import { Split } from '@pendex/split';
 export class Application {
     private static instance: Application | null = null;
 
-    private readonly STRINGS: Record<string, string> = {
+    private readonly STRINGS = {
         title: '  PENDEX — PROJECT FILE CONSOLIDATOR ',
         mainMenu: 'Main Menu:',
         returnToMenu: 'Press Enter to return to main panel...',
@@ -40,25 +50,26 @@ export class Application {
     private _commands: Command[] = [];
     private mainMenuOptions: MainMenuOptions[] = [];
 
-    private constructor() { }
+    private constructor() {}
 
     /**
-     * Lazily creates and returns the shared instance.
+     * Create and/or return the singleton
      */
     public static getInstance(): Application {
-        if (!this.instance) { this.instance = new Application(); }
-        return this.instance;
+        return this.instance ?? new Application();
     }
 
     /**
-     * Resets the singleton. Primarily useful for test isolation.
+     * Reset the singleton
+     * Useful for test isolation
      */
     public static resetInstance(): void {
         this.instance = null;
     }
 
     /**
-     * The application's current state (theme, config, category colors).
+     * The application's current state
+     * (theme, config, category colors)
      */
     public get state(): State {
         return this._state;
@@ -79,20 +90,37 @@ export class Application {
      * @param exitFn - Function used by the Exit command
      * to terminate the process.
      */
-    public async init(exitFn: (code?: number) => void): Promise<void> {
-        this._state = await resolveRunnerDeps();;
+    public async init(exitFn: ExitFn): Promise<void> {
+        this._state = await resolveRunnerDeps();
 
         this._commands = [
             new Compile(this.state),
             new Split(this.state),
-            new Exit({ ...this.state, exit: exitFn })
+            new Exit({
+                ...this.state,
+                exit: exitFn,
+                exitCode: 0,
+            }),
         ];
 
-        this.mainMenuOptions = this.commands.map(cmd => ({
-            value: cmd.key,
-            label: cmd.label,
-            hint: cmd.hint
-        }));
+        this.mainMenuOptions = this.commands.map(
+            (cmd: Command): MainMenuOptions => ({
+                value: cmd.key,
+                label: cmd.label,
+                hint: cmd.hint,
+            }),
+        );
+    }
+
+    public async returnToMenu(): Promise<boolean> {
+        const wantsToReturn: symbol | boolean = await confirm({
+            message: this.STRINGS.returnToMenu,
+        });
+
+        if (isCancel(wantsToReturn) || !wantsToReturn) {
+            return false;
+        }
+        return true;
     }
 
     /**
@@ -101,31 +129,33 @@ export class Application {
      * This method is public specifically for robust testability.
      */
     public async runSingleIteration(): Promise<boolean> {
-        //console.clear();
-        console.log();
+        clear();
+
+        // Display app title
         intro(this.state.theme.title(this.STRINGS.title));
 
-        const choice = await select({
+        // Display choices and get user's choice
+        const choice: string | symbol = await select({
             message: this.state.theme.info(this.STRINGS.mainMenu),
             options: this.mainMenuOptions,
         });
 
+        // Handle exit
         if (isCancel(choice) || choice === this.STRINGS.exit) {
             return false;
         }
 
-        const command = this.commands.find(cmd => cmd.key === choice);
-        if (command) {
-            //console.clear();
-            console.log();
-            await command.execute();
+        // Find the correct command based on the user's choice
+        const command: Command | undefined = this.commands.find(
+            (cmd: Command): boolean => cmd.key === choice,
+        );
 
-            const wantsToReturn = await confirm({ message: this.STRINGS.returnToMenu });
-            if (isCancel(wantsToReturn) || !wantsToReturn) {
-                return false;
-            }
+        // If a command is found, execute
+        if (command) {
+            clear();
+            await command.execute();
         }
-        return true;
+        return await this.returnToMenu();
     }
 
     /**
@@ -133,8 +163,8 @@ export class Application {
      *
      * @param exitFn - Optional exit function (defaults to `process.exit`)
      */
-    public async run(exitFn?: (code?: number | string | null) => never): Promise<void> {
-        await this.init(exitFn ?? process.exit);
+    public async run(exitFn?: ExitFn): Promise<void> {
+        await this.init(exitFn ?? process.exit.bind(process));
 
         while (await this.runSingleIteration()) {
             /*
@@ -144,10 +174,16 @@ export class Application {
         }
 
         // After the loop terminates, call the final exit command.
-        const exitCmd: Exit = this.commands.find(cmd => cmd instanceof Exit);
+        const exitCmd: Exit = this.commands.find(
+            (cmd: Command): cmd is Exit => cmd instanceof Exit,
+        ) as Exit;
+
         if (exitCmd) await exitCmd.execute();
     }
 }
 
-/** Shared {@link Application} instance used as the CLI's composition root. */
-export default Application.getInstance();
+/**
+ * Shared {@link Application} instance used as the CLI's composition root.
+ */
+const App = Application.getInstance();
+export { App };

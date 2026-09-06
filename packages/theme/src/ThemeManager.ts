@@ -1,6 +1,7 @@
+// FILE-PATH: packages/theme/src/ThemeManager.ts
+//
 /**
  * @module ThemeManager
- * @file FILE-PATH: src/components/ThemeManager.ts
  *
  * Single responsibility: own the process's active Theme, exactly the way
  * `ConfigManager` owns the active Config. Loads `src/themes/<name>.toml`
@@ -14,7 +15,7 @@
  */
 
 import type { BunFile } from 'bun';
-import type { PendexTheme, ThemeName } from './ThemePalette';
+import type { DefaultTheme, PendexTheme, ThemeName } from './ThemePalette';
 import { buildTheme, parsePendexTheme } from './ThemePalette';
 import type { Theme } from './useTheme';
 import { useTheme } from './useTheme';
@@ -24,8 +25,9 @@ import { useTheme } from './useTheme';
  */
 const THEMES_DIR = `${import.meta.dir}/../themes`;
 
-export interface ThemeManagerDeps {
+export interface ThemeManagerState {
     themeName: ThemeName;
+    defaultTheme: DefaultTheme;
     theme: Theme;
     pendexTheme: PendexTheme;
 }
@@ -37,15 +39,25 @@ export interface ThemeManagerDeps {
  */
 export class ThemeManager {
     private static instance: ThemeManager | null = null;
+    private static instancePromise: Promise<ThemeManager> | null = null;
 
     private readonly theme: Theme;
     private readonly themeName: ThemeName;
     private readonly pendexTheme: PendexTheme;
+    private readonly defaultTheme: DefaultTheme;
 
-    private constructor(deps: ThemeManagerDeps) {
-        this.themeName = deps.themeName;
-        this.theme = deps.theme;
-        this.pendexTheme = deps.pendexTheme;
+    private constructor(state: ThemeManagerState) {
+        this.themeName = state.themeName;
+        this.theme = state.theme;
+        this.pendexTheme = state.pendexTheme;
+        this.defaultTheme = state.defaultTheme;
+    }
+
+    /**
+     * Builds the absolute path for a theme file stem under `THEMES_DIR`.
+     */
+    private static filePathFor(name: ThemeName): string {
+        return `${THEMES_DIR}/${name}.toml`;
     }
 
     /**
@@ -55,19 +67,45 @@ export class ThemeManager {
      * @returns The validated {@link PendexTheme}, degrading to the
      *  brand palette on any failure.
      */
-    private static async readPendexTheme(name: ThemeName): Promise<PendexTheme> {
-        const fileName: string = `${name}.toml`;
-        const filePath: string = `${THEMES_DIR}/${fileName}`;
+    private static async readPendexTheme(
+        name: ThemeName,
+    ): Promise<PendexTheme> {
+        const filePath: string = this.filePathFor(name);
         const file: BunFile = Bun.file(filePath);
 
-        if (!(await file.exists())) return parsePendexTheme(undefined, name);
-
         try {
-            const parsed: Record<string, any> = Bun.TOML.parse(await file.text());
+            if (!(await file.exists()))
+                return parsePendexTheme(undefined, name);
+
+            const parsed: unknown = Bun.TOML.parse(await file.text());
             return parsePendexTheme(parsed, name);
         } catch {
             return parsePendexTheme(undefined, name);
         }
+    }
+
+    /**
+     * Resolves all runtime theme state from a requested theme name:
+     * - the parsed/validated full PendexTheme
+     * - the flat DefaultTheme
+     * - the chainable Theme proxy
+     *
+     * Keeping this assembly in one place avoids duplicating theme-build
+     * knowledge across the singleton lifecycle.
+     */
+    private static async loadState(
+        themeName: ThemeName,
+    ): Promise<ThemeManagerState> {
+        const pendexTheme: PendexTheme = await this.readPendexTheme(themeName);
+        const defaultTheme: DefaultTheme = buildTheme(pendexTheme.colors);
+        const theme: Theme = useTheme(defaultTheme);
+
+        return {
+            themeName,
+            defaultTheme,
+            theme,
+            pendexTheme,
+        };
     }
 
     /**
@@ -76,17 +114,28 @@ export class ThemeManager {
      * return the same instance regardless of the name passed — same
      * contract as ConfigManager.
      *
+     * Uses an in-flight promise guard so concurrent first calls do not
+     * race and build multiple instances.
+     *
      * @param themeName - Theme to load on first call (default
      *  `'pendex'`); ignored on subsequent calls.
      * @returns The shared {@link ThemeManager} instance.
      */
-    public static async getInstance(themeName: ThemeName = 'pendex'): Promise<ThemeManager> {
-        if (!this.instance) {
-            const pendexTheme: PendexTheme = await this.readPendexTheme(themeName);
-            const theme: Theme = useTheme(buildTheme(pendexTheme.colors));
-            this.instance = new ThemeManager({ themeName, theme, pendexTheme });
-        }
-        return this.instance;
+    public static async getInstance(
+        themeName: ThemeName = 'pendex',
+    ): Promise<ThemeManager> {
+        if (this.instance) return this.instance;
+        if (this.instancePromise) return this.instancePromise;
+
+        this.instancePromise = (async () => {
+            const state: ThemeManagerState = await this.loadState(themeName);
+            const instance = new ThemeManager(state);
+            this.instance = instance;
+            this.instancePromise = null;
+            return instance;
+        })();
+
+        return this.instancePromise;
     }
 
     /**
@@ -94,6 +143,7 @@ export class ThemeManager {
      */
     public static resetInstance(): void {
         this.instance = null;
+        this.instancePromise = null;
     }
 
     /**
@@ -105,6 +155,10 @@ export class ThemeManager {
 
     /**
      * The name the active theme was loaded as.
+     *
+     * Note: this is the requested file stem, not necessarily the theme
+     * metadata's internal `name` field. If the requested file is missing
+     * or malformed, the returned Theme may still be a fallback-built one.
      */
     public name(): ThemeName {
         return this.themeName;
@@ -118,5 +172,14 @@ export class ThemeManager {
      */
     public extended(): PendexTheme {
         return this.pendexTheme;
+    }
+
+    /**
+     * The active flat DefaultTheme before it is wrapped in `useTheme`.
+     * Useful for tests or for call sites that want direct style
+     * functions without the chainable proxy.
+     */
+    public raw(): DefaultTheme {
+        return this.defaultTheme;
     }
 }

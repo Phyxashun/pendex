@@ -4,7 +4,6 @@
   //@ CSpell flagword list to import into cspell.json configuration file
   //
   "version": "0.2",
-
   "flagWords": [
     //* Regional Spelling Clashes (US / GB Variant Expansion)
     "aluminium -> aluminum",

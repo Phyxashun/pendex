@@ -23,9 +23,9 @@ export {
     writeManifest,
     type CompileHooks,
     type CompileJob,
+    type CompileJobContext,
     type CompileJobResult,
     type CompileSummary,
-    type InitializedCompileJob
 } from './CompileService';
 
 export { CompileView } from './CompileView';

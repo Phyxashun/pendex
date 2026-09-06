@@ -1,3 +1,5 @@
+// FILE-PATH: packages/core/src/View.ts
+//
 /**
  * @module View
  *
@@ -70,8 +72,10 @@ export class View {
      * @returns A style function: either the resolved brand-color
      *  styler, or `fallback`.
      */
-    protected categoryStyle(category: Category, fallback:
-StyleFunction): StyleFunction {
+    protected categoryStyle(
+        category: Category,
+        fallback: StyleFunction,
+    ): StyleFunction {
         const hex: string | undefined = this.state.categoryColors?.[category];
         if (!hex) return fallback;
         return (text: string): string => Colors.bold(Colors.hex(hex)(text));

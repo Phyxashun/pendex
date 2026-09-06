@@ -1,5 +1,14 @@
+// FILE-PATH: packages/core/src/Constants.ts
+//
 import path from 'node:path';
-import '../../../src/utils/string-extensions';
+
+export type PathStringFn = (path: string) => string;
+
+export type PathSegment = string | number;
+
+export type PossiblePathSegment = PathSegment | false | null | undefined;
+
+export type Path = (...segments: PossiblePathSegment[]) => string;
 
 /**
  * @module Constants
@@ -21,7 +30,7 @@ export const CONSECUTIVE_SLASH_REGEX = /(?<!^)(?<!\b[a-zA-Z]{2,}:)\/{2,}/g;
  * @param filePath - Path to convert.
  * @returns `filePath` with all backslashes replaced by forward slashes.
  */
-export const toPosixPath = (filePath: string): string => {
+export const toPosixPath: PathStringFn = (filePath: string): string => {
     return filePath.replace(PATH_SEPARATOR_REGEX, SEPARATOR);
 };
 
@@ -33,8 +42,9 @@ export const toPosixPath = (filePath: string): string => {
  * @returns `filePath` with all double forward slashes replaced by
  *  single forward slashes.
  */
-export const normalizePath = (filePath: string): string => {
-    return filePath.toPosixPath().replace(CONSECUTIVE_SLASH_REGEX, SEPARATOR);
+export const normalizePath: PathStringFn = (filePath: string): string => {
+    const result: string = toPosixPath(filePath);
+    return result.replace(CONSECUTIVE_SLASH_REGEX, SEPARATOR);
 };
 
 /**
@@ -44,16 +54,16 @@ export const normalizePath = (filePath: string): string => {
  * @param segments - Path segments to join; falsy segments are dropped.
  * @returns The joined path.
  */
-export const joinPath = (...segments: (string | undefined | null | false | number)[]): string => {
-    const allSegments = segments.filter(Boolean) as (string | number)[];
+export const joinPath: Path = (...segments: PossiblePathSegment[]): string => {
+    const allSegments = segments.filter(Boolean) as PathSegment[];
 
     // Convert each segment to a posix path
-    const posixPath = allSegments
-        .map(segment => String(segment).toPosixPath())
+    const posixPath: string = allSegments
+        .map((segment: PathSegment): string => toPosixPath(String(segment)))
         .join(SEPARATOR);
 
     // Normalize entire combined string
-    return posixPath.normalizePath();
+    return normalizePath(posixPath);
 };
 
 /**
@@ -62,8 +72,8 @@ export const joinPath = (...segments: (string | undefined | null | false | numbe
  * @param filePath - The path to extract the basename from.
  * @returns The final path segment (filename).
  */
-export const baseName = (filePath: string): string => {
-    return path.basename(filePath.toPosixPath());
+export const baseName: PathStringFn = (filePath: string): string => {
+    return path.basename(toPosixPath(filePath));
 };
 
 /**
@@ -72,8 +82,8 @@ export const baseName = (filePath: string): string => {
  * @param filePath - The path to extract the extension from.
  * @returns The extension including its leading dot, or `''` if there is none.
  */
-export const extName = (filePath: string): string => {
-    return path.extname(filePath.toPosixPath());
+export const extName: PathStringFn = (filePath: string): string => {
+    return path.extname(toPosixPath(filePath));
 };
 
 /**
@@ -82,8 +92,8 @@ export const extName = (filePath: string): string => {
  * @param filePath - The path to extract the directory from.
  * @returns The directory portion of `filePath`, or `'.'` if there is none.
  */
-export const dirName = (filePath: string): string => {
-    return path.dirname(filePath.toPosixPath());
+export const dirName: PathStringFn = (filePath: string): string => {
+    return path.dirname(toPosixPath(filePath));
 };
 
 /**
@@ -100,23 +110,23 @@ class ConstantsManager {
     /**
      * The current process's working directory, read live on every access.
      */
-    public get BASE_DIR(): string {
-        return process.cwd().toPosixPath();
-    }
+    public readonly BASE_DIR: string = toPosixPath(process.cwd());
 
     /**
      * Absolute path to `.gitignore` under {@link BASE_DIR}.
      */
-    public get GITIGNORE_PATH(): string {
-        return this.BASE_DIR.joinPath('.gitignore');
-    }
+    public readonly GITIGNORE_PATH: string = joinPath(
+        this.BASE_DIR,
+        '.gitignore',
+    );
 
     /**
      * Absolute path to `runtime.config.json` under {@link BASE_DIR}.
      */
-    public get RUNTIME_CONFIG_PATH(): string {
-        return this.BASE_DIR.joinPath('runtime.config.json');
-    }
+    public readonly RUNTIME_CONFIG_PATH: string = joinPath(
+        this.BASE_DIR,
+        'runtime.config.json',
+    );
 
     /**
      * Default directory name for compiled output.
@@ -137,6 +147,8 @@ class ConstantsManager {
      * A fixed-width horizontal rule string, used for CLI section dividers.
      */
     public readonly DIVIDER = this.BLOCK.repeat(this.WIDTH);
+
+    constructor() {}
 }
 
 /**

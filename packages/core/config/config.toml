@@ -1,15 +1,20 @@
 # FILE-PATH: src/config/config.toml
 #
 # DEFAULT THEME
+#
 theme = { name = "pendex", path = "packages/theme/themes/" }
-http  = true
 
+#
 # DEFAULT OUTPUT CONFIGURATION
-outputType = 'pdf'
+#
+http       = true
+outputType = "txt"         # "txt" or "pdf"
 outputDir  = "ALL"
 rebuiltDir = "ALL_REBUILT"
 
+#
 # DEFAULT GLOBAL EXCLUDES
+#
 exclude = [
     # General
     "**/node_modules/**",
@@ -90,7 +95,12 @@ exclude = [
     "**/ALL_REBUILT/**",
 ]
 
+#
 # DEFAULT INCLUDE JOBS
+#
+###############################################################################
+## SOURCE FILES
+###############################################################################
 [[jobs]]
 filename = "1_SOURCE_FILES.txt"
 category = "source"
@@ -161,6 +171,9 @@ exclude = [
     "**/*cspell*",
 ]
 
+###############################################################################
+## WEB FILES
+###############################################################################
 [[jobs]]
 filename = "2_WEB_FILES.txt"
 category = "web"
@@ -218,6 +231,9 @@ exclude = [
     "**/*cspell*",
 ]
 
+###############################################################################
+## STYLE FILES
+###############################################################################
 [[jobs]]
 filename = "3_STYLE_FILES.txt"
 category = "style"
@@ -246,6 +262,9 @@ exclude = [
     "**/*cspell*",
 ]
 
+###############################################################################
+## TERMINAL FILES
+###############################################################################
 [[jobs]]
 filename = "4_TERMINAL_FILES.txt"
 category = "terminal"
@@ -261,6 +280,9 @@ exclude = [
     "**/*cspell*",
 ]
 
+###############################################################################
+## CONFIGURATION FILES
+###############################################################################
 [[jobs]]
 filename = "5_CONFIG_FILES.txt"
 category = "configuration"
@@ -323,6 +345,9 @@ exclude = [
     "**/*cspell*",
 ]
 
+###############################################################################
+## DOCUMENTATION FILES
+###############################################################################
 [[jobs]]
 filename = "6_DOC_FILES.txt"
 category = "documentation"
@@ -371,6 +396,9 @@ exclude = [
     "**/*cspell*",
 ]
 
+###############################################################################
+## TEST FILES
+###############################################################################
 [[jobs]]
 filename = "7_TEST_FILES.txt"
 category = "testing"
@@ -404,6 +432,9 @@ include = [
 ]
 exclude = ["**/*cspell*"]
 
+###############################################################################
+## CSPELL DICTIONARY AND CONFIGURATION FILES
+###############################################################################
 [[jobs]]
 filename = "8_CSPELL_FILES.txt"
 category = "cspell"
@@ -414,6 +445,9 @@ include = [
 ]
 exclude = ["**/*cspell-dictionary-*"]
 
+###############################################################################
+## MISC. (I.E. EVERYTHING ELSE) FILES
+###############################################################################
 [[jobs]]
 filename    = "9_MISC_FILES.txt"
 category    = "misc"
@@ -424,4 +458,4 @@ description = "All remaining project files"
 # resolution depends on every prior job having already run. See
 # src/core/FileScanner.ts and src/core/CompileService.ts.
 include = []
-exclude = ["**/*cspell-dictionary*.txt", "**/*.svg"]
+exclude = ["**/*cspell*", "**/*cspell-dictionary*.txt", "**/*.svg"]

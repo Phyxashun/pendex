@@ -9,23 +9,32 @@
  */
 
 import type { Command, State } from '@pendex/core';
-import { Exit } from '@pendex/exit';
 import { SplitView } from './SplitView';
 
 /**
  * The "Split Archive" command: rebuilds original files from compiled archives.
  */
 export class Split implements Command {
-    readonly key = 'split';
-    readonly label = 'Split Archive';
-    readonly hint = 'Rebuild everything';
-
     private readonly state: State;
     private readonly view: SplitView;
+
+    readonly key: string;
+    readonly label: string;
+    readonly hint: string;
+
+    private readonly STRINGS = {
+        key: 'split',
+        label: 'Split Archive',
+        hint: 'Rebuild project files',
+    } as const;
 
     constructor(state: State) {
         this.state = state;
         this.view = new SplitView(this.state);
+
+        this.key = this.STRINGS.key;
+        this.label = `${this.state.theme.secondary(this.STRINGS.label)}`;
+        this.hint = `${this.state.theme.secondary(this.STRINGS.hint)}`;
     }
 
     /**
@@ -35,21 +44,3 @@ export class Split implements Command {
         await this.view.render();
     }
 }
-
-/**
- * STANDALONE EXECUTION ENTRY POINT
- * `bun run src/commands/Split.ts` — only pulls a Config, no App/State required.
- */
-// c8 ignore start
-if (import.meta.main) {
-
-    const { resolveRunnerDeps } = await import('@pendex/core');
-    const state = await resolveRunnerDeps();
-
-    const split = await new Split(state);
-    await split.execute();
-
-    const exit = await new Exit(state);
-    await exit.execute();
-}
-// c8 ignore stop

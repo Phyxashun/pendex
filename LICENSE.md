@@ -629,7 +629,8 @@ Limitation of Liability
 > EVEN IF SUCH HOLDER OR OTHER PARTY HAS BEEN ADVISED OF THE POSSIBILITY OF
 > SUCH DAMAGES.
 
-Interpretation of Sections _Disclaimer of Warranty_ and _Limitation of Liability_
+Interpretation of Sections _Disclaimer of Warranty_ and _Limitation of
+Liability_
 ---------------------------------------------------------------------------------
 
 If the disclaimer of warranty and limitation of liability provided

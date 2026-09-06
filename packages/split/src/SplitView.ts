@@ -11,25 +11,19 @@
  * dangling.
  */
 
-import { intro, log, note, outro, tasks } from '@clack/prompts';
+import { intro, log, note, outro, tasks, type Task } from '@clack/prompts';
 import { Colors } from '@pendex/color';
 import type { Config, Manifest, State, Theme } from '@pendex/core';
 import { View } from '@pendex/core';
 import { initializeSplit, splitSingleFile } from './SplitService';
-
-interface ClackTask {
-    title: string;
-    task: () => Promise<string>;
-}
 
 /**
  * Renders the interactive split session: intro, per-file progress,
  * summary, and outro.
  */
 export class SplitView extends View {
-
     // User-facing strings for this view.
-    private readonly STRINGS: Record<string, string> = {
+    private readonly STRINGS = {
         title: ' 󰏖 RUNNING PENDEX SPLIT ',
         excludedTitle: 'Excluded Patterns',
         presentAction: 'Splitting from',
@@ -63,43 +57,55 @@ export class SplitView extends View {
         intro(theme.title(this.STRINGS.title));
 
         try {
-            const manifest: Manifest | null = await initializeSplit(outputDir, rebuiltDir);
+            const manifest: Manifest | null = await initializeSplit(
+                outputDir,
+                rebuiltDir,
+            );
 
             if (!manifest) {
-                log.error(`${theme.error(`${this.STRINGS.noManifest} / ${outputDir}. ${this.STRINGS.pleaseCompile}`)}`);
+                log.error(
+                    `${theme.error(`${this.STRINGS.noManifest} /
+${outputDir}. ${this.STRINGS.pleaseCompile}`)}`,
+                );
                 outro(theme.muted(this.STRINGS.outroNoManifest));
                 return;
             }
 
             if (exclude.length > 0) {
-                note(
-                    exclude.join(', '),
-                    this.STRINGS.excludedTitle,
-                    {
-                        format: this.mutedFormatter
-                    }
-                );
+                note(exclude.join(', '), this.STRINGS.excludedTitle, {
+                    format: this.mutedFormatter,
+                });
             }
 
             const outcomes: number[] = [];
 
-            const fileTasks: ClackTask[] = Object.keys(manifest.files).map((filename, index) =>
-                this.buildFileTask(filename, index, manifest, outcomes)
+            const fileTasks: Task[] = Object.keys(manifest.files).map(
+                (filename, index) =>
+                    this.buildFileTask(filename, index, manifest, outcomes),
             );
 
             await tasks(fileTasks);
 
-            const totalRecreated = outcomes.reduce((sum, count) => sum + (count || 0), 0);
+            const totalRecreated = outcomes.reduce(
+                (sum, count) => sum + (count || 0),
+                0,
+            );
 
             const styledRebuiltDir = theme.muted('/' + rebuiltDir);
-            log.step(`${theme.success(`${this.STRINGS.success} ${styledRebuiltDir}.`)}`);
+            log.step(
+                `${theme.success(`${this.STRINGS.success}
+${styledRebuiltDir}.`)}`,
+            );
 
-            const styledTotal = theme.bold(theme.warning(totalRecreated.toString()));
-            log.success(`${theme.success(this.STRINGS.totalLabel)}: ${styledTotal}`);
+            const styledTotal = theme.bold(
+                theme.warning(totalRecreated.toString()),
+            );
+            log.success(
+                `${theme.success(this.STRINGS.totalLabel)}: ${styledTotal}`,
+            );
 
             const success = this.STRINGS.outroSuccess.toUpperCase();
             log.success(Colors.bgGreen(Colors.black(success)));
-
         } catch (err) {
             log.error(theme.error(this.STRINGS.error));
             if (err instanceof Error) {
@@ -117,18 +123,24 @@ export class SplitView extends View {
         filename: string,
         index: number,
         manifest: Manifest,
-        outcomes: number[]
-    ): ClackTask {
+        outcomes: number[],
+    ): Task {
         const theme: Theme = this.state.theme;
         const config: Config = this.state.config;
 
         const category = manifest.categories?.[filename];
-        const titleStyle = category ? this.categoryStyle(category, theme.bold) : theme.bold;
+        const titleStyle = category
+            ? this.categoryStyle(category, theme.bold)
+            : theme.bold;
 
         return {
             title: `${this.STRINGS.presentAction} ${titleStyle(filename)}`,
             task: async (): Promise<string> => {
-                const outcome = await splitSingleFile(config.outputDir, config.rebuiltDir, filename);
+                const outcome = await splitSingleFile(
+                    config.outputDir,
+                    config.rebuiltDir,
+                    filename,
+                );
 
                 if (!outcome.archiveFound) {
                     outcomes[index] = 0;
@@ -136,11 +148,15 @@ export class SplitView extends View {
                 }
 
                 outcomes[index] = outcome.filesRecreated;
-                const styledCount = theme.bold(theme.warning(outcome.filesRecreated.toString()));
-                return `${styledCount} ${theme.primary(this.STRINGS.filesRecreated)}`;
+                const styledCount = theme.bold.warning(
+                    outcome.filesRecreated.toString(),
+                );
+                return `${styledCount}
+${theme.primary(this.STRINGS.filesRecreated)}`;
             },
         };
     }
 
-    private mutedFormatter = (text: string) => `${this.state.theme.muted(text)}`;
+    private mutedFormatter = (text: string) =>
+        `${this.state.theme.muted(text)}`;
 }

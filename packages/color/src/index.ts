@@ -10,5 +10,16 @@
 
 export {
     Colors,
-    type Styler
+    ESC,
+    bg,
+    detectColorSupport,
+    fg,
+    parseHex,
+    style,
+    type BooleanFn,
+    type CodeStyleFactory,
+    type HexStringParser,
+    type StyleFactory,
+    type Styler,
+    type Tuple,
 } from './Colors';

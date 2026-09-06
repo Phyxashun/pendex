@@ -1,3 +1,4 @@
+// oxlint-disable typescript/no-explicit-any
 import { errorNote } from './errorNote';
 
 import { intro, log, outro } from '@clack/prompts';
@@ -24,88 +25,91 @@ export const testPathExtensions = async (): Promise<void> => {
 
     const testCases: TestCase[] = [
         {
-            name: "Standard Windows Path",
-            input: "C:\\Users\\Admin\\Documents\\projects",
-            expectedPosix: "C:/Users/Admin/Documents/projects",
-            expectedNormalized: "C:/Users/Admin/Documents/projects"
+            name: 'Standard Windows Path',
+            input: 'C:\\Users\\Admin\\Documents\\projects',
+            expectedPosix: 'C:/Users/Admin/Documents/projects',
+            expectedNormalized: 'C:/Users/Admin/Documents/projects',
         },
         {
-            name: "Mixed Slashes",
-            input: "src\\components/buttons\\SubmitButton.tsx",
-            expectedPosix: "src/components/buttons/SubmitButton.tsx",
-            expectedNormalized: "src/components/buttons/SubmitButton.tsx"
+            name: 'Mixed Slashes',
+            input: 'src\\components/buttons\\SubmitButton.tsx',
+            expectedPosix: 'src/components/buttons/SubmitButton.tsx',
+            expectedNormalized: 'src/components/buttons/SubmitButton.tsx',
         },
         {
-            name: "Consecutive Slashes (Internal)",
-            input: "folder/subfolder//nested///file.txt",
-            expectedPosix: "folder/subfolder//nested///file.txt",
-            expectedNormalized: "folder/subfolder/nested/file.txt"
+            name: 'Consecutive Slashes (Internal)',
+            input: 'folder/subfolder//nested///file.txt',
+            expectedPosix: 'folder/subfolder//nested///file.txt',
+            expectedNormalized: 'folder/subfolder/nested/file.txt',
         },
         {
-            name: "Windows UNC Network Share",
-            input: "\\\\server\\share\\folder",
-            expectedPosix: "//server/share/folder",
-            expectedNormalized: "//server/share/folder"
+            name: 'Windows UNC Network Share',
+            input: '\\\\server\\share\\folder',
+            expectedPosix: '//server/share/folder',
+            expectedNormalized: '//server/share/folder',
         },
         {
-            name: "Web Protocol (HTTP)",
-            input: "http://example.com",
-            expectedPosix: "http://example.com",
-            expectedNormalized: "http://example.com"
+            name: 'Web Protocol (HTTP)',
+            input: 'http://example.com',
+            expectedPosix: 'http://example.com',
+            expectedNormalized: 'http://example.com',
         },
         {
-            name: "Windows Drive Letter with Double Slash",
-            input: "C:\\\\folder\\\\subfolder",
-            expectedPosix: "C://folder//subfolder",
-            expectedNormalized: "C:/folder/subfolder"
+            name: 'Windows Drive Letter with Double Slash',
+            input: 'C:\\\\folder\\\\subfolder',
+            expectedPosix: 'C://folder//subfolder',
+            expectedNormalized: 'C:/folder/subfolder',
         },
         {
-            name: "Trailing Slashes",
-            input: "usr/local/bin//",
-            expectedPosix: "usr/local/bin//",
-            expectedNormalized: "usr/local/bin/"
+            name: 'Trailing Slashes',
+            input: 'usr/local/bin//',
+            expectedPosix: 'usr/local/bin//',
+            expectedNormalized: 'usr/local/bin/',
         },
         {
-            name: "joinPath: Standard Append",
-            input: "src",
-            segments: ["components", "Button.tsx"],
-            expectedPosix: "src/components/Button.tsx",
-            expectedNormalized: "src/components/Button.tsx"
+            name: 'joinPath: Standard Append',
+            input: 'src',
+            segments: ['components', 'Button.tsx'],
+            expectedPosix: 'src/components/Button.tsx',
+            expectedNormalized: 'src/components/Button.tsx',
         },
         {
-            name: "joinPath: Falsy Conditions & Numbers",
-            input: "src",
-            segments: ["v1", false && "premium", "users", 404],
-            expectedPosix: "src/v1/users/404",
-            expectedNormalized: "src/v1/users/404"
+            name: 'joinPath: Falsy Conditions & Numbers',
+            input: 'src',
+            // oxlint-disable-next-line no-constant-binary-expression
+            segments: ['v1', false && 'premium', 'users', 404],
+            expectedPosix: 'src/v1/users/404',
+            expectedNormalized: 'src/v1/users/404',
         },
         {
-            name: "joinPath: Mixed Backslashes in Segments",
-            input: "src",
-            segments: ["assets\\images", "logo.png"],
-            expectedPosix: "src/assets/images/logo.png",
-            expectedNormalized: "src/assets/images/logo.png"
+            name: 'joinPath: Mixed Backslashes in Segments',
+            input: 'src',
+            segments: ['assets\\images', 'logo.png'],
+            expectedPosix: 'src/assets/images/logo.png',
+            expectedNormalized: 'src/assets/images/logo.png',
         },
         /**
          * PURPOSEFULLY FAILING TESTS
          */
         {
-            name: "Intentional Failure: Incorrect Mapped Path",
-            input: "C:\\Users\\Guest",
-            expectedPosix: "C:/Wrong/Path/Here",
-            expectedNormalized: "C:/Wrong/Path/Here"
+            name: 'Intentional Failure: Incorrect Mapped Path',
+            input: 'C:\\Users\\Guest',
+            expectedPosix: 'C:/Wrong/Path/Here',
+            expectedNormalized: 'C:/Wrong/Path/Here',
         },
         {
-            name: "Intentional Failure: joinPath Output Mismatch",
-            input: "dist",
-            segments: ["bundles", "app.js"],
-            expectedPosix: "dist/wrong/app.js",
-            expectedNormalized: "dist/wrong/app.js"
-        }
+            name: 'Intentional Failure: joinPath Output Mismatch',
+            input: 'dist',
+            segments: ['bundles', 'app.js'],
+            expectedPosix: 'dist/wrong/app.js',
+            expectedNormalized: 'dist/wrong/app.js',
+        },
     ];
 
     console.log();
-    intro(Colors.bgYellow(Colors.black(Colors.bold('STRING EXTENSIONS TESTING'))));
+    intro(
+        Colors.bgYellow(Colors.black(Colors.bold('STRING EXTENSIONS TESTING'))),
+    );
 
     const deferredFailures: any[] = [];
 
@@ -138,7 +142,7 @@ export const testPathExtensions = async (): Promise<void> => {
                 expectedPosix: test.expectedPosix,
                 actualPosix,
                 expectedNormalized: test.expectedNormalized,
-                actualNormalized
+                actualNormalized,
             });
 
             log.error(`${failedTag}...${testNumber}: ${testName}`);
@@ -173,37 +177,47 @@ export const testPathExtensions = async (): Promise<void> => {
 
         for (const details of failuresToPrint) {
             const lines: [string, string][] = [
-                ['Input'.label(), `"${details.input}"`]
+                ['Input'.label(), `"${details.input}"`],
             ];
 
             if (details.segments) {
-                lines.push(
-                    ['Segments'.label(), JSON.stringify(details.segments)]
-                );
+                lines.push([
+                    'Segments'.label(),
+                    JSON.stringify(details.segments),
+                ]);
             }
             if (details.posix) {
-                lines.push(
-                    ['Expected Posix'.label(), `"${details.expectedPosix}"`]
-                );
-                lines.push(
-                    ['Got Posix'.label(), `"${details.actualPosix}"`.red()]
-                );
+                lines.push([
+                    'Expected Posix'.label(),
+                    `"${details.expectedPosix}"`,
+                ]);
+                lines.push([
+                    'Got Posix'.label(),
+                    `"${details.actualPosix}"`.red(),
+                ]);
             }
             if (details.normalized) {
-                lines.push(
-                    ['Expected Normalized'.label(), `"${details.expectedNormalized}"`]
-                );
-                lines.push(
-                    ['Got Normalized'.label(), `"${details.actualNormalized}"`.red()]
-                );
+                lines.push([
+                    'Expected Normalized'.label(),
+                    `"${details.expectedNormalized}"`,
+                ]);
+                lines.push([
+                    'Got Normalized'.label(),
+                    `"${details.actualNormalized}"`.red(),
+                ]);
             }
 
             const maxLength = Math.max(...lines.map(([label]) => label.length));
             const noteContent = lines
-                .map(([label, value]) => `${label.padEnd(maxLength)} : ${value}`)
+                .map(
+                    ([label, value]) => `${label.padEnd(maxLength)} : ${value}`,
+                )
                 .join('\n');
 
-            errorNote(noteContent, Colors.red(`Failure Details: ${details.name}`));
+            errorNote(
+                noteContent,
+                Colors.red(`Failure Details: ${details.name}`),
+            );
         }
 
         log.error(Colors.red('Process terminated due to test failures.'));

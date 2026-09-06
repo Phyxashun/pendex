@@ -1,3 +1,5 @@
+// FILE-PATH: packages/theme/src/useTheme.ts
+//
 /**
  * @module useTheme
  *
@@ -11,7 +13,7 @@
  * the file that used to also hold the palette data.
  */
 
-import type { DefaultTheme, DefaultThemeKeys } from './ThemePalette';
+import type { DefaultTheme, DefaultThemeKey } from './ThemePalette';
 
 /**
  * Hybrid structure matching:
@@ -91,20 +93,22 @@ export type Theme = ChainableTheme & string;
 export const useTheme = (
     activeTheme: DefaultTheme,
     initialTxt: string = '',
-    pendingStyles: DefaultThemeKeys = []
+    pendingStyles: DefaultThemeKey[] = [],
 ): Theme => {
     // Computes styles on the text whenever string
     // conversion is triggered or new text is supplied
     const compile = (textToStyle: string): string => {
-        return pendingStyles.reduce((result, styleKey) =>
-            activeTheme[styleKey](result), textToStyle);
+        return pendingStyles.reduce(
+            (result, styleKey) => activeTheme[styleKey](result),
+            textToStyle,
+        );
     };
 
     // The handler function allows calling the chain
     // instance like a function: theme('TEXT') or
     // theme.bold('TEXT')
     const targetFunction = (txt?: string) => {
-        const textToProcess = txt || initialTxt || '';
+        const textToProcess = txt ?? initialTxt ?? '';
         const compiledText = compile(textToProcess);
 
         // Return a fresh theme node so operations can
@@ -116,7 +120,11 @@ export const useTheme = (
         get(_, prop) {
             // These symbols/methods intercept conversions
             // to primitives (strings) automatically
-            if (prop === 'toString' || prop === 'valueOf' || prop === Symbol.toPrimitive) {
+            if (
+                prop === 'toString' ||
+                prop === 'valueOf' ||
+                prop === Symbol.toPrimitive
+            ) {
                 return () => compile(initialTxt);
             }
 
@@ -130,7 +138,10 @@ export const useTheme = (
                     return useTheme(activeTheme, nextText, pendingStyles);
                 }
 
-                return useTheme(activeTheme, initialTxt, [...pendingStyles, styleKey]);
+                return useTheme(activeTheme, initialTxt, [
+                    ...pendingStyles,
+                    styleKey,
+                ]);
             }
             return undefined;
         },

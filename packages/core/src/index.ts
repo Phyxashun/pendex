@@ -19,7 +19,7 @@ export {
     extName,
     joinPath,
     normalizePath,
-    toPosixPath
+    toPosixPath,
 } from './Constants';
 
 export {
@@ -27,26 +27,21 @@ export {
     buildArchiveEntry,
     joinArchiveEntries,
     parseArchive,
-    type ArchivedFile
+    type ArchivedFile,
 } from './ArchiveFormat';
 
 export {
     findEmptyDirectories,
     loadIgnorePatterns,
-    resolveJobFiles
+    resolveJobFiles,
 } from './FileScanner';
 
-export {
-    View,
-    identity
-} from './View';
+export { View, identity } from './View';
+
+export { ConfigManager, assignKey } from './Config';
 
 export {
-    ConfigManager,
-    assignKey
-} from './Config';
-
-export {
+    extractCategoryColors,
     resolveRunnerDeps,
-    type ResolvedDeps
+    type ResolvedDeps,
 } from './bootstrap';

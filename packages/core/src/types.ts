@@ -1,3 +1,5 @@
+// FILE-PATH: packages/core/src/types.ts
+//
 /**
  * @module types
  * @file FILE-PATH: packages/core/src/types.ts
@@ -67,12 +69,16 @@ export interface State {
     categoryColors?: Partial<Record<Category, string>>;
 }
 
+export type ExitFn = (code?: number | string | null) => never;
+
 /**
  * Defines the dependencies required by the Exit command.
  */
 export interface ExitState extends State {
     // Terminates the process with an optional exit code.
-    exit: (code?: number | string | null) => never;
+    exit: ExitFn;
+    // Tracks the exit code throughout execution
+    exitCode: number;
 }
 
 /**
@@ -100,14 +106,16 @@ export interface Manifest {
 /**
  * The set of job categories Pendex recognizes for grouping and coloring output.
  */
-export type Category = 'source'
-    | 'web'
-    | 'style'
-    | 'terminal'
-    | 'configuration'
-    | 'documentation'
-    | 'testing'
-    | 'misc';
+export type Category =
+    | 'source' // Source files
+    | 'web' // Web site files
+    | 'style' // Web style files
+    | 'terminal' // Terminal/CLI files
+    | 'configuration' // Config files
+    | 'documentation' // Documentation files
+    | 'testing' // Test files
+    | 'cspell' // CSpell config files and dictionaries
+    | 'misc'; // Anything not covered by previous categories (except .svg files)
 
 /**
  * A single compile job: a named output file built from a set of include/exclude
@@ -121,9 +129,9 @@ export interface Job {
     // Human-readable description of what this job consolidates.
     readonly description: string;
     // Glob patterns for files to include.
-    readonly include: readonly string[];
+    readonly include: readonly (string | undefined)[];
     // Glob patterns for files to exclude, applied after `include`.
-    readonly exclude: readonly string[];
+    readonly exclude: readonly (string | undefined)[];
 }
 
 export interface ThemeConfig {
@@ -134,12 +142,18 @@ export interface ThemeConfig {
     path: string;
 }
 
+export type CompileOutputType = 'txt' | 'pdf';
+
 /**
  * The full application configuration, typically loaded from a config file.
  */
 export interface Config {
     // Theme configuration information.
     theme: ThemeConfig;
+    // Keep http(s) in files?
+    http: boolean;
+    // Output type
+    outputType: CompileOutputType;
     // Directory compiled output files are written to.
     outputDir: string;
     // Directory split (rebuilt-from-consolidated) output is written to.
@@ -151,3 +165,34 @@ export interface Config {
 }
 
 export type StyleFunction = (text: string) => string;
+
+export type StandaloneExecution = () => Promise<void>;
+
+// DeepPartial helper allows us to type disk data safely
+export type DeepPartial<T> = T extends object
+    ? {
+          [P in keyof T]?: DeepPartial<T[P]>;
+      }
+    : T;
+
+/**
+ * Represents the loose, unchecked data layout when loading configuration files
+ * from disk before defaults are applied.
+ */
+export type RawDiskConfig = DeepPartial<Config> & {
+    // Overriding specific properties if needed to make them completely optional
+    // Theme configuration information.
+    theme?: ThemeConfig;
+    // Keep http(s) in files?
+    http?: boolean;
+    // Output type
+    outputType?: CompileOutputType;
+    // Directory compiled output files are written to.
+    outputDir?: string;
+    // Directory split (rebuilt-from-consolidated) output is written to.
+    rebuiltDir?: string;
+    // Glob patterns excluded from all jobs globally.
+    exclude?: Array<DeepPartial<string>>;
+    // The compile jobs to run.
+    jobs?: Array<DeepPartial<Job>>;
+};

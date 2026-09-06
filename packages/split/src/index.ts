@@ -9,9 +9,7 @@
  * interactive and standalone/test call paths.
  */
 
-export {
-    Split
-} from './Split';
+export { Split } from './Split';
 
 export {
     initializeSplit,
@@ -23,9 +21,7 @@ export {
     splitSingleFile,
     type SplitFileOutcome,
     type SplitHooks,
-    type SplitSummary
+    type SplitSummary,
 } from './SplitService';
 
-export {
-    SplitView
-} from './SplitView';
+export { SplitView } from './SplitView';

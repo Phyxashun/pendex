@@ -9,35 +9,32 @@
  * {@link FallbackTheme} for contexts that can't await a file read.
  */
 
-import {
-    BRAND_PALETTE,
-    buildTheme
-} from './ThemePalette';
+import { FALLBACK_THEME } from './ThemePalette';
+import { useTheme } from './useTheme';
 
-import {
-    useTheme
-} from './useTheme';
-
-export {
-    ThemeManager
-} from './ThemeManager';
+export { ThemeManager } from './ThemeManager';
 
 export {
     BRAND_PALETTE,
     buildTheme,
+    FALLBACK_THEME,
     parsePendexTheme,
+    THEME_COLOR_KEYS,
     type DefaultTheme,
-    type DefaultThemeKeys,
+    type DefaultThemeKey,
     type PendexTheme,
+    type ThemeColorKey,
     type ThemeColors,
-    type ThemeName
+    type ThemeName,
 } from './ThemePalette';
 
-export {
-    useTheme,
-    type ChainableTheme,
-    type Theme
-} from './useTheme';
+export { useTheme, type ChainableTheme, type Theme } from './useTheme';
 
-/** Synchronous brand-palette theme */
-export const FallbackTheme = useTheme(buildTheme(BRAND_PALETTE));
+/**
+ * Synchronous brand-palette theme.
+ *
+ * This is the chainable proxy form of {@link FALLBACK_THEME}; exporting
+ * both lets callers choose either the flat style-function object or the
+ * chainable `theme.bold.primary('txt')` API.
+ */
+export const FallbackTheme = useTheme(FALLBACK_THEME);

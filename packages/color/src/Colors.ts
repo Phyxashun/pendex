@@ -1,21 +1,35 @@
+//FILE-PATH: packages/color/src/Colors.ts
 /**
  * @module Colors
  *
- * Single responsibility: turning text into ANSI-styled text. Drop-in
- * replacement for picocolors — same call shape (`Colors.red('x')`,
- * `Colors.bold('x')`, `Colors.bgMagenta('x')`) — plus what picocolors can't
- * do and the TOML theme system needs: 24-bit truecolor via {@link Colors.hex}
- * and {@link Colors.bgHex}. This is the ONLY file in the codebase that knows
- * what an escape code is; `ThemeManager`/`ThemePalette` build semantics on
- * top of it and `useTheme` composes those — three layers, one job each.
+ * Single responsibility: turning text into ANSI-styled text.
+ *
+ * Drop-in replacement for picocolors — same call shape
+ *  - `Colors.red('x')`
+ *  - `Colors.bold('x')`
+ *  - `Colors.bgMagenta('x')
+ *
+ * plus what picocolors can't do and the TOML theme system needs:
+ *  - 24-bit truecolor via {@link Colors.hex}
+ *  - 24-bit truecolor via {@link Colors.bgHex}
  */
+
+import type { Env } from 'bun';
 
 /**
- * A function that wraps text in ANSI styling.
+ * Types
  */
 export type Styler = (text: string) => string;
+export type StyleFactory = (open: string, close: string) => Styler;
+export type CodeStyleFactory = (code: number) => Styler;
+export type BooleanFn = () => boolean;
+export type Tuple = [number, number, number];
+export type HexStringParser = (hex: string) => Tuple;
 
-const ESC = '\x1b[';
+/**
+ * Constants
+ */
+export const ESC: string = '\x1b[';
 
 /**
  * Determines whether ANSI color output should be enabled, honoring the
@@ -24,10 +38,15 @@ const ESC = '\x1b[';
  *
  * @returns `true` if color output should be enabled, `false` otherwise.
  */
-const detectColorSupport = (): boolean => {
-    const env = Bun.env;
+export const detectColorSupport: BooleanFn = (): boolean => {
+    const env: Env & NodeJS.ProcessEnv & ImportMetaEnv = Bun.env;
+
     if ('NO_COLOR' in env) return false;
-    if (env.FORCE_COLOR !== undefined && env.FORCE_COLOR !== '0') return true;
+
+    if (env.FORCE_COLOR !== undefined && env.FORCE_COLOR !== '0') {
+        return true;
+    }
+
     return process.stdout?.isTTY === true;
 };
 
@@ -45,13 +64,16 @@ let enabled: boolean = detectColorSupport();
  * @param close - ANSI escape sequence that closes the style.
  * @returns A {@link Styler} that wraps input text in the given codes.
  */
-const style = (open: string, close: string): Styler => {
+export const style: StyleFactory = (open: string, close: string): Styler => {
     return (text: string): string => {
         if (!enabled) return text;
 
         // Handle cases where runtime data does not match TypeScript types
         if (typeof text !== 'string') {
-            return `${open}${String(text ?? '').replaceAll(close, open)}${close}`;
+            return `${open}${String(text ?? '').replaceAll(
+                close,
+                open,
+            )}${close}`;
         }
 
         return `${open}${text.replaceAll(close, open)}${close}`;
@@ -64,7 +86,8 @@ const style = (open: string, close: string): Styler => {
  * @param code - ANSI SGR foreground color code (e.g. 31 for red).
  * @returns A {@link Styler} for that foreground color.
  */
-const fg = (code: number): Styler => style(`${ESC}${code}m`, `${ESC}39m`);
+export const fg: CodeStyleFactory = (code: number): Styler =>
+    style(`${ESC}${code}m`, `${ESC}39m`);
 
 /**
  * Builds a standard-palette background {@link Styler} for a given SGR code.
@@ -72,7 +95,8 @@ const fg = (code: number): Styler => style(`${ESC}${code}m`, `${ESC}39m`);
  * @param code - ANSI SGR background color code (e.g. 41 for red).
  * @returns A {@link Styler} for that background color.
  */
-const bg = (code: number): Styler => style(`${ESC}${code}m`, `${ESC}49m`);
+export const bg: CodeStyleFactory = (code: number): Styler =>
+    style(`${ESC}${code}m`, `${ESC}49m`);
 
 /**
  * Parses a hex color string into its RGB components.
@@ -81,15 +105,22 @@ const bg = (code: number): Styler => style(`${ESC}${code}m`, `${ESC}49m`);
  * @returns A `[r, g, b]` tuple with each channel in the range 0-255.
  * @throws {Error} If `hex` is not a valid 3- or 6-digit hex color.
  */
-const parseHex = (hex: string): [number, number, number] => {
-    let value = hex.startsWith('#') ? hex.slice(1) : hex;
+export const parseHex: HexStringParser = (hex: string): Tuple => {
+    let value: string = hex.startsWith('#') ? hex.slice(1) : hex;
+
     if (value.length === 3) {
-        value = value.split('').map(ch => ch + ch).join('');
+        value = value
+            .split('')
+            .map((ch: string): string => ch + ch)
+            .join('');
     }
+
     if (!/^[0-9a-fA-F]{6}$/.test(value)) {
         throw new Error(`Colors: invalid hex color "${hex}"`);
     }
-    const num = parseInt(value, 16);
+
+    const num: number = parseInt(value, 16);
+
     return [(num >> 16) & 0xff, (num >> 8) & 0xff, num & 0xff];
 };
 
@@ -108,28 +139,30 @@ const parseHex = (hex: string): [number, number, number] => {
  * ```
  */
 export class Colors {
+    private constructor() {}
+
     // Whether color output is currently enabled.
-    static get isEnabled(): boolean { return enabled; }
+    static get isEnabled(): boolean {
+        return enabled;
+    }
 
     // Force-enables ANSI color output, overriding auto-detection.
-    static enable(): void { enabled = true; }
+    static enable(): void {
+        enabled = true;
+    }
 
     // Force-disables ANSI color output, overriding auto-detection.
-    static disable(): void { enabled = false; }
+    static disable(): void {
+        enabled = false;
+    }
 
     // @category Modifiers
     static readonly reset: Styler = style(`${ESC}0m`, `${ESC}0m`);
-    // @category Modifiers
     static readonly bold: Styler = style(`${ESC}1m`, `${ESC}22m`);
-    // @category Modifiers
     static readonly dim: Styler = style(`${ESC}2m`, `${ESC}22m`);
-    // @category Modifiers
     static readonly italic: Styler = style(`${ESC}3m`, `${ESC}23m`);
-    // @category Modifiers
     static readonly underline: Styler = style(`${ESC}4m`, `${ESC}24m`);
-    // @category Modifiers
     static readonly inverse: Styler = style(`${ESC}7m`, `${ESC}27m`);
-    // @category Modifiers
     static readonly strikethrough: Styler = style(`${ESC}9m`, `${ESC}29m`);
 
     // @category Standard foreground
@@ -178,7 +211,7 @@ export class Colors {
      * themes are built on.
      */
     static hex(hexColor: string): Styler {
-        const [r, g, b] = parseHex(hexColor);
+        const [r, g, b]: Tuple = parseHex(hexColor);
         return style(`${ESC}38;2;${r};${g};${b}m`, `${ESC}39m`);
     }
 
@@ -186,7 +219,7 @@ export class Colors {
      * 24-bit truecolor background from a hex string.
      */
     static bgHex(hexColor: string): Styler {
-        const [r, g, b] = parseHex(hexColor);
+        const [r, g, b]: Tuple = parseHex(hexColor);
         return style(`${ESC}48;2;${r};${g};${b}m`, `${ESC}49m`);
     }
 }

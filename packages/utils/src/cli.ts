@@ -16,27 +16,24 @@
  */
 
 /**
- * @module index
+ * @module cli
  *
  * The pendex CLI's process entry point: runs the interactive
  * {@link App} shell and reports any uncaught error as a fatal crash.
  */
 
-import App from './components/App';
-import Message from './utils/Message';
-import './utils/string-extensions';
-import './utils/string-extensions-test';
-
-
+import { App } from './components/App';
+import { Message } from './components/Message';
 
 /**
  * MAIN ENTRY POINT
  */
+
 // c8 ignore start
 if (import.meta.main) {
     try {
         await App.run();
-    } catch (err) {
+    } catch (err: unknown) {
         Message(err);
         process.exit(1);
     }

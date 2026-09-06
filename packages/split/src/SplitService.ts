@@ -9,14 +9,14 @@
  * parsing, never imports `@clack/prompts`.
  */
 
-import { mkdir, rm } from "node:fs/promises";
+import { mkdir, rm } from 'node:fs/promises';
 
 import {
     dirName,
     joinPath,
     normalizePath,
     parseArchive,
-    type Manifest
+    type Manifest,
 } from '@pendex/core';
 
 /**
@@ -53,7 +53,10 @@ export interface SplitHooks {
     // Called before a job's archive starts splitting.
     onFileStart?: (filename: string) => void | Promise<void>;
     // Called after a job's archive finishes splitting.
-    onFileSuccess?: (filename: string, outcome: SplitFileOutcome) => void | Promise<void>;
+    onFileSuccess?: (
+        filename: string,
+        outcome: SplitFileOutcome,
+    ) => void | Promise<void>;
 }
 
 /**
@@ -63,7 +66,9 @@ export interface SplitHooks {
  * @param outputDir - Directory to read `manifest.json` from.
  * @returns The parsed {@link Manifest}, or `null` if the file doesn't exist.
  */
-export async function readManifest(outputDir: string): Promise<Manifest | null> {
+export async function readManifest(
+    outputDir: string,
+): Promise<Manifest | null> {
     const normalizedPath = normalizePath(outputDir);
     const manifestFile = Bun.file(joinPath(normalizedPath, 'manifest.json'));
 
@@ -82,7 +87,10 @@ export async function readManifest(outputDir: string): Promise<Manifest | null> 
 export async function prepareRebuildDirectory(dir: string): Promise<void> {
     const normalizedPath = normalizePath(dir);
 
-    await rm(normalizedPath, { recursive: true, force: true });
+    await rm(normalizedPath, {
+        recursive: true,
+        force: true,
+    });
 }
 
 /**
@@ -93,12 +101,14 @@ export async function prepareRebuildDirectory(dir: string): Promise<void> {
  */
 export async function restoreEmptyDirectories(
     rebuiltDir: string,
-    emptyDirectories: string[]
+    emptyDirectories: string[],
 ): Promise<void> {
     const normalizedPath = normalizePath(rebuiltDir);
 
     for (const dir of emptyDirectories) {
-        await mkdir(joinPath(normalizedPath, dir), { recursive: true });
+        await mkdir(joinPath(normalizedPath, dir), {
+            recursive: true,
+        });
     }
 }
 
@@ -113,7 +123,7 @@ export async function restoreEmptyDirectories(
 export async function splitArchiveFile(
     outputDir: string,
     rebuiltDir: string,
-    filename: string
+    filename: string,
 ): Promise<SplitFileOutcome> {
     const normalizedOutputPath = normalizePath(outputDir);
     const normalizedRebuiltPath = normalizePath(rebuiltDir);
@@ -124,7 +134,7 @@ export async function splitArchiveFile(
         return {
             filename,
             archiveFound: false,
-            filesRecreated: 0
+            filesRecreated: 0,
         };
     }
 
@@ -134,9 +144,14 @@ export async function splitArchiveFile(
     let filesRecreated = 0;
     for (const archived of archivedFiles) {
         const normalizedArchivedPath = normalizePath(archived.originalPath);
-        const writePath = joinPath(normalizedRebuiltPath, normalizedArchivedPath);
+        const writePath = joinPath(
+            normalizedRebuiltPath,
+            normalizedArchivedPath,
+        );
 
-        await mkdir(dirName(writePath), { recursive: true });
+        await mkdir(dirName(writePath), {
+            recursive: true,
+        });
         await Bun.write(writePath, archived.content);
 
         filesRecreated++;
@@ -145,7 +160,7 @@ export async function splitArchiveFile(
     return {
         filename,
         archiveFound: true,
-        filesRecreated
+        filesRecreated,
     };
 }
 
@@ -162,7 +177,7 @@ export async function splitArchiveFile(
 export async function runSplit(
     outputDir: string,
     rebuiltDir: string,
-    hooks?: SplitHooks
+    hooks?: SplitHooks,
 ): Promise<SplitSummary> {
     const normalizedOutputPath = normalizePath(outputDir);
     const normalizedRebuiltPath = normalizePath(rebuiltDir);
@@ -172,7 +187,7 @@ export async function runSplit(
         return {
             manifestFound: false,
             fileOutcomes: [],
-            totalFilesRecreated: 0
+            totalFilesRecreated: 0,
         };
     }
 
@@ -181,7 +196,10 @@ export async function runSplit(
     }
 
     await prepareRebuildDirectory(normalizedRebuiltPath);
-    await restoreEmptyDirectories(normalizedRebuiltPath, manifest.emptyDirectories ?? []);
+    await restoreEmptyDirectories(
+        normalizedRebuiltPath,
+        manifest.emptyDirectories ?? [],
+    );
 
     const fileOutcomes: SplitFileOutcome[] = [];
 
@@ -193,7 +211,7 @@ export async function runSplit(
         const outcome = await splitArchiveFile(
             normalizedOutputPath,
             normalizedRebuiltPath,
-            filename
+            filename,
         );
         fileOutcomes.push(outcome);
 
@@ -220,7 +238,7 @@ export async function runSplit(
  */
 export async function initializeSplit(
     outputDir: string,
-    rebuiltDir: string
+    rebuiltDir: string,
 ): Promise<Manifest | null> {
     const normalizedOutputPath = normalizePath(outputDir);
     const normalizedRebuiltPath = normalizePath(rebuiltDir);
@@ -229,7 +247,10 @@ export async function initializeSplit(
     if (!manifest) return null;
 
     await prepareRebuildDirectory(normalizedRebuiltPath);
-    await restoreEmptyDirectories(normalizedRebuiltPath, manifest.emptyDirectories ?? []);
+    await restoreEmptyDirectories(
+        normalizedRebuiltPath,
+        manifest.emptyDirectories ?? [],
+    );
 
     return manifest;
 }
@@ -246,14 +267,21 @@ export async function initializeSplit(
 export async function splitSingleFile(
     outputDir: string,
     rebuiltDir: string,
-    filename: string
+    filename: string,
 ): Promise<SplitFileOutcome> {
     const normalizedOutputPath = normalizePath(outputDir);
     const normalizedRebuiltPath = normalizePath(rebuiltDir);
 
-    return await splitArchiveFile(normalizedOutputPath, normalizedRebuiltPath, filename);
+    return await splitArchiveFile(
+        normalizedOutputPath,
+        normalizedRebuiltPath,
+        filename,
+    );
 }
 
-const filesRecreatedReducer = (sum: number, outcome: SplitFileOutcome): number => {
+const filesRecreatedReducer = (
+    sum: number,
+    outcome: SplitFileOutcome,
+): number => {
     return sum + outcome.filesRecreated;
 };
