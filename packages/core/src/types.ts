@@ -142,7 +142,7 @@ export interface ThemeConfig {
     path: string;
 }
 
-export type CompileOutputType = 'txt' | 'pdf';
+export type CompileOutputType = 'txt' | 'pdf' | 'md';
 
 /**
  * The full application configuration, typically loaded from a config file.

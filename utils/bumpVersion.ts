@@ -32,12 +32,11 @@ const SKIP = new Set([
 ]);
 
 export async function bumpVersion(
-    rootDir: string,
     options: { version?: string; reset?: boolean } = {},
 ) {
     const spec = parseSpec(options);
     const files: string[] = [];
-    await walk(rootDir, files);
+    await walk(projectRoot, files);
     files.sort();
 
     const changes = [];
@@ -47,10 +46,10 @@ export async function bumpVersion(
         const from = pkg.version ?? "0.0.0";
         const to = nextVersion(from, spec);
         if (from !== to) {
-            await writeFile(file, applyVersion(source, to), "utf8");
+            await writeFile(file, applyVersion(source, pkg, to), "utf8");
         }
         changes.push({
-            file: relative(rootDir, file) || "package.json",
+            file: relative(projectRoot, file) || "package.json",
             from,
             to,
         });
@@ -122,22 +121,14 @@ async function walk(dir: string, found: string[]) {
  * MAIN ENTRY POINT
  */
 if (import.meta.main) {
-    let version = "0.0.0";
-
     try {
-        if (Bun.argv[2]) {
-            version = Bun.argv[2];
-        }
+        const version = Bun.argv[2] ? Bun.argv[2] : "0.0.0";
         const reset = Bun.argv[3] ? true : false;
 
-        const options = {
+        await bumpVersion({
             version,
             reset
-        }
-        await bumpVersion(
-            outputDir,
-            options
-        )
+        });
     } catch (err: unknown) {
         console.error(err);
         process.exit(1);

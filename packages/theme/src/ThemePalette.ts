@@ -28,7 +28,13 @@ import { Colors } from '@pendex/color';
 /**
  * A theme is chosen by name — the stem of a file in src/themes/.
  */
-export type ThemeName = string;
+export type ThemeName =
+    | 'default'
+    | 'pendex'
+    | 'dracula'
+    | 'monokaipro'
+    | 'onedark'
+    | 'tokyonight';
 
 /**
  * The required root color slots every theme file provides.
