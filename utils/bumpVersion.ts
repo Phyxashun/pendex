@@ -24,7 +24,6 @@ function findProjectRoot(startDir: string): string {
 
 // Automatically starts looking from the directory of this current file
 const projectRoot = findProjectRoot(import.meta.dirname);
-const outputDir = (p: string) => join(projectRoot, p);
 
 const SKIP = new Set([
     "node_modules", ".git", "dist", "build", "coverage",
@@ -39,17 +38,20 @@ export async function bumpVersion(
     await walk(projectRoot, files);
     files.sort();
 
+    const sources = await Promise.all(files.map(f => readFile(f, "utf8")));
+
     const changes = [];
-    for (const file of files) {
-        const source = await readFile(file, "utf8");
+    for (let i = 0; i < files.length; i++) {
+        const file = files[i];
+        const source = sources[i];
         const pkg = JSON.parse(source) as { name?: string; version?: string };
         const from = pkg.version ?? "0.0.0";
         const to = nextVersion(from, spec);
         if (from !== to) {
-            await writeFile(file, applyVersion(source, pkg, to), "utf8");
+            await writeFile(file, applyVersion(source, to), "utf8");
         }
         changes.push({
-            file: relative(projectRoot, file) || "package.json",
+            file: relative(projectRoot, file),
             from,
             to,
         });
@@ -72,8 +74,9 @@ function parseSpec(options: { version?: string; reset?: boolean }) {
     if (mask === "X.X.+") return { kind: "patch" as const };
     if (mask === "X.+.X") return { kind: "minor" as const };
     if (mask === "+.X.X") return { kind: "major" as const };
-    if (/^\d+\.\d+\.\d+/.test(version.replace(/^v/, ""))) {
-        return { kind: "set" as const, value: version.replace(/^v/, "") };
+    const stripped = mask.replace(/^v/, "");
+    if (/^\d+\.\d+\.\d+/.test(stripped)) {
+        return { kind: "set" as const, value: stripped };
     }
     throw new Error(`Unknown version spec "${version}"`);
 }
@@ -92,31 +95,26 @@ function nextVersion(
     return `${major + 1}.${minor}.${patch}`;
 }
 
-function applyVersion(source: string, pkg: Record<string, unknown>, next: string): string {
-    const indent = source.match(/\n([ \t]+)"/)?.[1]?.length ?? 2;
-    pkg.version = next; // object preserves key insertion order
-    return JSON.stringify(pkg, null, indent) + (source.endsWith("\n") ? "\n" : "");
+function applyVersion(source: string, next: string): string {
+    return source.replace(
+        /("version"\s*:\s*")([^"]*)(")/,
+        `$1${next}$3`,
+    );
 }
 
 async function walk(dir: string, found: string[]) {
-    for (const entry of await readdir(dir, { withFileTypes: true })) {
+    const entries = await readdir(dir, { withFileTypes: true });
+    await Promise.all(entries.map(async (entry) => {
         const path = join(dir, entry.name);
         if (entry.isDirectory()) {
-            if (SKIP.has(entry.name) || entry.name.startsWith(".")) continue;
+            if (SKIP.has(entry.name) || entry.name.startsWith(".")) return;
             await walk(path, found);
         } else if (entry.isFile() && entry.name === "package.json") {
             found.push(path);
         }
-    }
+    }));
 }
 
-/**
- * Extract CLI arguments
- *
- * Bun.argv[0] is the bun binary path
- * Bun.argv[1] is the script path (./packages/db/src/ConfigInitView.ts)
- * Bun.argv[2] is first custom argument
- */
 /**
  * MAIN ENTRY POINT
  */
