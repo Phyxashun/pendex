@@ -61,6 +61,7 @@
     "@pendex/color": "workspace:*",
     "@pendex/compile": "workspace:*",
     "@pendex/core": "workspace:*",
+    "@pendex/db": "workspace:*",
     "@pendex/exit": "workspace:*",
     "@pendex/split": "workspace:*",
     "@pendex/theme": "workspace:*",

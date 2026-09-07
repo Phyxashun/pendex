@@ -707,14 +707,14 @@
   // // #region* 📁 HIDE PROJECT CONFIGURATION FILES FROM VIEW
   //
   "files.exclude": {
-    "**/node_modules/**": true,
-    "**/.editorconfig": true,
-    //"**/.gitignore": true,
-    "**/.ox*.json": true,
-    "**/tsconfig*": true,
-    "**/*.lock": true,
-    "**/*.md": true,
-    "**/bunfig.toml": true
+    // "**/node_modules/**": true,
+    // "**/.editorconfig": true,
+    // "**/.gitignore": true,
+    // "**/.ox*.json": true,
+    // "**/tsconfig*": true,
+    // "**/*.lock": true,
+    // "**/*.md": true,
+    // "**/bunfig.toml": true
   }
   // #endregion
 }

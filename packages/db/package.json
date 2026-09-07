@@ -1,5 +1,5 @@
 {
-  "name": "@pendex/utils",
+  "name": "@pendex/db",
   "version": "0.1.0",
   "private": true,
   "type": "module",
